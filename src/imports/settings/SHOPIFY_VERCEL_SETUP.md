@@ -211,18 +211,18 @@ color_rot
 4. Откройте **API credentials** и нажмите **Install app**.
 5. Скопируйте **Storefront API access token** в безопасное временное место. Он понадобится на следующем шаге.
 
-## Шаг 10. Получите Admin API token
+## Шаг 10. Сохраните Client ID и Client secret
 
-Этот ключ очень опасен: он может менять товары и видеть служебные данные. Он остаётся только на сервере Vercel.
+В Shopify Dev Dashboard вместо готового Admin token используются `Client ID` и `Client secret`. Сервер Vercel получает временный Admin API token сам и не отдаёт его браузеру.
 
 1. В **Configuration → Admin API integration** включите только нужные права:
    - `read_products`, `write_products`;
    - `read_inventory`, `write_inventory`, если редактируете остатки;
    - `read_orders`, если нужна собственная панель заказов.
 2. Не включайте лишние права.
-3. Нажмите **Save → API credentials → Install app**.
-4. Скопируйте **Admin API access token**.
-5. Не вставляйте этот токен в `App.tsx`, `.env` в Git, Notion, скриншот или публичный чат.
+3. Нажмите **Save**, создайте новую версию и нажмите **Release**.
+4. В **API credentials** сохраните `Client ID` и `Client secret`.
+5. Не вставляйте `Client secret` в `App.tsx`, `.env` в Git, Notion, скриншот или публичный чат.
 
 ---
 
@@ -244,9 +244,10 @@ color_rot
 | Имя | Что вставить |
 |---|---|
 | `SHOPIFY_STORE_DOMAIN` | `ваш-магазин.myshopify.com`, без `https://` |
-| `SHOPIFY_STOREFRONT_ACCESS_TOKEN` | Storefront token из шага 9 |
-| `SHOPIFY_ADMIN_ACCESS_TOKEN` | Admin token из шага 10 |
-| `SHOPIFY_API_VERSION` | `2025-01` или актуальная стабильная версия Shopify |
+| `SHOPIFY_STOREFRONT_ACCESS_TOKEN` | Storefront token из шага подключения корзины |
+| `SHOPIFY_CLIENT_ID` | Client ID из Shopify Dev Dashboard |
+| `SHOPIFY_CLIENT_SECRET` | Client secret из Shopify Dev Dashboard |
+| `SHOPIFY_API_VERSION` | `2026-07` или актуальная стабильная версия Shopify |
 | `POTTLER_ADMIN_SECRET` | случайная строка минимум из 32 символов |
 
 Для `POTTLER_ADMIN_SECRET` можно сгенерировать пароль менеджером паролей. Это не пароль Shopify.
