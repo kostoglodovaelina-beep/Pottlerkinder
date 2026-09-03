@@ -9,7 +9,7 @@ function requireEnv(name) {
 
 export async function storefront(query, variables = {}) {
   const shop = requireEnv("SHOPIFY_STORE_DOMAIN")
-  const token = requireEnv("SHOPIFY_STOREFRONT_ACCESS_TOKEN")
+  const token = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
   return graphQL(`https://${shop}/api/${apiVersion}/graphql.json`, "X-Shopify-Storefront-Access-Token", token, query, variables)
 }
 
@@ -38,7 +38,7 @@ async function getAdminToken(shop) {
 async function graphQL(url, header, token, query, variables) {
   const response = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json", [header]: token },
+    headers: { "Content-Type": "application/json", ...(token ? { [header]: token } : {}) },
     body: JSON.stringify({ query, variables }),
   })
   const result = await response.json()

@@ -197,7 +197,7 @@ color_rot
 5. Название: `Pottlerkinder Vercel API`.
 6. Выберите себя как разработчика приложения.
 
-## Шаг 9. Получите Storefront API token
+## Шаг 9. Настройте Storefront API access
 
 Этот ключ используется для магазина: читать товары, работать с корзиной и аккаунтом покупателя. Он не должен давать права на удаление товаров.
 
@@ -209,7 +209,8 @@ color_rot
    - работы с customer accounts, если доступно.
 3. Нажмите **Save**.
 4. Откройте **API credentials** и нажмите **Install app**.
-5. Скопируйте **Storefront API access token** в безопасное временное место. Он понадобится на следующем шаге.
+5. Для каталога и корзины отдельный Storefront token пока не нужен: Shopify допускает tokenless-доступ к товарам и Cart API.
+6. Token понадобится позднее только для расширенных возможностей customer accounts; не создавайте его сейчас без отдельного шага в чате.
 
 ## Шаг 10. Сохраните Client ID и Client secret
 
@@ -244,7 +245,7 @@ color_rot
 | Имя | Что вставить |
 |---|---|
 | `SHOPIFY_STORE_DOMAIN` | `ваш-магазин.myshopify.com`, без `https://` |
-| `SHOPIFY_STOREFRONT_ACCESS_TOKEN` | Storefront token из шага подключения корзины |
+| `SHOPIFY_STOREFRONT_ACCESS_TOKEN` | пока не добавляйте; нужен только для расширенных возможностей аккаунта покупателей |
 | `SHOPIFY_CLIENT_ID` | Client ID из Shopify Dev Dashboard |
 | `SHOPIFY_CLIENT_SECRET` | Client secret из Shopify Dev Dashboard |
 | `SHOPIFY_API_VERSION` | `2026-07` или актуальная стабильная версия Shopify |
@@ -754,7 +755,7 @@ on conflict (id) do update set role = 'admin', email = excluded.email;
 |---|---|
 | API пишет `Missing SHOPIFY...` | переменная не добавлена в Vercel или не сделан Redeploy |
 | Товар не виден | статус Active, опубликован в нужном sales channel, корректная коллекция/тег |
-| Корзина не создаётся | Storefront token и права Storefront API |
+| Корзина не создаётся | публикацию товара, варианты и права Storefront API |
 | Редактирование товара возвращает 401 | неверный `POTTLER_ADMIN_SECRET` или нет `Authorization: Bearer ...` |
 | Редактирование возвращает Shopify error | проверьте права Admin API и Shopify product ID |
 | Оплата не проходит | Settings → Payments и test mode в Shopify |
