@@ -2957,6 +2957,58 @@ const CATALOG_PRODUCTS = Array.from({ length: 100 }, (_, index) => {
   }
 })
 
+const SHOPIFY_CATEGORY_MAP: Record<string, string> = {
+  HOODIES: "HOODIES", SWEATSHIRTS: "SWEATSHIRTS", "T-SHIRTS": "T-SHIRTS", TSHIRTS: "T-SHIRTS", POLOS: "POLOS",
+  ACCESSOIRES: "ACCESSOIRES", ACCESSORIES: "ACCESSOIRES", "GLÄSER & TASSEN": "GLÄSER & TASSEN", "GLASER & TASSEN": "GLÄSER & TASSEN", "DTF-TRANSFERS": "DTF-TRANSFERS",
+}
+const SHOPIFY_GENDER_MAP: Record<string, string> = { MAENNER: "MÄNNER", MANNER: "MÄNNER", FRAUEN: "FRAUEN", KINDER: "KINDER", UNISEX: "UNISEX" }
+const SHOPIFY_COLORS: Record<string, string> = { schwarz: "#161616", black: "#161616", weiß: "#f4f4f4", weiss: "#f4f4f4", white: "#f4f4f4", rot: "#cf3131", red: "#cf3131", grau: "#777", grey: "#777", gray: "#777", blau: "#3189d6", blue: "#3189d6", grün: "#36b95a", green: "#36b95a" }
+
+function shopifyCatalogProduct(product: any) {
+  const tags = product.tags || []
+  const tag = (prefix: string) => tags.find((item: string) => item.toLowerCase().startsWith(prefix))?.slice(prefix.length)
+  const variants = product.variants?.nodes || []
+  const option = (name: string) => variants.flatMap((variant: any) => variant.selectedOptions || []).filter((item: any) => item.name.toLowerCase() === name).map((item: any) => item.value)
+  const categoryValue = (tag("category_") || product.productType || "T-SHIRTS").toUpperCase()
+  const category = SHOPIFY_CATEGORY_MAP[categoryValue] || "T-SHIRTS"
+  const genderValue = (tag("gender_") || "UNISEX").toUpperCase()
+  const gender = SHOPIFY_GENDER_MAP[genderValue] || "UNISEX"
+  const selectedColors = Array.from(new Set(option("farbe").concat(option("color")))).map((item: string) => SHOPIFY_COLORS[item.toLowerCase()] || "#777")
+  const selectedSizes = Array.from(new Set(option("größe").concat(option("groesse"), option("size"))))
+  const firstVariant = variants[0]
+  const formatPrice = (value: string | null | undefined) => value ? new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(Number(value)) : "–"
+  return {
+    id: product.id,
+    slug: product.handle,
+    image: product.featuredMedia?.preview?.image?.url || imgProduct1,
+    name: product.title,
+    category,
+    sub: tag("sub_")?.toUpperCase(),
+    gender,
+    colors: selectedColors.length ? selectedColors : ["#161616"],
+    price: formatPrice(firstVariant?.price),
+    compareAtPrice: formatPrice(firstVariant?.compareAtPrice),
+    short: product.productType || "Pottlerkinder · Made im Pott",
+    description: product.description || "",
+    sizes: selectedSizes.length ? selectedSizes : ["ALLE"],
+    variants,
+  }
+}
+
+function useShopifyCatalog(handle?: string) {
+  const [products, setProducts] = useState<any[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  useEffect(() => {
+    let active = true
+    fetch(`/api/products${handle ? `?handle=${encodeURIComponent(handle)}` : ""}`)
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Shopify products unavailable")))
+      .then((data) => active && setProducts((data.products || []).map(shopifyCatalogProduct)))
+      .catch((requestError) => active && setError(requestError.message))
+    return () => { active = false }
+  }, [handle])
+  return { products, error }
+}
+
 const CATALOG_CATEGORIES = [
   "ALLE",
   "HOODIES",
@@ -3012,6 +3064,8 @@ function FilterOptionIcon({ label }: { label: string }) {
 }
 
 function CatalogPage() {
+  const { products: shopifyProducts, error: shopifyError } = useShopifyCatalog()
+  const catalogProducts = shopifyProducts ?? []
   const params = new URLSearchParams(window.location.search)
   const [category, setCategory] = useState(
     () => params.get("category") || "ALLE",
@@ -3037,7 +3091,7 @@ function CatalogPage() {
         : category === "DTF-TRANSFERS"
           ? ["FÜR KLEIDUNG & TEXTILIEN"]
           : []
-  const products = CATALOG_PRODUCTS.filter(
+  const products = catalogProducts.filter(
     (product) =>
       (category === "ALLE" || product.category === category) &&
       (sub === "ALLE" || product.sub === sub) &&
@@ -3273,9 +3327,12 @@ function CatalogPage() {
                 </article>
               ))}
             </div>
-            {products.length === 0 && (
+            {shopifyProducts === null && !shopifyError && (
+              <div className="catalog-no-results">SHOPIFY KATALOG WIRD GELADEN.</div>
+            )}
+            {shopifyProducts !== null && products.length === 0 && (
               <div className="catalog-no-results">
-                KEINE PRODUKTE FÜR DIESE AUSWAHL.
+                {shopifyError ? "SHOPIFY KATALOG IST MOMENTAN NICHT VERFÜGBAR." : "KEINE PRODUKTE FÜR DIESE AUSWAHL."}
               </div>
             )}
             {totalPages > 1 && (
@@ -3371,6 +3428,18 @@ function SalePage() {
             </nav>
           )}
         </section>
+      </main>
+    </PageShell>
+  )
+}
+
+function ShopifyProductPage({ handle }: { handle: string }) {
+  const { products, error } = useShopifyCatalog(handle)
+  if (products?.[0]) return <ProductPage product={products[0]} />
+  return (
+    <PageShell inner>
+      <main className="flex-1 flex items-center justify-center min-h-[55vh] px-6">
+        <p className="catalog-no-results">{error ? "DIESER ARTIKEL IST NICHT VERFÜGBAR." : "ARTIKEL WIRD GELADEN."}</p>
       </main>
     </PageShell>
   )
@@ -3487,12 +3556,6 @@ export default function App() {
     "/zechen": <CollieriesPage />,
     "/blog": <BlogPage />,
   }
-  const product = CATALOG_PRODUCTS.find(
-    (item) => `/katalog/${item.slug}` === window.location.pathname,
-  )
-  return product ? (
-    <ProductPage product={product} />
-  ) : (
-    (pages[window.location.pathname] ?? <HomePage />)
-  )
+  const productHandle = window.location.pathname.match(/^\/katalog\/([^/]+)$/)?.[1]
+  return productHandle ? <ShopifyProductPage handle={decodeURIComponent(productHandle)} /> : (pages[window.location.pathname] ?? <HomePage />)
 }
