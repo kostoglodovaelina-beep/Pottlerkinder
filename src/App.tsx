@@ -34,6 +34,7 @@ import pageCompany from "@/imports/assets/pages/company.webp"
 import pageHistory from "@/imports/assets/pages/history.webp"
 import pageCollieries from "@/imports/assets/pages/collieries.webp"
 import pageBlog from "@/imports/assets/pages/blog.webp"
+import { shopCart } from "@/lib/shopify"
 
 // ─── Shared padding value (12vw clamped) ──────────────────────────────────────
 const SECTION_PAD = "clamp(16px, 12vw, 210px)"
@@ -1239,7 +1240,8 @@ function BannerSection() {
 
 function CategoryCard({ img, name }: { img: string name: string }) {
   return (
-    <div
+    <a
+      href={`/katalog?category=${encodeURIComponent(name)}`}
       className="group cat-card flex-1 relative overflow-hidden rounded-[4px] min-w-0 cursor-pointer shadow-[0px_2px_12px_2px_rgba(0,0,0,0.6)] bg-[#0d0d0d]"
       style={{ minHeight: "clamp(160px, 22vw, 500px)" }}
     >
@@ -1305,7 +1307,7 @@ function CategoryCard({ img, name }: { img: string name: string }) {
           </span>
         </div>
       </div>
-    </div>
+    </a>
   )
 }
 
@@ -1367,6 +1369,7 @@ function CategoriesSection() {
 // ─── Bestseller Carousel ──────────────────────────────────────────────────────
 
 type BestsellerProduct = {
+  slug: string
   img: string
   badge: string
   category: string
@@ -1380,6 +1383,12 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
   return (
     <div
       className="product-card relative rounded-[8px] flex-shrink-0 overflow-hidden"
+      role="link"
+      tabIndex={0}
+      onClick={() => { window.location.href = `/katalog/${product.slug}` }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") window.location.href = `/katalog/${product.slug}`
+      }}
       style={{
         background: "#202020",
         border: "1px solid #484848",
@@ -1422,7 +1431,7 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
           </span>
         </div>
         {/* Wishlist */}
-        <button className="btn-wishlist absolute top-3 right-3 w-9 h-9 rounded-full bg-black/45 flex items-center justify-center">
+        <button onClick={(event) => event.stopPropagation()} className="btn-wishlist absolute top-3 right-3 w-9 h-9 rounded-full bg-black/45 flex items-center justify-center">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path
               d={svgPaths.p3bd7ee70}
@@ -1541,6 +1550,7 @@ function BestsellerSection() {
       .sort(() => Math.random() - 0.5)
       .slice(0, 20)
       .map((product) => ({
+        slug: product.slug,
         img: product.image,
         badge: "BESTSELLER",
         category: product.category,
@@ -3455,9 +3465,34 @@ function ShopifyProductPage({ handle }: { handle: string }) {
 function ProductPage({
   product,
 }: {
-  product: typeof CATALOG_PRODUCTS[number]
+  product: any
 }) {
   const [size, setSize] = useState(product.sizes[0])
+  const [cartStatus, setCartStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const addToCart = async () => {
+    const variant = product.variants?.find((item: any) =>
+      item.selectedOptions?.some((option: any) =>
+        ["größe", "groesse", "size"].includes(option.name.toLowerCase()) && option.value === size,
+      ),
+    ) || product.variants?.[0]
+    if (!variant?.id) {
+      setCartStatus("error")
+      return
+    }
+    setCartStatus("loading")
+    try {
+      const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
+      const response = cartId
+        ? await shopCart.add(cartId, [{ merchandiseId: variant.id, quantity: 1 }])
+        : await shopCart.create([{ merchandiseId: variant.id, quantity: 1 }])
+      const cart = (response as { cart: { id: string } }).cart
+      window.localStorage.setItem("pottlerkinder-cart-id", cart.id)
+      setCartStatus("success")
+    } catch {
+      window.localStorage.removeItem("pottlerkinder-cart-id")
+      setCartStatus("error")
+    }
+  }
   return (
     <PageShell inner>
       <main className="flex-1">
@@ -3506,9 +3541,11 @@ function ProductPage({
                   ))}
                 </div>
               </div>
-              <button className="btn-red product-cart-button">
-                IN DEN WARENKORB <span>→</span>
+              <button className="btn-red product-cart-button" onClick={addToCart} disabled={cartStatus === "loading"}>
+                {cartStatus === "loading" ? "WIRD HINZUGEFÜGT" : "IN DEN WARENKORB"} <span>→</span>
               </button>
+              {cartStatus === "success" && <p className="product-cart-feedback">IM WARENKORB GESPEICHERT.</p>}
+              {cartStatus === "error" && <p className="product-cart-feedback is-error">WARENKORB KONNTE NICHT AKTUALISIERT WERDEN.</p>}
             </div>
           </div>
           <section id="details" className="product-more-details">
