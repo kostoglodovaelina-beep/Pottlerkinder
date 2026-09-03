@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { FaBeer, FaChild, FaFemale, FaGem, FaHatCowboy, FaMale, FaMugHot, FaRegSquare, FaRegStickyNote, FaShoppingBag, FaTags, FaThumbtack, FaTshirt, FaUsers } from "react-icons/fa"
 import { GiPoloShirt } from "react-icons/gi"
 
@@ -1534,8 +1534,10 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
 
 function BestsellerSection() {
   const [drag, setDrag] = useState<{ x: number position: number } | null>(null)
-  const [bestsellers] = useState<BestsellerProduct[]>(() =>
-    [...CATALOG_PRODUCTS]
+  const { products: shopifyProducts } = useShopifyCatalog()
+  const bestsellers = useMemo<BestsellerProduct[]>(
+    () =>
+      [...(shopifyProducts ?? [])]
       .sort(() => Math.random() - 0.5)
       .slice(0, 20)
       .map((product) => ({
@@ -1546,6 +1548,7 @@ function BestsellerSection() {
         price: product.price,
         swatches: product.colors,
       })),
+    [shopifyProducts],
   )
   const carouselRef = useRef<HTMLDivElement>(null)
   const carouselTrackRef = useRef<HTMLDivElement>(null)
@@ -1581,7 +1584,7 @@ function BestsellerSection() {
     }
     frame = requestAnimationFrame(move)
     return () => cancelAnimationFrame(frame)
-  }, [drag])
+  }, [drag, bestsellers.length])
 
   return (
     <div className="w-full bg-[#0a0a0a] py-8 sm:py-10">
@@ -3364,11 +3367,13 @@ function CatalogPage() {
 }
 
 function SalePage() {
+  const { products: shopifyProducts, error: shopifyError } = useShopifyCatalog()
   const [page, setPage] = useState(1)
   const resultsRef = useRef<HTMLElement>(null)
   const perPage = 20
-  const totalPages = Math.ceil(CATALOG_PRODUCTS.length / perPage)
-  const products = CATALOG_PRODUCTS.slice((page - 1) * perPage, page * perPage)
+  const saleProducts = (shopifyProducts ?? []).filter((product) => product.compareAtPrice)
+  const totalPages = Math.max(1, Math.ceil(saleProducts.length / perPage))
+  const products = saleProducts.slice((page - 1) * perPage, page * perPage)
   const changePage = (nextPage: number) => {
     setPage(nextPage)
     window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0)
@@ -3390,7 +3395,7 @@ function SalePage() {
         >
           <div className="catalog-result-head">
             <p>
-              <span>{CATALOG_PRODUCTS.length}</span> ANGEBOTE
+              <span>{saleProducts.length}</span> ANGEBOTE
             </p>
             <span>REDUZIERTE ARTIKEL</span>
           </div>
@@ -3420,6 +3425,14 @@ function SalePage() {
               </article>
             ))}
           </div>
+          {shopifyProducts === null && !shopifyError && (
+            <div className="catalog-no-results">SHOPIFY SALE WIRD GELADEN.</div>
+          )}
+          {shopifyProducts !== null && products.length === 0 && (
+            <div className="catalog-no-results">
+              {shopifyError ? "SHOPIFY SALE IST MOMENTAN NICHT VERFÜGBAR." : "AKTUELL SIND KEINE SALE-ARTIKEL VERFÜGBAR."}
+            </div>
+          )}
           {totalPages > 1 && (
             <nav className="catalog-pagination" aria-label="Sale Seiten">
               <button type="button" onClick={() => changePage(Math.max(1, page - 1))} disabled={page === 1}>← ZURÜCK</button>
