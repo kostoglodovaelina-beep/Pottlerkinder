@@ -1,0 +1,10 @@
+{
+  "description": "Experience a fully responsive online store designed for seamless shopping across devices, featuring tailored layouts, engaging carousels, and intuitive navigation.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
