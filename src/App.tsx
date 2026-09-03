@@ -2987,7 +2987,9 @@ function shopifyCatalogProduct(product: any) {
     gender,
     colors: selectedColors.length ? selectedColors : ["#161616"],
     price: formatPrice(firstVariant?.price),
-    compareAtPrice: formatPrice(firstVariant?.compareAtPrice),
+    compareAtPrice: firstVariant?.compareAtPrice
+      ? formatPrice(firstVariant.compareAtPrice)
+      : null,
     short: product.productType || "Pottlerkinder · Made im Pott",
     description: product.description || "",
     sizes: selectedSizes.length ? selectedSizes : ["ALLE"],
@@ -3397,26 +3399,21 @@ function SalePage() {
             <span>REDUZIERTE ARTIKEL</span>
           </div>
           <div className="sale-product-grid catalog-product-grid">
-            {products.map((product, index) => (
+            {products.map((product) => (
               <article key={product.slug} className="catalog-product-card">
                 <a
                   href={`/katalog/${product.slug}`}
                   className="catalog-product-image relative"
                 >
                   <img src={product.image} alt={product.name} loading="lazy" />
-                  <span className="sale-badge">-{20 + index * 5}%</span>
+                  <span className="sale-badge">SALE</span>
                 </a>
                 <div className="catalog-product-copy">
                   <h2>{product.name}</h2>
                   <p className="catalog-product-short">{product.short}</p>
                   <strong>
                     <s>{product.price}</s>{" "}
-                    {`${Math.round(
-                      Number(product.price.replace(",", ".")) *
-                        (0.8 - index * 0.05),
-                    )
-                      .toFixed(2)
-                      .replace(".", ",")} €`}
+                    {product.price}
                   </strong>
                 </div>
               </article>
