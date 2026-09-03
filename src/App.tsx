@@ -1554,8 +1554,10 @@ function BestsellerSection() {
   const carouselTrackRef = useRef<HTMLDivElement>(null)
   const carouselStarted = useRef(false)
   const carouselPosition = useRef(0)
+  const canLoopBestsellers = bestsellers.length > 1
 
   useEffect(() => {
+    if (!canLoopBestsellers) return
     const viewport = carouselRef.current
     const group =
       carouselTrackRef.current?.querySelector<HTMLElement>(".bestseller-group")
@@ -1627,22 +1629,17 @@ function BestsellerSection() {
 
       {/* Scrolling carousel */}
       <div
-        className={`bestseller-viewport w-full overflow-hidden ${
-          drag ? "is-dragging" : ""
-        }`}
+        className={`bestseller-viewport w-full overflow-hidden ${drag ? "is-dragging" : ""}`}
         ref={carouselRef}
         onPointerDown={(event) => {
-          if (event.button !== 0) return
+          if (!canLoopBestsellers || event.button !== 0) return
           event.currentTarget.setPointerCapture(event.pointerId)
           setDrag({ x: event.clientX, position: carouselPosition.current })
         }}
         onPointerMove={(event) => {
-          if (!drag || !carouselTrackRef.current) return
+          if (!canLoopBestsellers || !drag || !carouselTrackRef.current) return
           let next = drag.position - (event.clientX - drag.x)
-          const unit =
-            carouselTrackRef.current.querySelector<HTMLElement>(
-              ".bestseller-group",
-            )?.offsetWidth ?? 0
+          const unit = carouselTrackRef.current.querySelector<HTMLElement>(".bestseller-group")?.offsetWidth ?? 0
           if (unit) {
             while (next <= 0) next += unit
             while (next >= unit * 2) next -= unit
@@ -1656,10 +1653,10 @@ function BestsellerSection() {
         <div style={{ paddingLeft: SECTION_PAD }}>
           <div
             ref={carouselTrackRef}
-            className="bestseller-track flex"
-            style={{ width: "max-content" }}
+            className={`bestseller-track flex ${canLoopBestsellers ? "" : "justify-center"}`}
+            style={{ width: canLoopBestsellers ? "max-content" : "100%" }}
           >
-            {[0, 1, 2].map((group) => (
+            {(canLoopBestsellers ? [0, 1, 2] : [0]).map((group) => (
               <div className="bestseller-group flex gap-4" key={group}>
                 {bestsellers.map((product) => (
                   <ProductCard
