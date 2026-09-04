@@ -1461,14 +1461,14 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
       {/* Image */}
       <div
         className="relative overflow-hidden"
-        style={{ height: "clamp(220px, 18vw, 310px)" }}
+        style={{ aspectRatio: "4 / 5" }}
       >
         <img
           src={product.img}
           alt={product.name}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-contain"
+          className="absolute inset-0 w-full h-full object-cover"
         />
         <div
           className="absolute left-0 right-0 bottom-0"
