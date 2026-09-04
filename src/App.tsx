@@ -342,7 +342,8 @@ function CatalogIcon({
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [catalogOpen, setCatalogOpen] = useState(false)
-  const { cart } = useShopifyCart()
+  const [cartOpen, setCartOpen] = useState(false)
+  const { cart, refreshCart } = useShopifyCart()
   const cartQuantity = cart?.totalQuantity || 0
   const catalogTarget = (section: string, child?: string) => {
     const params = new URLSearchParams()
@@ -646,8 +647,9 @@ function Header() {
               </span>
             </button>
             {/* WARENKORB */}
-            <a
-              href="/warenkorb"
+            <button
+              type="button"
+              onClick={() => { refreshCart(); setCartOpen(true) }}
               className="btn-glass flex items-center gap-2 whitespace-nowrap"
               style={{ padding: "9px 14px" }}
             >
@@ -668,7 +670,7 @@ function Header() {
                 WARENKORB
               </span>
               {cartQuantity > 0 && <span className="cart-count">{cartQuantity}</span>}
-            </a>
+            </button>
           </div>
         </div>
 
@@ -786,14 +788,15 @@ function Header() {
             <button aria-label="Login" className="btn-glass mobile-icon-btn">
               <img src={imgAccount} alt="" className="mobile-icon-glyph" />
             </button>
-            <a
-              href="/warenkorb"
+            <button
+              type="button"
+              onClick={() => { refreshCart(); setCartOpen(true) }}
               aria-label="Warenkorb"
               className="btn-glass mobile-icon-btn"
             >
               <img src={imgCart} alt="" className="mobile-icon-glyph" />
               {cartQuantity > 0 && <span className="cart-count">{cartQuantity}</span>}
-            </a>
+            </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="btn-glass mobile-menu-btn flex flex-col items-center justify-center gap-[5px] cursor-pointer"
@@ -864,7 +867,60 @@ function Header() {
           </div>
         )}
       </div>
+      {cartOpen && <CartDrawer cart={cart} onClose={() => setCartOpen(false)} onChanged={refreshCart} />}
     </header>
+  )
+}
+
+function CartDrawer({
+  cart,
+  onClose,
+  onChanged,
+}: {
+  cart: any | null
+  onClose: () => void
+  onChanged: () => void
+}) {
+  const [removing, setRemoving] = useState<string | null>(null)
+  const lines = cart?.lines?.edges || []
+  const total = cart?.cost?.totalAmount
+  const removeLine = async (lineId: string) => {
+    if (!cart?.id) return
+    setRemoving(lineId)
+    try {
+      await shopCart.remove(cart.id, [lineId])
+      onChanged()
+      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+    } finally {
+      setRemoving(null)
+    }
+  }
+  return (
+    <div className="cart-drawer-layer" role="dialog" aria-modal="true" aria-label="Warenkorb">
+      <button type="button" className="cart-drawer-backdrop" onClick={onClose} aria-label="Warenkorb schließen" />
+      <aside className="cart-drawer">
+        <header className="cart-drawer-head"><div><span>DEINE AUSWAHL</span><h2>WARENKORB <b>{cart?.totalQuantity || 0}</b></h2></div><button type="button" onClick={onClose} aria-label="Schließen">×</button></header>
+        <div className="cart-drawer-lines">
+          {!cart && <p className="cart-drawer-empty">WARENKORB WIRD GELADEN.</p>}
+          {cart && lines.length === 0 && <p className="cart-drawer-empty">DEIN WARENKORB IST LEER.</p>}
+          {lines.map(({ node }: any) => {
+            const variant = node.merchandise
+            const image = variant.product.featuredImage
+            const price = new Intl.NumberFormat("de-DE", { style: "currency", currency: variant.price.currencyCode }).format(Number(variant.price.amount))
+            return <article className="cart-drawer-line" key={node.id}>
+              <div className="cart-drawer-image">{image?.url && <img src={image.url} alt={image.altText || variant.product.title} />}</div>
+              <div className="cart-drawer-copy"><p>{variant.product.title}</p><span>{variant.title}</span><strong>{node.quantity} × {price}</strong></div>
+              <button type="button" onClick={() => removeLine(node.id)} disabled={removing === node.id} className="cart-drawer-remove">ENTFERNEN</button>
+            </article>
+          })}
+        </div>
+        <footer className="cart-drawer-foot">
+          <div><span>ZWISCHENSUMME</span><strong>{total ? new Intl.NumberFormat("de-DE", { style: "currency", currency: total.currencyCode }).format(Number(total.amount)) : "—"}</strong></div>
+          <a href="/katalog" onClick={onClose} className="cart-drawer-continue">← WEITER EINKAUFEN</a>
+          {cart?.checkoutUrl && lines.length > 0 && <a href={cart.checkoutUrl} className="btn-red cart-drawer-checkout">SICHER ZUR KASSE <span>→</span></a>}
+        </footer>
+      </aside>
+    </div>
   )
 }
 
@@ -2974,10 +3030,11 @@ const CATALOG_PRODUCTS = Array.from({ length: 100 }, (_, index) => {
 })
 
 const SHOPIFY_CATEGORY_MAP: Record<string, string> = {
-  HOODIES: "HOODIES", SWEATSHIRTS: "SWEATSHIRTS", "T-SHIRTS": "T-SHIRTS", TSHIRTS: "T-SHIRTS", POLOS: "POLOS",
-  ACCESSOIRES: "ACCESSOIRES", ACCESSORIES: "ACCESSOIRES", "GLÄSER & TASSEN": "GLÄSER & TASSEN", "GLASER & TASSEN": "GLÄSER & TASSEN", "DTF-TRANSFERS": "DTF-TRANSFERS",
+  HOODIES: "HOODIES", SWEATSHIRTS: "SWEATSHIRTS", TSHIRTS: "T-SHIRTS", T_SHIRTS: "T-SHIRTS", POLOS: "POLOS",
+  ACCESSOIRES: "ACCESSOIRES", ACCESSORIES: "ACCESSOIRES", GLAESER_TASSEN: "GLÄSER & TASSEN", DTF_TRANSFERS: "DTF-TRANSFERS",
 }
 const SHOPIFY_GENDER_MAP: Record<string, string> = { MAENNER: "MÄNNER", MANNER: "MÄNNER", FRAUEN: "FRAUEN", KINDER: "KINDER", UNISEX: "UNISEX" }
+const SHOPIFY_SUBCATEGORY_MAP: Record<string, string> = { KOPFBEDECKUNG: "KOPFBEDECKUNG", SHOPPER: "SHOPPER", SCHMUCK: "SCHMUCK", PINS: "PINS", TASSEN: "TASSEN", BIERGLAESER: "BIERGLÄSER", UNTERSETZER: "UNTERSETZER", FUER_KLEIDUNG_TEXTILIEN: "FÜR KLEIDUNG & TEXTILIEN" }
 const SHOPIFY_COLORS: Record<string, string> = { schwarz: "#161616", black: "#161616", weiß: "#f4f4f4", weiss: "#f4f4f4", white: "#f4f4f4", rot: "#cf3131", red: "#cf3131", grau: "#777", grey: "#777", gray: "#777", blau: "#3189d6", blue: "#3189d6", grün: "#36b95a", green: "#36b95a" }
 
 function shopifyCatalogProduct(product: any) {
@@ -2985,9 +3042,10 @@ function shopifyCatalogProduct(product: any) {
   const tag = (prefix: string) => tags.find((item: string) => item.toLowerCase().startsWith(prefix))?.slice(prefix.length)
   const variants = product.variants?.nodes || []
   const option = (name: string) => variants.flatMap((variant: any) => variant.selectedOptions || []).filter((item: any) => item.name.toLowerCase() === name).map((item: any) => item.value)
-  const categoryValue = (tag("category_") || product.productType || "T-SHIRTS").toUpperCase()
+  const normalizeTag = (value: string) => value.toUpperCase().replace(/Ä/g, "AE").replace(/Ö/g, "OE").replace(/Ü/g, "UE").replace(/ß/g, "SS").replace(/[\s&-]+/g, "_")
+  const categoryValue = normalizeTag(tag("category_") || product.productType || "T-SHIRTS")
   const category = SHOPIFY_CATEGORY_MAP[categoryValue] || "T-SHIRTS"
-  const genderValue = (tag("gender_") || "UNISEX").toUpperCase()
+  const genderValue = normalizeTag(tag("gender_") || "UNISEX")
   const gender = SHOPIFY_GENDER_MAP[genderValue] || "UNISEX"
   const selectedColors = Array.from(new Set(option("farbe").concat(option("color")))).map((item: string) => SHOPIFY_COLORS[item.toLowerCase()] || "#777")
   const selectedSizes = Array.from(new Set(option("größe").concat(option("groesse"), option("size"))))
@@ -2999,7 +3057,7 @@ function shopifyCatalogProduct(product: any) {
     image: product.featuredMedia?.preview?.image?.url || imgProduct1,
     name: product.title,
     category,
-    sub: tag("sub_")?.toUpperCase(),
+    sub: tag("sub_") ? SHOPIFY_SUBCATEGORY_MAP[normalizeTag(tag("sub_")!)] : undefined,
     gender,
     colors: selectedColors.length ? selectedColors : ["#161616"],
     price: formatPrice(firstVariant?.price),
