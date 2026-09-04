@@ -8,6 +8,7 @@ async function api<T>(path: string, body: unknown): Promise<T> {
 }
 
 export const shopCart = {
+  get: (cartId: string) => api<{ cart: unknown }>("/api/cart", { action: "get", cartId }),
   create: (lines: CartLine[]) => api<{ cart: unknown }>("/api/cart", { action: "create", lines }),
   add: (cartId: string, lines: CartLine[]) => api<{ cart: unknown }>("/api/cart", { action: "add", cartId, lines }),
   update: (cartId: string, lines: { id: string; quantity: number }[]) => api<{ cart: unknown }>("/api/cart", { action: "update", cartId, lines }),

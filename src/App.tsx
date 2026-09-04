@@ -342,6 +342,8 @@ function CatalogIcon({
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [catalogOpen, setCatalogOpen] = useState(false)
+  const { cart } = useShopifyCart()
+  const cartQuantity = cart?.totalQuantity || 0
   const catalogTarget = (section: string, child?: string) => {
     const params = new URLSearchParams()
     const gender =
@@ -644,7 +646,8 @@ function Header() {
               </span>
             </button>
             {/* WARENKORB */}
-            <button
+            <a
+              href="/warenkorb"
               className="btn-glass flex items-center gap-2 whitespace-nowrap"
               style={{ padding: "9px 14px" }}
             >
@@ -664,7 +667,8 @@ function Header() {
               >
                 WARENKORB
               </span>
-            </button>
+              {cartQuantity > 0 && <span className="cart-count">{cartQuantity}</span>}
+            </a>
           </div>
         </div>
 
@@ -782,12 +786,14 @@ function Header() {
             <button aria-label="Login" className="btn-glass mobile-icon-btn">
               <img src={imgAccount} alt="" className="mobile-icon-glyph" />
             </button>
-            <button
+            <a
+              href="/warenkorb"
               aria-label="Warenkorb"
               className="btn-glass mobile-icon-btn"
             >
               <img src={imgCart} alt="" className="mobile-icon-glyph" />
-            </button>
+              {cartQuantity > 0 && <span className="cart-count">{cartQuantity}</span>}
+            </a>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="btn-glass mobile-menu-btn flex flex-col items-center justify-center gap-[5px] cursor-pointer"
@@ -3021,6 +3027,26 @@ function useShopifyCatalog(handle?: string) {
   return { products, error }
 }
 
+function useShopifyCart() {
+  const [cart, setCart] = useState<any | null>(null)
+  const refreshCart = () => {
+    const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
+    if (!cartId) return setCart(null)
+    shopCart.get(cartId)
+      .then((response) => setCart((response as { cart: any }).cart))
+      .catch(() => {
+        window.localStorage.removeItem("pottlerkinder-cart-id")
+        setCart(null)
+      })
+  }
+  useEffect(() => {
+    refreshCart()
+    window.addEventListener("pottlerkinder-cart-updated", refreshCart)
+    return () => window.removeEventListener("pottlerkinder-cart-updated", refreshCart)
+  }, [])
+  return { cart, refreshCart }
+}
+
 const CATALOG_CATEGORIES = [
   "ALLE",
   "HOODIES",
@@ -3487,6 +3513,7 @@ function ProductPage({
         : await shopCart.create([{ merchandiseId: variant.id, quantity: 1 }])
       const cart = (response as { cart: { id: string } }).cart
       window.localStorage.setItem("pottlerkinder-cart-id", cart.id)
+      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
       setCartStatus("success")
     } catch {
       window.localStorage.removeItem("pottlerkinder-cart-id")
@@ -3590,10 +3617,53 @@ function HomePage() {
   )
 }
 
+function CartPage() {
+  const { cart, refreshCart } = useShopifyCart()
+  const [updating, setUpdating] = useState<string | null>(null)
+  const lines = cart?.lines?.edges || []
+  const removeLine = async (lineId: string) => {
+    if (!cart?.id) return
+    setUpdating(lineId)
+    try {
+      await shopCart.remove(cart.id, [lineId])
+      await refreshCart()
+      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+    } finally {
+      setUpdating(null)
+    }
+  }
+  return (
+    <PageShell inner>
+      <main className="flex-1">
+        <PageHero compact image={imgHeaderCoal} eyebrow="POTTLERKINDER SHOP" title="WARENKORB" lead="Deine Auswahl aus dem Pott." />
+        <section className="cart-page max-w-[1120px] mx-auto" style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}>
+          {!cart && <p className="catalog-no-results">WARENKORB WIRD GELADEN.</p>}
+          {cart && lines.length === 0 && <p className="catalog-no-results">DEIN WARENKORB IST LEER.</p>}
+          {lines.length > 0 && <div className="cart-layout">
+            <div className="cart-lines">
+              {lines.map(({ node }: any) => {
+                const variant = node.merchandise
+                const image = variant.product.featuredImage
+                return <article key={node.id} className="cart-line">
+                  {image?.url && <img src={image.url} alt={image.altText || variant.product.title} />}
+                  <div><p>{variant.product.title}</p><span>{variant.title}</span><small>{node.quantity} × {new Intl.NumberFormat("de-DE", { style: "currency", currency: variant.price.currencyCode }).format(Number(variant.price.amount))}</small></div>
+                  <button type="button" onClick={() => removeLine(node.id)} disabled={updating === node.id}>ENTFERNEN</button>
+                </article>
+              })}
+            </div>
+            <aside className="cart-summary"><p>ZWISCHENSUMME</p><strong>{new Intl.NumberFormat("de-DE", { style: "currency", currency: cart.cost.totalAmount.currencyCode }).format(Number(cart.cost.totalAmount.amount))}</strong><a className="btn-red" href={cart.checkoutUrl}>SICHER ZUR KASSE →</a><span>Bezahlung und Versand erfolgen sicher über Shopify.</span></aside>
+          </div>}
+        </section>
+      </main>
+    </PageShell>
+  )
+}
+
 export default function App() {
   const pages: Record<string, React.ReactNode> = {
     "/katalog": <CatalogPage />,
     "/sale": <SalePage />,
+    "/warenkorb": <CartPage />,
     "/unternehmen": <CompanyPage />,
     "/ueber-uns": <AboutPage />,
     "/geschichte": <HistoryPage />,
