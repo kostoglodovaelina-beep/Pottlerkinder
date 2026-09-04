@@ -1461,7 +1461,7 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
       {/* Image */}
       <div
         className="relative overflow-hidden"
-        style={{ aspectRatio: "4 / 5" }}
+        style={{ height: "clamp(220px, 18vw, 310px)" }}
       >
         <img
           src={product.img}
@@ -3596,11 +3596,13 @@ function ProductPage({
             ← ZURÜCK ZUM KATALOG
           </a>
           <div className="product-detail-grid">
-            <div className="product-detail-image">
-              <img src={productImages[selectedImage]?.url || product.image} alt={productImages[selectedImage]?.altText || product.name} />
+            <div className="product-detail-media">
               {productImages.length > 1 && <div className="product-gallery" aria-label="Produktbilder">
                 {productImages.map((image: any, index: number) => <button type="button" key={image.url} onClick={() => setSelectedImage(index)} className={selectedImage === index ? "is-active" : ""} aria-label={`Bild ${index + 1} anzeigen`}><img src={image.url} alt="" /></button>)}
               </div>}
+              <div className="product-detail-image">
+                <img src={productImages[selectedImage]?.url || product.image} alt={productImages[selectedImage]?.altText || product.name} />
+              </div>
             </div>
             <div className="product-detail-copy">
               <p>
