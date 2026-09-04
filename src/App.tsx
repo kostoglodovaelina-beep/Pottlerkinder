@@ -3469,6 +3469,7 @@ function ProductPage({
 }) {
   const [size, setSize] = useState(product.sizes[0])
   const [cartStatus, setCartStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const [cartError, setCartError] = useState("")
   const addToCart = async () => {
     const variant = product.variants?.find((item: any) =>
       item.selectedOptions?.some((option: any) =>
@@ -3480,6 +3481,7 @@ function ProductPage({
       return
     }
     setCartStatus("loading")
+    setCartError("")
     try {
       const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
       const response = cartId
@@ -3488,8 +3490,9 @@ function ProductPage({
       const cart = (response as { cart: { id: string } }).cart
       window.localStorage.setItem("pottlerkinder-cart-id", cart.id)
       setCartStatus("success")
-    } catch {
+    } catch (error) {
       window.localStorage.removeItem("pottlerkinder-cart-id")
+      setCartError(error instanceof Error ? error.message : "Unbekannter Shopify-Fehler")
       setCartStatus("error")
     }
   }
@@ -3545,7 +3548,7 @@ function ProductPage({
                 {cartStatus === "loading" ? "WIRD HINZUGEFÜGT" : "IN DEN WARENKORB"} <span>→</span>
               </button>
               {cartStatus === "success" && <p className="product-cart-feedback">IM WARENKORB GESPEICHERT.</p>}
-              {cartStatus === "error" && <p className="product-cart-feedback is-error">WARENKORB KONNTE NICHT AKTUALISIERT WERDEN.</p>}
+              {cartStatus === "error" && <p className="product-cart-feedback is-error">WARENKORB KONNTE NICHT AKTUALISIERT WERDEN: {cartError}</p>}
             </div>
           </div>
           <section id="details" className="product-more-details">
