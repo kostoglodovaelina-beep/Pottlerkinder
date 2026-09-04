@@ -41,8 +41,16 @@ async function graphQL(url, header, token, query, variables) {
     headers: { "Content-Type": "application/json", ...(token ? { [header]: token } : {}) },
     body: JSON.stringify({ query, variables }),
   })
-  const result = await response.json()
-  if (!response.ok || result.errors) throw new Error(result.errors?.[0]?.message || "Shopify request failed")
+  const raw = await response.text()
+  let result
+  try {
+    result = JSON.parse(raw)
+  } catch {
+    throw new Error(`Shopify HTTP ${response.status}: ${raw.slice(0, 180) || "Ungültige Antwort"}`)
+  }
+  if (!response.ok || result.errors) {
+    throw new Error(result.errors?.[0]?.message || `Shopify HTTP ${response.status}: ${result.error || result.message || "Request failed"}`)
+  }
   return result.data
 }
 
