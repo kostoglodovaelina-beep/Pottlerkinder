@@ -1468,7 +1468,7 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
           alt={product.name}
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-contain"
         />
         <div
           className="absolute left-0 right-0 bottom-0"
