@@ -3050,11 +3050,16 @@ function shopifyCatalogProduct(product: any) {
   const selectedColors = Array.from(new Set(option("farbe").concat(option("color")))).map((item: string) => SHOPIFY_COLORS[item.toLowerCase()] || "#777")
   const selectedSizes = Array.from(new Set(option("größe").concat(option("groesse"), option("size"))))
   const firstVariant = variants[0]
+  const images = (product.media?.nodes || [])
+    .map((media: any) => media.preview?.image)
+    .filter(Boolean)
+    .slice(0, 5)
   const formatPrice = (value: string | null | undefined) => value ? new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(Number(value)) : "–"
   return {
     id: product.id,
     slug: product.handle,
     image: product.featuredMedia?.preview?.image?.url || imgProduct1,
+    images: images.length ? images : [{ url: product.featuredMedia?.preview?.image?.url || imgProduct1, altText: product.title }],
     name: product.title,
     category,
     sub: tag("sub_") ? SHOPIFY_SUBCATEGORY_MAP[normalizeTag(tag("sub_")!)] : undefined,
@@ -3552,6 +3557,8 @@ function ProductPage({
   product: any
 }) {
   const [size, setSize] = useState(product.sizes[0])
+  const [selectedImage, setSelectedImage] = useState(0)
+  const productImages = product.images || [{ url: product.image, altText: product.name }]
   const [cartStatus, setCartStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
   const addToCart = async () => {
     const variant = product.variants?.find((item: any) =>
@@ -3590,7 +3597,10 @@ function ProductPage({
           </a>
           <div className="product-detail-grid">
             <div className="product-detail-image">
-              <img src={product.image} alt={product.name} />
+              <img src={productImages[selectedImage]?.url || product.image} alt={productImages[selectedImage]?.altText || product.name} />
+              {productImages.length > 1 && <div className="product-gallery" aria-label="Produktbilder">
+                {productImages.map((image: any, index: number) => <button type="button" key={image.url} onClick={() => setSelectedImage(index)} className={selectedImage === index ? "is-active" : ""} aria-label={`Bild ${index + 1} anzeigen`}><img src={image.url} alt="" /></button>)}
+              </div>}
             </div>
             <div className="product-detail-copy">
               <p>

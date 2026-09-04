@@ -3,6 +3,7 @@ import { admin, sendError } from "./_shopify.js"
 const productFields = `
   id title handle description productType tags
   featuredMedia { preview { image { url altText } } }
+  media(first:5) { nodes { preview { image { url altText } } } }
   variants(first:100) {
     nodes {
       id title price compareAtPrice availableForSale
