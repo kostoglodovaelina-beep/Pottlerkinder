@@ -40,6 +40,12 @@ async function discovery() {
   return response.json()
 }
 
+async function customerApiDiscovery() {
+  const response = await fetch(`https://${shop()}/.well-known/customer-account-api`)
+  if (!response.ok) throw new Error("Customer Account API configuration could not be loaded")
+  return response.json()
+}
+
 function base64url(value) {
   return Buffer.from(value).toString("base64url")
 }
@@ -87,25 +93,41 @@ const customerQuery = `query CustomerAccount {
     lastName
     emailAddress { emailAddress }
     phoneNumber { phoneNumber }
-    defaultAddress { address1 address2 city zip country }
+    defaultAddress { id address1 address2 city zip country }
     orders(first: 12, reverse: true) {
       nodes { id name processedAt financialStatus fulfillmentStatus totalPrice { amount currencyCode } }
     }
   }
 }`
 
-async function getCustomer(req) {
+async function customerApiRequest(req, query, variables = {}) {
   const session = readSession(req)
-  if (!session?.accessToken) return null
-  const openid = await discovery()
-  const response = await fetch(openid.graphql_api, {
+  if (!session?.accessToken) throw new Error("Nicht angemeldet")
+  const customerApi = await customerApiDiscovery()
+  const response = await fetch(customerApi.graphql_api, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.accessToken}` },
-    body: JSON.stringify({ query: customerQuery }),
+    body: JSON.stringify({ query, variables }),
   })
   const result = await response.json()
   if (!response.ok || result.errors?.length) throw new Error(result.errors?.[0]?.message || "Customer Account API request failed")
-  return result.data.customer
+  return result.data
+}
+
+async function getCustomer(req) {
+  if (!readSession(req)?.accessToken) return null
+  const result = await customerApiRequest(req, customerQuery)
+  return result.customer
+}
+
+async function saveRegistration(req) {
+  const raw = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {}
+  const details = { firstName: String(raw.firstName || "").trim(), lastName: String(raw.lastName || "").trim(), address1: String(raw.address1 || "").trim(), address2: String(raw.address2 || "").trim(), zip: String(raw.zip || "").trim(), city: String(raw.city || "").trim(), phoneNumber: String(raw.phoneNumber || "").trim() }
+  if (!details.firstName || !details.lastName || !details.address1 || !details.zip || !details.city) throw new Error("Bitte fülle alle Pflichtfelder aus.")
+  const update = await customerApiRequest(req, "mutation UpdateCustomer($input: CustomerUpdateInput!) { customerUpdate(input: $input) { userErrors { message } } }", { input: { firstName: details.firstName, lastName: details.lastName } })
+  if (update.customerUpdate?.userErrors?.length) throw new Error(update.customerUpdate.userErrors[0].message)
+  const address = await customerApiRequest(req, "mutation CreateAddress($address: CustomerAddressInput!, $defaultAddress: Boolean) { customerAddressCreate(address: $address, defaultAddress: $defaultAddress) { userErrors { message } } }", { address: { firstName: details.firstName, lastName: details.lastName, address1: details.address1, address2: details.address2 || undefined, zip: details.zip, city: details.city, territoryCode: "DE", phoneNumber: details.phoneNumber || undefined }, defaultAddress: true })
+  if (address.customerAddressCreate?.userErrors?.length) throw new Error(address.customerAddressCreate.userErrors[0].message)
 }
 
 export default async function handler(req, res) {
@@ -141,6 +163,10 @@ export default async function handler(req, res) {
       if (!customer) return res.status(401).json({ error: "Nicht angemeldet" })
       res.setHeader("Cache-Control", "private, no-store, max-age=0")
       return res.status(200).json({ customer })
+    }
+    if (action === "complete-registration" && req.method === "POST") {
+      await saveRegistration(req)
+      return res.status(200).json({ ok: true })
     }
     return res.status(400).json({ error: "Unknown customer account action" })
   } catch (error) {
