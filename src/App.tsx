@@ -3791,7 +3791,7 @@ function AccountCallbackPage() {
     const code = params.get("code")
     const state = params.get("state")
     if (!code) { setMessage("DIE ANMELDUNG WURDE ABGEBROCHEN."); return }
-    fetch(`/api/customer-account?action=callback&code=${encodeURIComponent(code)}&state=${encodeURIComponent(state || "")}`)
+    fetch(`/api/customer-account?action=callback&code=${encodeURIComponent(code)}&state=${encodeURIComponent(state || "")}`, { credentials: "same-origin" })
       .then(async (response) => {
         const data = await response.json()
         if (!response.ok) throw new Error(data.error || "Anmeldung fehlgeschlagen")
