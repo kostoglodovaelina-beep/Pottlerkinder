@@ -106,7 +106,8 @@ async function customerApiRequest(req, query, variables = {}) {
   const customerApi = await customerApiDiscovery()
   const response = await fetch(customerApi.graphql_api, {
     method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.accessToken}` },
+    // Customer Account API expects the raw access token, not the OAuth Bearer prefix.
+    headers: { "Content-Type": "application/json", Authorization: session.accessToken },
     body: JSON.stringify({ query, variables }),
   })
   const result = await response.json()
