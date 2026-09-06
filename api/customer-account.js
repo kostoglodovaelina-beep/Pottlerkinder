@@ -106,9 +106,8 @@ const customerQuery = `query CustomerAccount {
     firstName
     lastName
     emailAddress { emailAddress }
-    phoneNumber { phoneNumber }
-    defaultAddress { id address1 address2 city zip country phoneNumber }
-    addresses(first: 3) { nodes { id firstName lastName address1 address2 city zip country territoryCode phoneNumber } }
+    defaultAddress { id address1 address2 city zip country }
+    addresses(first: 3) { nodes { id firstName lastName address1 address2 city zip country territoryCode } }
     orders(first: 12, reverse: true) {
       nodes { id name processedAt financialStatus fulfillmentStatus totalPrice { amount currencyCode } }
     }
@@ -137,7 +136,7 @@ async function getCustomer(req) {
 }
 
 async function saveRegistration(req, raw) {
-  const details = { firstName: String(raw.firstName || "").trim(), lastName: String(raw.lastName || "").trim(), address1: String(raw.address1 || "").trim(), address2: String(raw.address2 || "").trim(), zip: String(raw.zip || "").trim(), city: String(raw.city || "").trim(), phoneNumber: String(raw.phoneNumber || "").trim() }
+  const details = { firstName: String(raw.firstName || "").trim(), lastName: String(raw.lastName || "").trim(), address1: String(raw.address1 || "").trim(), address2: String(raw.address2 || "").trim(), zip: String(raw.zip || "").trim(), city: String(raw.city || "").trim() }
   if (!details.firstName || !details.lastName || !details.address1 || !details.zip || !details.city) throw new Error("Bitte fülle alle Pflichtfelder aus.")
   const update = await customerApiRequest(req, "mutation UpdateCustomer($input: CustomerUpdateInput!) { customerUpdate(input: $input) { userErrors { message } } }", { input: { firstName: details.firstName, lastName: details.lastName } })
   if (update.customerUpdate?.userErrors?.length) throw new Error(update.customerUpdate.userErrors[0].message)
@@ -148,27 +147,13 @@ async function saveRegistration(req, raw) {
     address.address1 === details.address1 && address.zip === details.zip && address.city === details.city,
   )
   if (addressAlreadySaved) return
-  const address = await customerApiRequest(req, "mutation CreateAddress($address: CustomerAddressInput!, $defaultAddress: Boolean) { customerAddressCreate(address: $address, defaultAddress: $defaultAddress) { userErrors { message } } }", { address: { firstName: details.firstName, lastName: details.lastName, address1: details.address1, address2: details.address2 || undefined, zip: details.zip, city: details.city, territoryCode: "DE", phoneNumber: normalizePhoneNumber(details.phoneNumber) }, defaultAddress: true })
+  const address = await customerApiRequest(req, "mutation CreateAddress($address: CustomerAddressInput!, $defaultAddress: Boolean) { customerAddressCreate(address: $address, defaultAddress: $defaultAddress) { userErrors { message } } }", { address: { firstName: details.firstName, lastName: details.lastName, address1: details.address1, address2: details.address2 || undefined, zip: details.zip, city: details.city, territoryCode: "DE" }, defaultAddress: true })
   if (address.customerAddressCreate?.userErrors?.length) throw new Error(address.customerAddressCreate.userErrors[0].message)
 }
 
 function body(req) { return typeof req.body === "string" ? JSON.parse(req.body) : req.body || {} }
-function normalizePhoneNumber(value) {
-  const raw = String(value || "").trim()
-  if (!raw) return undefined
-  const compact = raw.replace(/[\s().-]/g, "")
-  const withCountryCode = compact.startsWith("00")
-    ? `+${compact.slice(2)}`
-    : compact.startsWith("0")
-      ? `+49${compact.slice(1)}`
-      : compact
-  // Shopify accepts addresses only with E.164 phone numbers. Saving the
-  // address is more important than rejecting all fields because a visitor
-  // typed a usual German local number such as 0176 12345678.
-  return /^\+\d{7,15}$/.test(withCountryCode) ? withCountryCode : undefined
-}
 function addressInput(value) {
-  return { firstName: String(value.firstName || "").trim() || undefined, lastName: String(value.lastName || "").trim() || undefined, address1: String(value.address1 || "").trim(), address2: String(value.address2 || "").trim() || undefined, zip: String(value.zip || "").trim(), city: String(value.city || "").trim(), territoryCode: "DE", phoneNumber: normalizePhoneNumber(value.phoneNumber) }
+  return { firstName: String(value.firstName || "").trim() || undefined, lastName: String(value.lastName || "").trim() || undefined, address1: String(value.address1 || "").trim(), address2: String(value.address2 || "").trim() || undefined, zip: String(value.zip || "").trim(), city: String(value.city || "").trim(), territoryCode: "DE" }
 }
 async function ensureMutation(data, key) {
   const errors = data[key]?.userErrors
@@ -237,7 +222,7 @@ export default async function handler(req, res) {
       const registration = {
         firstName: String(input.firstName || "").trim(), lastName: String(input.lastName || "").trim(),
         address1: String(input.address1 || "").trim(), address2: String(input.address2 || "").trim(),
-        zip: String(input.zip || "").trim(), city: String(input.city || "").trim(), phoneNumber: String(input.phoneNumber || "").trim(),
+        zip: String(input.zip || "").trim(), city: String(input.city || "").trim(),
       }
       if (!registration.firstName || !registration.lastName || !registration.address1 || !registration.zip || !registration.city) return res.status(422).json({ error: "Bitte fülle alle Pflichtfelder aus." })
       setCookie(res, "pottler_customer_registration", base64url(JSON.stringify(registration)), 900)
