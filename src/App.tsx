@@ -661,7 +661,7 @@ function Header() {
           <div className="hidden" />
 
           {/* RIGHT NAV */}
-          <div className="flex items-center gap-2 flex-shrink-0 relative z-10">
+          <div className="flex items-center gap-2 flex-shrink-0 relative z-[30]">
             {/* EIGENER DESIGN */}
             <button
               className="btn-red flex items-center gap-2 whitespace-nowrap rounded-[5px]"
@@ -688,7 +688,7 @@ function Header() {
               </span>
             </button>
             {/* LOGIN */}
-            <div className="relative">
+            <div className="relative z-[30]">
             <button type="button" data-account-trigger onClick={() => setAccountOpen((open) => !open)} aria-expanded={accountOpen} className="btn-glass flex items-center gap-2 whitespace-nowrap" style={{ padding: "9px 14px" }}>
               <img
                 src={imgAccount}
@@ -744,6 +744,7 @@ function Header() {
               left: "max(16px, calc((100% - 1440px) / 2 + clamp(16px, 12vw, 210px)))",
             }}
           >
+            <p className="catalog-menu-kicker">KOLLEKTIONEN</p>
             {[
               {
                 label: "FRAUEN",
@@ -1001,7 +1002,8 @@ function AccountMenu({ customer, onClose, onSignOut }: { customer: CustomerAccou
   }
   const name = customerName(customer)
   return <div className="account-menu" role="menu">
-    <div className="account-menu-head"><span>{customer ? "GLÜCK AUF" : "MEIN POTTLERKINDER"}</span>{customer ? <strong>{name || "MEIN KONTO"}</strong> : <button type="button" className="account-menu-login btn-red" onClick={() => go("personal")}>ANMELDEN</button>}</div>
+    <div className="account-menu-head"><span>GLÜCK AUF</span>{customer && <strong>{name || "MEIN KONTO"}</strong>}</div>
+    {!customer && <button type="button" className="account-menu-login btn-red" onClick={() => go("personal")}>ANMELDEN</button>}
     {ACCOUNT_SECTIONS.map((item) => <button type="button" key={item.id} onClick={() => go(item.id)} role="menuitem"><span>{item.label}</span><b aria-hidden="true">›</b></button>)}
     {customer && <div className="account-menu-footer"><button type="button" className="btn-glass account-menu-logout" onClick={async () => { await onSignOut(); onClose() }}>ABMELDEN</button></div>}
   </div>
