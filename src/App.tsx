@@ -3816,6 +3816,13 @@ function AccountPage() {
   const { customer, loading, signOut } = useCustomerAccount()
   const [registration, setRegistration] = useState({ firstName: "", lastName: "", email: "", address1: "", address2: "", zip: "", city: "", phoneNumber: "", privacy: false })
   const [registrationError, setRegistrationError] = useState("")
+  useEffect(() => {
+    const pending = window.sessionStorage.getItem("pottler-registration-details")
+    if (!customer || !pending) return
+    fetch("/api/customer-account?action=complete-registration", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: pending })
+      .then((response) => { if (response.ok) window.sessionStorage.removeItem("pottler-registration-details") })
+      .catch(() => undefined)
+  }, [customer])
   const selectSection = (next: string) => {
     setSection(next)
     window.history.replaceState({}, "", `/account?section=${next}`)

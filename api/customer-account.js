@@ -12,7 +12,9 @@ const clientId = () => {
   return value
 }
 
-const callbackUrl = () => process.env.SHOPIFY_CUSTOMER_ACCOUNT_CALLBACK_URL || "https://pottlerkinder.vercel.app/account/callback"
+// Shopify returns directly to this server endpoint. Exchanging the code on the
+// server keeps the PKCE cookie in the same navigation and avoids browser races.
+const callbackUrl = () => process.env.SHOPIFY_CUSTOMER_ACCOUNT_CALLBACK_URL || "https://pottlerkinder.vercel.app/api/customer-account?action=callback"
 const cookieSecure = process.env.VERCEL ? "; Secure" : ""
 
 function parseCookies(req) {
@@ -23,12 +25,18 @@ function parseCookies(req) {
   }, {})
 }
 
+function appendCookie(res, value) {
+  const current = res.getHeader("Set-Cookie")
+  const cookies = Array.isArray(current) ? current : current ? [String(current)] : []
+  res.setHeader("Set-Cookie", [...cookies, value])
+}
+
 function setCookie(res, name, value, maxAge = 600) {
-  res.setHeader("Set-Cookie", `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${cookieSecure}`)
+  appendCookie(res, `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAge}${cookieSecure}`)
 }
 
 function clearCookie(res, name) {
-  res.setHeader("Set-Cookie", `${name}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${cookieSecure}`)
+  appendCookie(res, `${name}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${cookieSecure}`)
 }
 
 async function discovery() {
@@ -153,7 +161,8 @@ export default async function handler(req, res) {
     if (action === "callback") {
       if (!req.query?.code) return res.status(400).json({ error: "Der Anmeldecode fehlt." })
       await exchangeCode(req, res, req.query.code, req.query.state)
-      return res.status(200).json({ ok: true })
+      res.writeHead(302, { Location: "/account?section=overview" })
+      return res.end()
     }
     if (action === "logout") {
       clearCookie(res, "pottler_customer_session")
