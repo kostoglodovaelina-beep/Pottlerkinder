@@ -13,10 +13,5 @@ export const shopCart = {
   add: (cartId: string, lines: CartLine[]) => api<{ cart: unknown }>("/api/cart", { action: "add", cartId, lines }),
   update: (cartId: string, lines: { id: string; quantity: number }[]) => api<{ cart: unknown }>("/api/cart", { action: "update", cartId, lines }),
   remove: (cartId: string, lines: string[]) => api<{ cart: unknown }>("/api/cart", { action: "remove", cartId, lines }),
-}
-
-export const shopAccount = {
-  register: (input: { firstName: string; lastName: string; email: string; password: string }) => api("/api/account", { action: "register", input }),
-  login: (input: { email: string; password: string }) => api("/api/account", { action: "login", input }),
-  recover: (email: string) => api("/api/account", { action: "recover", input: { email } }),
+  detach: (cartId: string) => api<{ cart: unknown }>("/api/cart", { action: "detach", cartId }),
 }

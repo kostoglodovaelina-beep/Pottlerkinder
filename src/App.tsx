@@ -346,13 +346,21 @@ const ACCOUNT_SECTIONS = [
   { id: "orders", label: "BESTELLUNGEN" },
 ]
 
+function customerName(customer: CustomerAccount | null) {
+  // Shopify may temporarily use the e-mail as a display/first name. Keep it
+  // out of the prominent profile label until real personal data is available.
+  return [customer?.firstName, customer?.lastName]
+    .filter((value) => value && !String(value).includes("@"))
+    .join(" ")
+}
+
 function useCustomerAccount() {
   const [customer, setCustomer] = useState<CustomerAccount | null>(null)
   const [loading, setLoading] = useState(true)
   const refresh = async () => {
     setLoading(true)
     try {
-      const response = await fetch("/api/customer-account?action=profile", { credentials: "same-origin" })
+      const response = await fetch("/api/customer-account?action=profile", { credentials: "same-origin", cache: "no-store" })
       if (response.status === 401) { setCustomer(null); return null }
       const data = await response.json()
       if (!response.ok) throw new Error(data.error)
@@ -361,9 +369,20 @@ function useCustomerAccount() {
     } catch { setCustomer(null); return null } finally { setLoading(false) }
   }
   useEffect(() => { refresh() }, [])
+  useEffect(() => {
+    const clearLocalSession = () => { setCustomer(null); setLoading(false) }
+    window.addEventListener("pottler-account-logout", clearLocalSession)
+    return () => window.removeEventListener("pottler-account-logout", clearLocalSession)
+  }, [])
   const signOut = async () => {
-    await fetch("/api/customer-account?action=logout", { credentials: "same-origin" })
+    const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
+    if (cartId) await shopCart.detach(cartId).catch(() => undefined)
+    await fetch("/api/customer-account?action=logout", { method: "POST", credentials: "same-origin" })
     setCustomer(null)
+    window.sessionStorage.removeItem("pottler-registration-details")
+    window.sessionStorage.removeItem("pottler-registration-warning")
+    window.sessionStorage.removeItem("pottler-account-section")
+    window.dispatchEvent(new Event("pottler-account-logout"))
   }
   return { customer, loading, refresh, signOut }
 }
@@ -376,6 +395,20 @@ function Header() {
   const { cart, refreshCart } = useShopifyCart()
   const { customer: accountCustomer, loading: accountLoading } = useCustomerAccount()
   const cartQuantity = cart?.totalQuantity || 0
+  useEffect(() => {
+    if (!accountOpen) return
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      const target = event.target as HTMLElement
+      if (!target.closest(".account-menu") && !target.closest("[data-account-trigger]")) setAccountOpen(false)
+    }
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setAccountOpen(false) }
+    document.addEventListener("pointerdown", closeOnOutsideClick)
+    document.addEventListener("keydown", closeOnEscape)
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsideClick)
+      document.removeEventListener("keydown", closeOnEscape)
+    }
+  }, [accountOpen])
   const catalogTarget = (section: string, child?: string) => {
     const params = new URLSearchParams()
     const gender =
@@ -657,7 +690,7 @@ function Header() {
             </button>
             {/* LOGIN */}
             <div className="relative">
-            <button type="button" onClick={() => setAccountOpen((open) => !open)} aria-expanded={accountOpen} className="btn-glass flex items-center gap-2 whitespace-nowrap" style={{ padding: "9px 14px" }}>
+            <button type="button" data-account-trigger onClick={() => setAccountOpen((open) => !open)} aria-expanded={accountOpen} className="btn-glass flex items-center gap-2 whitespace-nowrap" style={{ padding: "9px 14px" }}>
               <img
                 src={imgAccount}
                 alt=""
@@ -816,7 +849,7 @@ function Header() {
             />
           </a>
           <div className="mobile-actions flex items-center gap-3">
-            <div className="relative"><button type="button" onClick={() => setAccountOpen((open) => !open)} aria-label="Login" aria-expanded={accountOpen} className="btn-glass mobile-icon-btn">
+            <div className="relative"><button type="button" data-account-trigger onClick={() => setAccountOpen((open) => !open)} aria-label="Login" aria-expanded={accountOpen} className="btn-glass mobile-icon-btn">
               <img src={imgAccount} alt="" className="mobile-icon-glyph" />
             </button></div>
             <button
@@ -962,8 +995,9 @@ function AccountMenu({ customer, onClose }: { customer: CustomerAccount | null; 
     onClose()
     window.location.href = `/account?section=${section}`
   }
+  const name = customerName(customer)
   return <div className="account-menu" role="menu">
-    <div className="account-menu-head"><span>{customer ? "GLÜCK AUF" : "MEIN POTTLERKINDER"}</span>{customer ? <strong>{customer.firstName || customer.displayName}</strong> : <button type="button" className="account-menu-login btn-red" onClick={() => go("overview")}>ANMELDEN</button>}</div>
+    <div className="account-menu-head"><span>{customer ? "GLÜCK AUF" : "MEIN POTTLERKINDER"}</span>{customer ? <strong>{name || "MEIN KONTO"}</strong> : <button type="button" className="account-menu-login btn-red" onClick={() => go("overview")}>ANMELDEN</button>}</div>
     {ACCOUNT_SECTIONS.map((item) => <button type="button" key={item.id} onClick={() => go(item.id)} role="menuitem"><span>{item.label}</span></button>)}
   </div>
 }
@@ -3094,16 +3128,13 @@ function shopifyCatalogProduct(product: any) {
   const selectedColors = Array.from(new Set(option("farbe").concat(option("color")))).map((item: string) => SHOPIFY_COLORS[item.toLowerCase()] || "#777")
   const selectedSizes = Array.from(new Set(option("größe").concat(option("groesse"), option("size"))))
   const firstVariant = variants[0]
-  const images = (product.media?.nodes || [])
-    .map((media: any) => media.preview?.image)
-    .filter(Boolean)
-    .slice(0, 5)
+  const images = (product.images?.nodes || []).slice(0, 5)
   const formatPrice = (value: string | null | undefined) => value ? new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(Number(value)) : "–"
   return {
     id: product.id,
     slug: product.handle,
-    image: product.featuredMedia?.preview?.image?.url || imgProduct1,
-    images: images.length ? images : [{ url: product.featuredMedia?.preview?.image?.url || imgProduct1, altText: product.title }],
+    image: product.featuredImage?.url || imgProduct1,
+    images: images.length ? images : [{ url: product.featuredImage?.url || imgProduct1, altText: product.title }],
     name: product.title,
     category,
     sub: tag("sub_") ? SHOPIFY_SUBCATEGORY_MAP[normalizeTag(tag("sub_")!)] : undefined,
@@ -3136,22 +3167,33 @@ function useShopifyCatalog(handle?: string) {
 
 function useShopifyCart() {
   const [cart, setCart] = useState<any | null>(null)
+  const [loading, setLoading] = useState(true)
   const refreshCart = () => {
     const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
-    if (!cartId) return setCart(null)
+    if (!cartId) { setCart(null); setLoading(false); return }
+    setLoading(true)
     shopCart.get(cartId)
-      .then((response) => setCart((response as { cart: any }).cart))
+      .then((response) => {
+        const nextCart = (response as { cart: any }).cart
+        if (!nextCart) window.localStorage.removeItem("pottlerkinder-cart-id")
+        setCart(nextCart || null)
+      })
       .catch(() => {
         window.localStorage.removeItem("pottlerkinder-cart-id")
         setCart(null)
       })
+      .finally(() => setLoading(false))
   }
   useEffect(() => {
     refreshCart()
     window.addEventListener("pottlerkinder-cart-updated", refreshCart)
-    return () => window.removeEventListener("pottlerkinder-cart-updated", refreshCart)
+    window.addEventListener("pottler-account-logout", refreshCart)
+    return () => {
+      window.removeEventListener("pottlerkinder-cart-updated", refreshCart)
+      window.removeEventListener("pottler-account-logout", refreshCart)
+    }
   }, [])
-  return { cart, refreshCart }
+  return { cart, loading, refreshCart }
 }
 
 const CATALOG_CATEGORIES = [
@@ -3624,10 +3666,7 @@ function ProductPage({
       window.localStorage.setItem("pottlerkinder-cart-id", cart.id)
       window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
       setCartStatus("success")
-    } catch {
-      window.localStorage.removeItem("pottlerkinder-cart-id")
-      setCartStatus("error")
-    }
+    } catch { setCartStatus("error") }
   }
   return (
     <PageShell inner>
@@ -3732,7 +3771,7 @@ function HomePage() {
 }
 
 function CartPage() {
-  const { cart, refreshCart } = useShopifyCart()
+  const { cart, loading, refreshCart } = useShopifyCart()
   const [updating, setUpdating] = useState<string | null>(null)
   const lines = cart?.lines?.edges || []
   const removeLine = async (lineId: string) => {
@@ -3751,7 +3790,7 @@ function CartPage() {
       <main className="flex-1">
         <PageHero compact image={imgHeaderCoal} eyebrow="POTTLERKINDER SHOP" title="WARENKORB" lead="Deine Auswahl aus dem Pott." />
         <section className="cart-page max-w-[1120px] mx-auto" style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}>
-          {!cart && <p className="catalog-no-results">WARENKORB WIRD GELADEN.</p>}
+          {!cart && <p className="catalog-no-results">{loading ? "WARENKORB WIRD GELADEN." : "DEIN WARENKORB IST LEER."}</p>}
           {cart && lines.length === 0 && <p className="catalog-no-results">DEIN WARENKORB IST LEER.</p>}
           {lines.length > 0 && <div className="cart-layout">
             <div className="cart-lines">
@@ -3844,7 +3883,7 @@ function AccountPage() {
     window.sessionStorage.setItem("pottler-registration-details", JSON.stringify(registration))
     beginLogin()
   }
-  const accountName = [customer?.firstName, customer?.lastName].filter(Boolean).join(" ")
+  const accountName = customerName(customer)
   const name = customer?.firstName || "KUMPEL"
   const orders = customer?.orders?.nodes || []
   const address = customer?.defaultAddress
@@ -3861,7 +3900,7 @@ function AccountPage() {
   return <PageShell inner><main className="flex-1"><section className="account-page account-page-access max-w-[1440px] mx-auto" style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}>
     {loading && <p className="account-loading">KONTO WIRD GELADEN …</p>}
     {!loading && !customer && <div className="account-login-panel"><div className="account-login-intro"><p className="account-kicker">SICHERER ZUGANG</p><h2>DEIN KONTO.<br />DEIN REVIER.</h2><p>Bestehende Kunden melden sich schnell per Code an. Neue Kunden hinterlegen ihre Lieferdaten direkt vor dem ersten Zugang.</p></div><div className="account-access-grid account-access-grid-register"><article className="account-access-card"><div className="account-access-symbol">@</div><p className="account-kicker">ICH BIN BEREITS KUNDE</p><h3>MIT CODE<br />ANMELDEN</h3><p>Melde dich auf der geschützten Anmeldeseite an und bestätige den Code aus deinem Postfach.</p><button type="button" className="btn-red account-login-button" onClick={beginLogin}>ZUR ANMELDUNG</button></article><form className="account-registration-form" onSubmit={beginRegistration} noValidate><p className="account-kicker">ICH BIN NEUER KUNDE</p><h3>KONTO ERSTELLEN</h3><p>Deine Angaben werden nach der Bestätigung sicher in deinem Kundenkonto gespeichert.</p><div className="account-form-grid"><label className={isInvalid("firstName") ? "is-invalid" : ""}>VORNAME*<input value={registration.firstName} onChange={(e) => setRegistration({ ...registration, firstName: e.target.value })} aria-invalid={isInvalid("firstName")} />{isInvalid("firstName") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={isInvalid("lastName") ? "is-invalid" : ""}>NACHNAME*<input value={registration.lastName} onChange={(e) => setRegistration({ ...registration, lastName: e.target.value })} aria-invalid={isInvalid("lastName")} />{isInvalid("lastName") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={`account-form-wide ${isInvalid("email") ? "is-invalid" : ""}`}>E-MAIL-ADRESSE*<input type="email" value={registration.email} onChange={(e) => setRegistration({ ...registration, email: e.target.value })} aria-invalid={isInvalid("email")} />{isInvalid("email") && <small>! GÜLTIGE E-MAIL EINGEBEN</small>}</label><label className={`account-form-wide ${isInvalid("address1") ? "is-invalid" : ""}`}>STRASSE & HAUSNUMMER*<input value={registration.address1} onChange={(e) => setRegistration({ ...registration, address1: e.target.value })} aria-invalid={isInvalid("address1")} />{isInvalid("address1") && <small>! BITTE AUSFÜLLEN</small>}</label><label className="account-form-wide">ADRESSZUSATZ <input value={registration.address2} onChange={(e) => setRegistration({ ...registration, address2: e.target.value })} /></label><label className={isInvalid("zip") ? "is-invalid" : ""}>POSTLEITZAHL*<input value={registration.zip} onChange={(e) => setRegistration({ ...registration, zip: e.target.value })} aria-invalid={isInvalid("zip")} />{isInvalid("zip") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={isInvalid("city") ? "is-invalid" : ""}>ORT*<input value={registration.city} onChange={(e) => setRegistration({ ...registration, city: e.target.value })} aria-invalid={isInvalid("city")} />{isInvalid("city") && <small>! BITTE AUSFÜLLEN</small>}</label><label className="account-form-wide">TELEFON <input type="tel" value={registration.phoneNumber} onChange={(e) => setRegistration({ ...registration, phoneNumber: e.target.value })} /></label></div><label className={`account-privacy ${isInvalid("privacy") ? "is-invalid" : ""}`}><input type="checkbox" checked={registration.privacy} onChange={(e) => setRegistration({ ...registration, privacy: e.target.checked })} aria-invalid={isInvalid("privacy")} /> <span>Ich habe die Datenschutzerklärung gelesen und akzeptiere sie.</span>{isInvalid("privacy") && <small>! BITTE BESTÄTIGEN</small>}</label>{registrationError && <small className="account-form-error">{registrationError}</small>}<button className="btn-red account-login-button" type="submit">KONTO MIT E-MAIL ERSTELLEN</button></form></div><small className="account-login-note">Danach öffnen wir direkt {activeLabel.toLowerCase()}.</small></div>}
-            {!loading && customer && <div className="account-layout"><aside className="account-profile"><p className="account-kicker">MEIN POTTLERKINDER</p>{accountName && <h2>{accountName}</h2>}<p>{customer.emailAddress?.emailAddress}</p>{customer.phoneNumber?.phoneNumber && <p>{customer.phoneNumber.phoneNumber}</p>}<nav className="account-side-nav">{ACCOUNT_SECTIONS.map((item) => <button type="button" className={section === item.id ? "is-active" : ""} onClick={() => selectSection(item.id)} key={item.id}>{item.label}</button>)}</nav><button type="button" className="account-logout" onClick={signOut}>ABMELDEN</button></aside><div className="account-content">
+            {!loading && customer && <div className="account-layout"><aside className="account-profile"><p className="account-kicker">MEIN POTTLERKINDER</p>{accountName && <h2>{accountName}</h2>}<p>{customer.emailAddress?.emailAddress}</p>{customer.phoneNumber?.phoneNumber && <p>{customer.phoneNumber.phoneNumber}</p>}<nav className="account-side-nav">{ACCOUNT_SECTIONS.map((item) => <button type="button" className={section === item.id ? "is-active" : ""} onClick={() => selectSection(item.id)} key={item.id}>{item.label}</button>)}</nav><button type="button" className="btn-red account-logout" onClick={signOut}>ABMELDEN</button></aside><div className="account-content">
       {section === "overview" && <><div className="account-section-head"><div><p className="account-kicker">ÜBERSICHT</p><h2>DEIN REVIER</h2></div><span>{orders.length} {orders.length === 1 ? "BESTELLUNG" : "BESTELLUNGEN"}</span></div><div className="account-overview"><div><small>LETZTE BESTELLUNG</small><strong>{orders[0]?.name || "NOCH KEINE"}</strong></div><div><small>LIEFERADRESSE</small><strong>{address ? `${address.zip || ""} ${address.city || ""}` : "NOCH NICHT HINTERLEGT"}</strong></div></div><div className="account-empty"><strong>{orders.length ? "ALLES IM BLICK" : "NOCH KEINE BESTELLUNGEN"}</strong><p>{orders.length ? "Deine Bestellungen, Angaben und Lieferadresse findest du über das Menü links." : "Deine nächste Auswahl aus dem Pott wartet im Katalog."}</p>{!orders.length && <a href="/katalog" className="btn-red">ZUM KATALOG →</a>}</div></>}
       {section === "personal" && <PersonalDataForm customer={customer} onSave={saveAccount} message={accountMessage} />}
       {section === "addresses" && <AddressManager addresses={customer.addresses?.nodes || []} onSave={saveAccount} message={accountMessage} />}

@@ -175,6 +175,7 @@ async function manageCustomer(req, action) {
 }
 
 export default async function handler(req, res) {
+  res.setHeader("Cache-Control", "private, no-store, max-age=0")
   try {
     const action = req.query?.action
     if (action === "login") {
@@ -200,13 +201,13 @@ export default async function handler(req, res) {
       return res.end()
     }
     if (action === "logout") {
+      if (req.method !== "POST") return res.status(405).json({ error: "POST only" })
       clearCookie(res, "pottler_customer_session")
       return res.status(200).json({ ok: true })
     }
     if (action === "profile") {
       const customer = await getCustomer(req)
       if (!customer) return res.status(401).json({ error: "Nicht angemeldet" })
-      res.setHeader("Cache-Control", "private, no-store, max-age=0")
       return res.status(200).json({ customer })
     }
     if (action === "complete-registration" && req.method === "POST") {
@@ -219,8 +220,11 @@ export default async function handler(req, res) {
     }
     return res.status(400).json({ error: "Unknown customer account action" })
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Customer Account API request failed"
-    if (req.query?.action === "profile") clearCookie(res, "pottler_customer_session")
-    return res.status(500).json({ error: message })
+    console.error(error)
+    if (req.query?.action === "profile") {
+      clearCookie(res, "pottler_customer_session")
+      return res.status(401).json({ error: "Nicht angemeldet" })
+    }
+    return res.status(500).json({ error: "Die Anfrage konnte nicht verarbeitet werden. Bitte versuche es erneut." })
   }
 }

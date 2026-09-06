@@ -9,6 +9,7 @@ export default async function handler(req, res) {
       const data = await admin(`query{products(first:100,sortKey:UPDATED_AT,reverse:true){nodes{${productFields}}}}`)
       return res.status(200).json(data.products.nodes)
     }
+    if (req.method !== "POST") return res.status(405).json({ error: "POST only" })
     const { action, product, id } = req.body || {}
     const operations = {
       create: [`mutation($product:ProductCreateInput!){productCreate(product:$product){product{${productFields}} userErrors{field message}}}`, { product }],

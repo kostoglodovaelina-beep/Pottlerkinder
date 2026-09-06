@@ -9,7 +9,7 @@ function requireEnv(name) {
 
 export async function storefront(query, variables = {}) {
   const shop = requireEnv("SHOPIFY_STORE_DOMAIN")
-  const token = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN
+  const token = requireEnv("SHOPIFY_STOREFRONT_ACCESS_TOKEN")
   return graphQL(`https://${shop}/api/${apiVersion}/graphql.json`, "Shopify-Storefront-Private-Token", token, query, variables)
 }
 
@@ -55,7 +55,10 @@ async function graphQL(url, header, token, query, variables) {
 }
 
 export function sendError(res, error) {
-  res.status(500).json({ error: error instanceof Error ? error.message : "Server error" })
+  // Detailed provider responses belong in protected Vercel logs, never in a
+  // browser where they could disclose configuration or internal API details.
+  console.error(error)
+  res.status(500).json({ error: "Der Dienst ist momentan nicht verfügbar. Bitte versuche es erneut." })
 }
 
 export function requireAdmin(req, res) {
