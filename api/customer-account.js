@@ -147,6 +147,7 @@ export default async function handler(req, res) {
       url.searchParams.set("state", state)
       url.searchParams.set("code_challenge", sha256(verifier))
       url.searchParams.set("code_challenge_method", "S256")
+      url.searchParams.set("prompt", "login")
       res.writeHead(302, { Location: url.toString() })
       return res.end()
     }
