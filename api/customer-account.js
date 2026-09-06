@@ -148,13 +148,27 @@ async function saveRegistration(req, raw) {
     address.address1 === details.address1 && address.zip === details.zip && address.city === details.city,
   )
   if (addressAlreadySaved) return
-  const address = await customerApiRequest(req, "mutation CreateAddress($address: CustomerAddressInput!, $defaultAddress: Boolean) { customerAddressCreate(address: $address, defaultAddress: $defaultAddress) { userErrors { message } } }", { address: { firstName: details.firstName, lastName: details.lastName, address1: details.address1, address2: details.address2 || undefined, zip: details.zip, city: details.city, territoryCode: "DE", phoneNumber: details.phoneNumber || undefined }, defaultAddress: true })
+  const address = await customerApiRequest(req, "mutation CreateAddress($address: CustomerAddressInput!, $defaultAddress: Boolean) { customerAddressCreate(address: $address, defaultAddress: $defaultAddress) { userErrors { message } } }", { address: { firstName: details.firstName, lastName: details.lastName, address1: details.address1, address2: details.address2 || undefined, zip: details.zip, city: details.city, territoryCode: "DE", phoneNumber: normalizePhoneNumber(details.phoneNumber) }, defaultAddress: true })
   if (address.customerAddressCreate?.userErrors?.length) throw new Error(address.customerAddressCreate.userErrors[0].message)
 }
 
 function body(req) { return typeof req.body === "string" ? JSON.parse(req.body) : req.body || {} }
+function normalizePhoneNumber(value) {
+  const raw = String(value || "").trim()
+  if (!raw) return undefined
+  const compact = raw.replace(/[\s().-]/g, "")
+  const withCountryCode = compact.startsWith("00")
+    ? `+${compact.slice(2)}`
+    : compact.startsWith("0")
+      ? `+49${compact.slice(1)}`
+      : compact
+  // Shopify accepts addresses only with E.164 phone numbers. Saving the
+  // address is more important than rejecting all fields because a visitor
+  // typed a usual German local number such as 0176 12345678.
+  return /^\+\d{7,15}$/.test(withCountryCode) ? withCountryCode : undefined
+}
 function addressInput(value) {
-  return { firstName: String(value.firstName || "").trim() || undefined, lastName: String(value.lastName || "").trim() || undefined, address1: String(value.address1 || "").trim(), address2: String(value.address2 || "").trim() || undefined, zip: String(value.zip || "").trim(), city: String(value.city || "").trim(), territoryCode: "DE", phoneNumber: value.phoneNumber ? String(value.phoneNumber).trim() : null }
+  return { firstName: String(value.firstName || "").trim() || undefined, lastName: String(value.lastName || "").trim() || undefined, address1: String(value.address1 || "").trim(), address2: String(value.address2 || "").trim() || undefined, zip: String(value.zip || "").trim(), city: String(value.city || "").trim(), territoryCode: "DE", phoneNumber: normalizePhoneNumber(value.phoneNumber) }
 }
 async function ensureMutation(data, key) {
   const errors = data[key]?.userErrors
