@@ -68,6 +68,12 @@ function readSession(req) {
   try { return JSON.parse(Buffer.from(raw, "base64url").toString("utf8")) } catch { return null }
 }
 
+function readPendingRegistration(req) {
+  const raw = parseCookies(req).pottler_customer_registration
+  if (!raw) return null
+  try { return JSON.parse(Buffer.from(raw, "base64url").toString("utf8")) } catch { return null }
+}
+
 async function exchangeCode(req, res, code, state) {
   const pendingRaw = parseCookies(req).pottler_customer_oauth
   if (!pendingRaw) throw new Error("Die Anmeldung ist abgelaufen. Bitte starte sie erneut.")
@@ -130,12 +136,18 @@ async function getCustomer(req) {
   return result.customer
 }
 
-async function saveRegistration(req) {
-  const raw = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {}
+async function saveRegistration(req, raw) {
   const details = { firstName: String(raw.firstName || "").trim(), lastName: String(raw.lastName || "").trim(), address1: String(raw.address1 || "").trim(), address2: String(raw.address2 || "").trim(), zip: String(raw.zip || "").trim(), city: String(raw.city || "").trim(), phoneNumber: String(raw.phoneNumber || "").trim() }
   if (!details.firstName || !details.lastName || !details.address1 || !details.zip || !details.city) throw new Error("Bitte fülle alle Pflichtfelder aus.")
   const update = await customerApiRequest(req, "mutation UpdateCustomer($input: CustomerUpdateInput!) { customerUpdate(input: $input) { userErrors { message } } }", { input: { firstName: details.firstName, lastName: details.lastName } })
   if (update.customerUpdate?.userErrors?.length) throw new Error(update.customerUpdate.userErrors[0].message)
+  // OAuth redirects and browser refreshes can retry this request. Do not add
+  // the same delivery address twice when the first request already succeeded.
+  const customer = await getCustomer(req)
+  const addressAlreadySaved = customer?.addresses?.nodes?.some((address) =>
+    address.address1 === details.address1 && address.zip === details.zip && address.city === details.city,
+  )
+  if (addressAlreadySaved) return
   const address = await customerApiRequest(req, "mutation CreateAddress($address: CustomerAddressInput!, $defaultAddress: Boolean) { customerAddressCreate(address: $address, defaultAddress: $defaultAddress) { userErrors { message } } }", { address: { firstName: details.firstName, lastName: details.lastName, address1: details.address1, address2: details.address2 || undefined, zip: details.zip, city: details.city, territoryCode: "DE", phoneNumber: details.phoneNumber || undefined }, defaultAddress: true })
   if (address.customerAddressCreate?.userErrors?.length) throw new Error(address.customerAddressCreate.userErrors[0].message)
 }
@@ -203,6 +215,18 @@ export default async function handler(req, res) {
     if (action === "logout") {
       if (req.method !== "POST") return res.status(405).json({ error: "POST only" })
       clearCookie(res, "pottler_customer_session")
+      clearCookie(res, "pottler_customer_registration")
+      return res.status(200).json({ ok: true })
+    }
+    if (action === "registration-pending" && req.method === "POST") {
+      const input = body(req)
+      const registration = {
+        firstName: String(input.firstName || "").trim(), lastName: String(input.lastName || "").trim(),
+        address1: String(input.address1 || "").trim(), address2: String(input.address2 || "").trim(),
+        zip: String(input.zip || "").trim(), city: String(input.city || "").trim(), phoneNumber: String(input.phoneNumber || "").trim(),
+      }
+      if (!registration.firstName || !registration.lastName || !registration.address1 || !registration.zip || !registration.city) return res.status(422).json({ error: "Bitte fülle alle Pflichtfelder aus." })
+      setCookie(res, "pottler_customer_registration", base64url(JSON.stringify(registration)), 900)
       return res.status(200).json({ ok: true })
     }
     if (action === "profile") {
@@ -211,8 +235,13 @@ export default async function handler(req, res) {
       return res.status(200).json({ customer })
     }
     if (action === "complete-registration" && req.method === "POST") {
-      await saveRegistration(req)
-      return res.status(200).json({ ok: true })
+      // The HttpOnly cookie survives the Shopify redirect, unlike browser
+      // session storage. A body is accepted only as a fallback for an old tab.
+      const registration = readPendingRegistration(req) || body(req)
+      if (!registration?.firstName) return res.status(200).json({ ok: true, saved: false })
+      await saveRegistration(req, registration)
+      clearCookie(res, "pottler_customer_registration")
+      return res.status(200).json({ ok: true, saved: true })
     }
     if (["update-profile", "create-address", "update-address", "delete-address"].includes(action) && req.method === "POST") {
       const customer = await manageCustomer(req, action)

@@ -3860,12 +3860,20 @@ function AccountPage() {
   const [registration, setRegistration] = useState({ firstName: "", lastName: "", email: "", address1: "", address2: "", zip: "", city: "", phoneNumber: "", privacy: false })
   const [registrationError, setRegistrationError] = useState("")
   const [invalidFields, setInvalidFields] = useState<string[]>([])
+  const registrationSaveInProgress = useRef(false)
   useEffect(() => {
-    const pending = window.sessionStorage.getItem("pottler-registration-details")
-    if (!customer || !pending) return
-    fetch("/api/customer-account?action=complete-registration", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: pending })
-      .then((response) => { if (response.ok) window.sessionStorage.removeItem("pottler-registration-details") })
+    if (!customer || registrationSaveInProgress.current) return
+    registrationSaveInProgress.current = true
+    fetch("/api/customer-account?action=complete-registration", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: window.sessionStorage.getItem("pottler-registration-details") || "{}" })
+      .then(async (response) => {
+        if (!response.ok) return
+        window.sessionStorage.removeItem("pottler-registration-details")
+        // The Customer Account session was loaded before the registration
+        // details were written. Reload it so name and address appear now.
+        await refresh()
+      })
       .catch(() => undefined)
+      .finally(() => { registrationSaveInProgress.current = false })
   }, [customer])
   const selectSection = (next: string) => {
     setSection(next)
@@ -3875,7 +3883,7 @@ function AccountPage() {
     window.sessionStorage.setItem("pottler-account-section", section)
     window.location.assign("/api/customer-account?action=login")
   }
-  const beginRegistration = (event: React.FormEvent<HTMLFormElement>) => {
+  const beginRegistration = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const missing = ["firstName", "lastName", "address1", "zip", "city"].filter((field) => !registration[field as keyof typeof registration])
     if (!/^\S+@\S+\.\S+$/.test(registration.email)) missing.push("email")
@@ -3883,7 +3891,8 @@ function AccountPage() {
     if (missing.length) { setInvalidFields(missing); setRegistrationError("BITTE PRÜFE DIE MARKIERTEN FELDER."); return }
     setInvalidFields([])
     setRegistrationError("")
-    window.sessionStorage.setItem("pottler-registration-details", JSON.stringify(registration))
+    const response = await fetch("/api/customer-account?action=registration-pending", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(registration) })
+    if (!response.ok) { setRegistrationError("DEINE ANGABEN KONNTEN NICHT GESPEICHERT WERDEN. BITTE VERSUCHE ES ERNEUT."); return }
     beginLogin()
   }
   const accountName = customerName(customer)
@@ -3903,7 +3912,7 @@ function AccountPage() {
   return <PageShell inner><main className="flex-1"><section className="account-page account-page-access max-w-[1440px] mx-auto" style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}>
     {loading && <p className="account-loading">KONTO WIRD GELADEN …</p>}
     {!loading && !customer && <div className="account-login-panel"><div className="account-login-intro"><p className="account-kicker">SICHERER ZUGANG</p><h2>DEIN KONTO.<br />DEIN REVIER.</h2><p>Bestehende Kunden melden sich schnell per Code an. Neue Kunden hinterlegen ihre Lieferdaten direkt vor dem ersten Zugang.</p></div><div className="account-access-grid account-access-grid-register"><article className="account-access-card"><div className="account-access-symbol">@</div><p className="account-kicker">ICH BIN BEREITS KUNDE</p><h3>MIT CODE<br />ANMELDEN</h3><p>Melde dich auf der geschützten Anmeldeseite an und bestätige den Code aus deinem Postfach.</p><button type="button" className="btn-red account-login-button" onClick={beginLogin}>ZUR ANMELDUNG</button></article><form className="account-registration-form" onSubmit={beginRegistration} noValidate><p className="account-kicker">ICH BIN NEUER KUNDE</p><h3>KONTO ERSTELLEN</h3><p>Deine Angaben werden nach der Bestätigung sicher in deinem Kundenkonto gespeichert.</p><div className="account-form-grid"><label className={isInvalid("firstName") ? "is-invalid" : ""}>VORNAME*<input value={registration.firstName} onChange={(e) => setRegistration({ ...registration, firstName: e.target.value })} aria-invalid={isInvalid("firstName")} />{isInvalid("firstName") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={isInvalid("lastName") ? "is-invalid" : ""}>NACHNAME*<input value={registration.lastName} onChange={(e) => setRegistration({ ...registration, lastName: e.target.value })} aria-invalid={isInvalid("lastName")} />{isInvalid("lastName") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={`account-form-wide ${isInvalid("email") ? "is-invalid" : ""}`}>E-MAIL-ADRESSE*<input type="email" value={registration.email} onChange={(e) => setRegistration({ ...registration, email: e.target.value })} aria-invalid={isInvalid("email")} />{isInvalid("email") && <small>! GÜLTIGE E-MAIL EINGEBEN</small>}</label><label className={`account-form-wide ${isInvalid("address1") ? "is-invalid" : ""}`}>STRASSE & HAUSNUMMER*<input value={registration.address1} onChange={(e) => setRegistration({ ...registration, address1: e.target.value })} aria-invalid={isInvalid("address1")} />{isInvalid("address1") && <small>! BITTE AUSFÜLLEN</small>}</label><label className="account-form-wide">ADRESSZUSATZ <input value={registration.address2} onChange={(e) => setRegistration({ ...registration, address2: e.target.value })} /></label><label className={isInvalid("zip") ? "is-invalid" : ""}>POSTLEITZAHL*<input value={registration.zip} onChange={(e) => setRegistration({ ...registration, zip: e.target.value })} aria-invalid={isInvalid("zip")} />{isInvalid("zip") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={isInvalid("city") ? "is-invalid" : ""}>ORT*<input value={registration.city} onChange={(e) => setRegistration({ ...registration, city: e.target.value })} aria-invalid={isInvalid("city")} />{isInvalid("city") && <small>! BITTE AUSFÜLLEN</small>}</label><label className="account-form-wide">TELEFON <input type="tel" value={registration.phoneNumber} onChange={(e) => setRegistration({ ...registration, phoneNumber: e.target.value })} /></label></div><label className={`account-privacy ${isInvalid("privacy") ? "is-invalid" : ""}`}><input type="checkbox" checked={registration.privacy} onChange={(e) => setRegistration({ ...registration, privacy: e.target.checked })} aria-invalid={isInvalid("privacy")} /> <span>Ich habe die Datenschutzerklärung gelesen und akzeptiere sie.</span>{isInvalid("privacy") && <small>! BITTE BESTÄTIGEN</small>}</label>{registrationError && <small className="account-form-error">{registrationError}</small>}<button className="btn-red account-login-button" type="submit">KONTO MIT E-MAIL ERSTELLEN</button></form></div><small className="account-login-note">Danach öffnen wir direkt {activeLabel.toLowerCase()}.</small></div>}
-            {!loading && customer && <div className="account-layout"><aside className="account-profile"><p className="account-kicker">MEIN POTTLERKINDER</p>{accountName && <h2>{accountName}</h2>}<p>{customer.emailAddress?.emailAddress}</p>{customer.phoneNumber?.phoneNumber && <p>{customer.phoneNumber.phoneNumber}</p>}<nav className="account-side-nav">{ACCOUNT_SECTIONS.map((item) => <button type="button" className={section === item.id ? "is-active" : ""} onClick={() => selectSection(item.id)} key={item.id}>{item.label}</button>)}</nav><button type="button" className="btn-red account-logout" onClick={signOut}>ABMELDEN</button></aside><div className="account-content">
+            {!loading && customer && <div className="account-layout"><aside className="account-profile"><p className="account-kicker">MEIN POTTLERKINDER</p>{accountName && <h2>{accountName}</h2>}<p>{customer.emailAddress?.emailAddress}</p>{customer.phoneNumber?.phoneNumber && <p>{customer.phoneNumber.phoneNumber}</p>}<nav className="account-side-nav">{ACCOUNT_SECTIONS.map((item) => <button type="button" className={section === item.id ? "is-active" : ""} onClick={() => selectSection(item.id)} key={item.id}>{item.label}</button>)}</nav><button type="button" className="btn-glass account-logout" onClick={signOut}>ABMELDEN</button></aside><div className="account-content">
       {section === "overview" && <><div className="account-section-head"><div><p className="account-kicker">ÜBERSICHT</p><h2>DEIN REVIER</h2></div><span>{orders.length} {orders.length === 1 ? "BESTELLUNG" : "BESTELLUNGEN"}</span></div><div className="account-overview"><div><small>LETZTE BESTELLUNG</small><strong>{orders[0]?.name || "NOCH KEINE"}</strong></div><div><small>LIEFERADRESSE</small><strong>{address ? `${address.zip || ""} ${address.city || ""}` : "NOCH NICHT HINTERLEGT"}</strong></div></div><div className="account-empty"><strong>{orders.length ? "ALLES IM BLICK" : "NOCH KEINE BESTELLUNGEN"}</strong><p>{orders.length ? "Deine Bestellungen, Angaben und Lieferadresse findest du über das Menü links." : "Deine nächste Auswahl aus dem Pott wartet im Katalog."}</p>{!orders.length && <a href="/katalog" className="btn-red">ZUM KATALOG →</a>}</div></>}
       {section === "personal" && <PersonalDataForm customer={customer} onSave={saveAccount} message={accountMessage} />}
       {section === "addresses" && <AddressManager addresses={customer.addresses?.nodes || []} onSave={saveAccount} message={accountMessage} />}
