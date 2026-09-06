@@ -339,11 +339,43 @@ function CatalogIcon({
   )
 }
 
+const ACCOUNT_SECTIONS = [
+  { id: "overview", label: "ÜBERSICHT" },
+  { id: "personal", label: "PERSÖNLICHE DATEN" },
+  { id: "addresses", label: "ADRESSEN" },
+  { id: "payment", label: "ZAHLUNGSARTEN" },
+  { id: "orders", label: "BESTELLUNGEN" },
+]
+
+function useCustomerAccount() {
+  const [customer, setCustomer] = useState<CustomerAccount | null>(null)
+  const [loading, setLoading] = useState(true)
+  const refresh = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch("/api/customer-account?action=profile", { credentials: "same-origin" })
+      if (response.status === 401) { setCustomer(null); return null }
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error)
+      setCustomer(data.customer)
+      return data.customer as CustomerAccount
+    } catch { setCustomer(null); return null } finally { setLoading(false) }
+  }
+  useEffect(() => { refresh() }, [])
+  const signOut = async () => {
+    await fetch("/api/customer-account?action=logout", { credentials: "same-origin" })
+    setCustomer(null)
+  }
+  return { customer, loading, refresh, signOut }
+}
+
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [catalogOpen, setCatalogOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
   const { cart, refreshCart } = useShopifyCart()
+  const { customer: accountCustomer, loading: accountLoading } = useCustomerAccount()
   const cartQuantity = cart?.totalQuantity || 0
   const catalogTarget = (section: string, child?: string) => {
     const params = new URLSearchParams()
@@ -625,10 +657,8 @@ function Header() {
               </span>
             </button>
             {/* LOGIN */}
-            <button
-              className="btn-glass flex items-center gap-2 whitespace-nowrap"
-              style={{ padding: "9px 14px" }}
-            >
+            <div className="relative">
+            <button type="button" onClick={() => setAccountOpen((open) => !open)} aria-expanded={accountOpen} className="btn-glass flex items-center gap-2 whitespace-nowrap" style={{ padding: "9px 14px" }}>
               <img
                 src={imgAccount}
                 alt=""
@@ -643,9 +673,10 @@ function Header() {
                   color: "white",
                 }}
               >
-                LOGIN
+                {accountLoading ? "LOGIN" : accountCustomer ? "KONTO" : "LOGIN"}
               </span>
             </button>
+            </div>
             {/* WARENKORB */}
             <button
               type="button"
@@ -751,6 +782,7 @@ function Header() {
             ))}
           </div>
         )}
+        {accountOpen && <div className="desktop-account-menu hidden lg:block" style={{ right: "max(16px, calc((100% - 1440px) / 2 + clamp(16px, 12vw, 210px)))" }}><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} /></div>}
 
         {/* ── Mobile header row ── */}
         <div
@@ -785,9 +817,9 @@ function Header() {
             />
           </a>
           <div className="mobile-actions flex items-center gap-3">
-            <button aria-label="Login" className="btn-glass mobile-icon-btn">
+            <div className="relative"><button type="button" onClick={() => setAccountOpen((open) => !open)} aria-label="Login" aria-expanded={accountOpen} className="btn-glass mobile-icon-btn">
               <img src={imgAccount} alt="" className="mobile-icon-glyph" />
-            </button>
+            </button></div>
             <button
               type="button"
               onClick={() => { refreshCart(); setCartOpen(true) }}
@@ -807,6 +839,8 @@ function Header() {
             </button>
           </div>
         </div>
+
+        {accountOpen && <div className="mobile-account-menu flex lg:hidden"><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} /></div>}
 
         {/* Mobile dropdown */}
         {mobileMenuOpen && (
@@ -922,6 +956,17 @@ function CartDrawer({
       </aside>
     </div>
   )
+}
+
+function AccountMenu({ customer, onClose }: { customer: CustomerAccount | null; onClose: () => void }) {
+  const go = (section: string) => {
+    onClose()
+    window.location.href = `/account?section=${section}`
+  }
+  return <div className="account-menu" role="menu">
+    <div className="account-menu-head"><span>{customer ? "GLÜCK AUF" : "MEIN POTTLERKINDER"}</span>{customer ? <strong>{customer.firstName || customer.displayName}</strong> : <button type="button" className="account-menu-login btn-red" onClick={() => go("overview")}>ANMELDEN</button>}</div>
+    {ACCOUNT_SECTIONS.map((item) => <button type="button" key={item.id} onClick={() => go(item.id)} role="menuitem"><span>{item.label}</span></button>)}
+  </div>
 }
 
 // ─── Hero Carousel ─────────────────────────────────────────────────────────────
@@ -2162,7 +2207,7 @@ function Footer() {
                 </p>
               </div>
               <div className="flex gap-2 mb-4">
-                {["DHL", "Hermes"].map((s) => (
+                {["DHL", "GLS"].map((s) => (
                   <div
                     key={s}
                     className="px-5 py-2.5 rounded-[4px]"
@@ -3729,6 +3774,69 @@ function CartPage() {
   )
 }
 
+type CustomerAccount = {
+  displayName?: string
+  firstName?: string
+  lastName?: string
+  emailAddress?: { emailAddress?: string }
+  phoneNumber?: { phoneNumber?: string }
+  defaultAddress?: { address1?: string; address2?: string; city?: string; zip?: string; country?: string }
+  orders?: { nodes?: Array<{ id: string; name?: string; processedAt?: string; financialStatus?: string; fulfillmentStatus?: string; totalPrice?: { amount: string; currencyCode: string } }> }
+}
+
+function AccountCallbackPage() {
+  const [message, setMessage] = useState("ANMELDUNG WIRD ABGESCHLOSSEN …")
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const code = params.get("code")
+    const state = params.get("state")
+    if (!code) { setMessage("DIE ANMELDUNG WURDE ABGEBROCHEN."); return }
+    fetch(`/api/customer-account?action=callback&code=${encodeURIComponent(code)}&state=${encodeURIComponent(state || "")}`)
+      .then(async (response) => {
+        const data = await response.json()
+        if (!response.ok) throw new Error(data.error || "Anmeldung fehlgeschlagen")
+        const section = window.sessionStorage.getItem("pottler-account-section") || "overview"
+        window.sessionStorage.removeItem("pottler-account-section")
+        window.location.replace(`/account?section=${section}`)
+      })
+      .catch(() => setMessage("DIE ANMELDUNG KONNTE NICHT ABGESCHLOSSEN WERDEN. BITTE VERSUCHE ES ERNEUT."))
+  }, [])
+  return <PageShell inner><main className="flex-1"><PageHero compact eyebrow="POTTLERKINDER ACCOUNT" title="EINEN MOMENT" lead={message} image={imgHeaderCoal} /></main></PageShell>
+}
+
+function AccountPage() {
+  const initialSection = new URLSearchParams(window.location.search).get("section") || "overview"
+  const [section, setSection] = useState(ACCOUNT_SECTIONS.some((item) => item.id === initialSection) ? initialSection : "overview")
+  const { customer, loading, signOut } = useCustomerAccount()
+  const selectSection = (next: string) => {
+    setSection(next)
+    window.history.replaceState({}, "", `/account?section=${next}`)
+  }
+  const beginLogin = () => {
+    window.sessionStorage.setItem("pottler-account-section", section)
+    window.location.assign("/api/customer-account?action=login")
+  }
+  const name = customer?.firstName || customer?.displayName || "KUMPEL"
+  const orders = customer?.orders?.nodes || []
+  const address = customer?.defaultAddress
+  const activeLabel = ACCOUNT_SECTIONS.find((item) => item.id === section)?.label || "ÜBERSICHT"
+  return <PageShell inner><main className="flex-1"><PageHero compact eyebrow="POTTLERKINDER ACCOUNT" title={customer ? `GLÜCK AUF, ${name}` : "DEIN KONTO"} lead={customer ? "Verwalte deine Bestellungen und deine Angaben an einem Ort." : "Erstelle dein Konto oder melde dich sicher an."} image={imgHeaderCoal} /><section className="account-page max-w-[1200px] mx-auto" style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}>
+    {loading && <p className="account-loading">KONTO WIRD GELADEN …</p>}
+    {!loading && !customer && <div className="account-login-panel"><p className="account-kicker">SICHERER ZUGANG</p><h2>DEIN KONTO.<br />DEIN REVIER.</h2><p>Erstelle dein Konto oder melde dich an. Shopify bestätigt deine E-Mail sicher per Code oder — wenn aktiviert — über Google.</p><button type="button" className="btn-red account-login-button" onClick={beginLogin}>KONTO ERSTELLEN / ANMELDEN <span>→</span></button><small>Danach öffnen wir direkt {activeLabel.toLowerCase()}.</small></div>}
+            {!loading && customer && <div className="account-layout"><aside className="account-profile"><p className="account-kicker">MEIN POTTLERKINDER</p><h2>{customer.displayName || `${customer.firstName || ""} ${customer.lastName || ""}`}</h2><p>{customer.emailAddress?.emailAddress}</p>{customer.phoneNumber?.phoneNumber && <p>{customer.phoneNumber.phoneNumber}</p>}<nav className="account-side-nav">{ACCOUNT_SECTIONS.map((item) => <button type="button" className={section === item.id ? "is-active" : ""} onClick={() => selectSection(item.id)} key={item.id}>{item.label}</button>)}</nav><button type="button" className="account-logout" onClick={signOut}>ABMELDEN</button></aside><div className="account-content">
+      {section === "overview" && <><div className="account-section-head"><div><p className="account-kicker">ÜBERSICHT</p><h2>DEIN REVIER</h2></div><span>{orders.length} {orders.length === 1 ? "BESTELLUNG" : "BESTELLUNGEN"}</span></div><div className="account-overview"><div><small>LETZTE BESTELLUNG</small><strong>{orders[0]?.name || "NOCH KEINE"}</strong></div><div><small>LIEFERADRESSE</small><strong>{address ? `${address.zip || ""} ${address.city || ""}` : "NOCH NICHT HINTERLEGT"}</strong></div></div><div className="account-empty"><strong>{orders.length ? "ALLES IM BLICK" : "NOCH KEINE BESTELLUNGEN"}</strong><p>{orders.length ? "Deine Bestellungen, Angaben und Lieferadresse findest du über das Menü links." : "Deine nächste Auswahl aus dem Pott wartet im Katalog."}</p>{!orders.length && <a href="/katalog" className="btn-red">ZUM KATALOG →</a>}</div></>}
+      {section === "personal" && <AccountInformation title="PERSÖNLICHE DATEN" rows={[["VORNAME", customer.firstName], ["NACHNAME", customer.lastName], ["E-MAIL", customer.emailAddress?.emailAddress], ["TELEFON", customer.phoneNumber?.phoneNumber || "NICHT HINTERLEGT"]]} />}
+      {section === "addresses" && <AccountInformation title="ADRESSEN" rows={address ? [["LIEFERADRESSE", `${address.address1 || ""}${address.address2 ? `, ${address.address2}` : ""}, ${address.zip || ""} ${address.city || ""}, ${address.country || ""}`]] : [["LIEFERADRESSE", "Eine Lieferadresse wird bei deiner ersten Bestellung sicher gespeichert."]]} />}
+      {section === "payment" && <AccountInformation title="ZAHLUNGSARTEN" rows={[["SICHERE ZAHLUNG", "Zahlungsmethoden wählst und verwaltest du geschützt beim Checkout. Kartendaten werden nicht auf Pottlerkinder gespeichert."]]} />}
+      {section === "orders" && <><div className="account-section-head"><div><p className="account-kicker">BESTELLUNGEN</p><h2>DEINE LETZTEN SCHICHTEN</h2></div><span>{orders.length} {orders.length === 1 ? "BESTELLUNG" : "BESTELLUNGEN"}</span></div>{orders.length === 0 ? <div className="account-empty"><strong>NOCH KEINE BESTELLUNGEN</strong><p>Deine nächste Auswahl aus dem Pott wartet im Katalog.</p><a href="/katalog" className="btn-red">ZUM KATALOG →</a></div> : <div className="account-orders">{orders.map((order) => <article key={order.id}><div><strong>{order.name || "BESTELLUNG"}</strong><span>{order.processedAt ? new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(new Date(order.processedAt)) : ""}</span></div><div><small>{order.fulfillmentStatus || order.financialStatus || "IN BEARBEITUNG"}</small><b>{order.totalPrice ? new Intl.NumberFormat("de-DE", { style: "currency", currency: order.totalPrice.currencyCode }).format(Number(order.totalPrice.amount)) : ""}</b></div></article>)}</div>}</>}
+    </div></div>}
+  </section></main></PageShell>
+}
+
+function AccountInformation({ title, rows }: { title: string; rows: Array<[string, string | undefined]> }) {
+  return <><div className="account-section-head"><div><p className="account-kicker">MEIN KONTO</p><h2>{title}</h2></div></div><div className="account-information">{rows.map(([label, value]) => <div key={label}><small>{label}</small><p>{value || "NICHT HINTERLEGT"}</p></div>)}</div></>
+}
+
 export default function App() {
   const pages: Record<string, React.ReactNode> = {
     "/katalog": <CatalogPage />,
@@ -3739,6 +3847,8 @@ export default function App() {
     "/geschichte": <HistoryPage />,
     "/zechen": <CollieriesPage />,
     "/blog": <BlogPage />,
+    "/account": <AccountPage />,
+    "/account/callback": <AccountCallbackPage />,
   }
   const productHandle = window.location.pathname.match(/^\/katalog\/([^/]+)$/)?.[1]
   return productHandle ? <ShopifyProductPage handle={decodeURIComponent(productHandle)} /> : (pages[window.location.pathname] ?? <HomePage />)
