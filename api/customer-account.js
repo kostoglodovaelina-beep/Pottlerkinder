@@ -101,7 +101,8 @@ const customerQuery = `query CustomerAccount {
     lastName
     emailAddress { emailAddress }
     phoneNumber { phoneNumber }
-    defaultAddress { id address1 address2 city zip country }
+    defaultAddress { id address1 address2 city zip country phoneNumber }
+    addresses(first: 3) { nodes { id firstName lastName address1 address2 city zip country territoryCode phoneNumber } }
     orders(first: 12, reverse: true) {
       nodes { id name processedAt financialStatus fulfillmentStatus totalPrice { amount currencyCode } }
     }
@@ -137,6 +138,40 @@ async function saveRegistration(req) {
   if (update.customerUpdate?.userErrors?.length) throw new Error(update.customerUpdate.userErrors[0].message)
   const address = await customerApiRequest(req, "mutation CreateAddress($address: CustomerAddressInput!, $defaultAddress: Boolean) { customerAddressCreate(address: $address, defaultAddress: $defaultAddress) { userErrors { message } } }", { address: { firstName: details.firstName, lastName: details.lastName, address1: details.address1, address2: details.address2 || undefined, zip: details.zip, city: details.city, territoryCode: "DE", phoneNumber: details.phoneNumber || undefined }, defaultAddress: true })
   if (address.customerAddressCreate?.userErrors?.length) throw new Error(address.customerAddressCreate.userErrors[0].message)
+}
+
+function body(req) { return typeof req.body === "string" ? JSON.parse(req.body) : req.body || {} }
+function addressInput(value) {
+  return { firstName: String(value.firstName || "").trim() || undefined, lastName: String(value.lastName || "").trim() || undefined, address1: String(value.address1 || "").trim(), address2: String(value.address2 || "").trim() || undefined, zip: String(value.zip || "").trim(), city: String(value.city || "").trim(), territoryCode: "DE", phoneNumber: value.phoneNumber ? String(value.phoneNumber).trim() : null }
+}
+async function ensureMutation(data, key) {
+  const errors = data[key]?.userErrors
+  if (errors?.length) throw new Error(errors[0].message)
+}
+async function manageCustomer(req, action) {
+  const value = body(req)
+  const customer = await getCustomer(req)
+  if (!customer) throw new Error("Nicht angemeldet")
+  if (action === "update-profile") {
+    const data = await customerApiRequest(req, "mutation($input:CustomerUpdateInput!){customerUpdate(input:$input){userErrors{message}}}", { input: { firstName: String(value.firstName || "").trim() || null, lastName: String(value.lastName || "").trim() || null } })
+    await ensureMutation(data, "customerUpdate")
+  }
+  if (action === "create-address") {
+    if ((customer.addresses?.nodes?.length || 0) >= 3) throw new Error("Du kannst maximal drei Adressen speichern.")
+    const data = await customerApiRequest(req, "mutation($address:CustomerAddressInput!){customerAddressCreate(address:$address){userErrors{message}}}", { address: addressInput(value) })
+    await ensureMutation(data, "customerAddressCreate")
+  }
+  if (action === "update-address") {
+    if (!customer.addresses?.nodes?.some((item) => item.id === value.id)) throw new Error("Adresse nicht gefunden")
+    const data = await customerApiRequest(req, "mutation($addressId:ID!,$address:CustomerAddressInput){customerAddressUpdate(addressId:$addressId,address:$address){userErrors{message}}}", { addressId: value.id, address: addressInput(value) })
+    await ensureMutation(data, "customerAddressUpdate")
+  }
+  if (action === "delete-address") {
+    if (!customer.addresses?.nodes?.some((item) => item.id === value.id)) throw new Error("Adresse nicht gefunden")
+    const data = await customerApiRequest(req, "mutation($addressId:ID!){customerAddressDelete(addressId:$addressId){userErrors{message}}}", { addressId: value.id })
+    await ensureMutation(data, "customerAddressDelete")
+  }
+  return getCustomer(req)
 }
 
 export default async function handler(req, res) {
@@ -177,6 +212,10 @@ export default async function handler(req, res) {
     if (action === "complete-registration" && req.method === "POST") {
       await saveRegistration(req)
       return res.status(200).json({ ok: true })
+    }
+    if (["update-profile", "create-address", "update-address", "delete-address"].includes(action) && req.method === "POST") {
+      const customer = await manageCustomer(req, action)
+      return res.status(200).json({ customer })
     }
     return res.status(400).json({ error: "Unknown customer account action" })
   } catch (error) {
