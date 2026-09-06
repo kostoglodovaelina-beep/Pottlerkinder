@@ -109,7 +109,28 @@ const customerQuery = `query CustomerAccount {
     defaultAddress { id address1 address2 city zip country }
     addresses(first: 3) { nodes { id firstName lastName address1 address2 city zip country territoryCode } }
     orders(first: 12, reverse: true) {
-      nodes { id name processedAt financialStatus fulfillmentStatus totalPrice { amount currencyCode } }
+      nodes {
+        id
+        name
+        confirmationNumber
+        processedAt
+        createdAt
+        cancelledAt
+        cancelReason
+        financialStatus
+        fulfillmentStatus
+        totalPrice { amount currencyCode }
+        lineItems(first: 50) {
+          nodes {
+            id
+            name
+            variantTitle
+            quantity
+            image { url altText }
+            totalPrice { amount currencyCode }
+          }
+        }
+      }
     }
   }
 }`
@@ -199,6 +220,9 @@ export default async function handler(req, res) {
       url.searchParams.set("response_type", "code")
       url.searchParams.set("redirect_uri", callbackUrl())
       url.searchParams.set("scope", "openid email customer-account-api:full")
+      // Do not silently reuse Shopify's browser SSO session after the visitor
+      // has explicitly selected ABMELDEN in this storefront.
+      url.searchParams.set("prompt", "login")
       url.searchParams.set("state", state)
       url.searchParams.set("code_challenge", sha256(verifier))
       url.searchParams.set("code_challenge_method", "S256")
@@ -208,7 +232,7 @@ export default async function handler(req, res) {
     if (action === "callback") {
       if (!req.query?.code) return res.status(400).json({ error: "Der Anmeldecode fehlt." })
       await exchangeCode(req, res, req.query.code, req.query.state)
-      res.writeHead(302, { Location: "/account?section=overview" })
+      res.writeHead(302, { Location: "/account?section=personal" })
       return res.end()
     }
     if (action === "logout") {

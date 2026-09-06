@@ -340,7 +340,6 @@ function CatalogIcon({
 }
 
 const ACCOUNT_SECTIONS = [
-  { id: "overview", label: "ÜBERSICHT" },
   { id: "personal", label: "PERSÖNLICHE DATEN" },
   { id: "addresses", label: "ADRESSEN" },
   { id: "orders", label: "BESTELLUNGEN" },
@@ -393,7 +392,7 @@ function Header() {
   const [cartOpen, setCartOpen] = useState(false)
   const [accountOpen, setAccountOpen] = useState(false)
   const { cart, refreshCart } = useShopifyCart()
-  const { customer: accountCustomer, loading: accountLoading } = useCustomerAccount()
+  const { customer: accountCustomer, loading: accountLoading, signOut: signOutAccount } = useCustomerAccount()
   const cartQuantity = cart?.totalQuantity || 0
   useEffect(() => {
     if (!accountOpen) return
@@ -814,7 +813,7 @@ function Header() {
             ))}
           </div>
         )}
-        {accountOpen && <div className="desktop-account-menu hidden lg:block" style={{ right: "max(16px, calc((100% - 1440px) / 2 + clamp(16px, 12vw, 210px)))" }}><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} /></div>}
+        {accountOpen && <div className="desktop-account-menu hidden lg:block" style={{ right: "max(16px, calc((100% - 1440px) / 2 + clamp(16px, 12vw, 210px)))" }}><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} onSignOut={signOutAccount} /></div>}
 
         {/* ── Mobile header row ── */}
         <div
@@ -872,7 +871,7 @@ function Header() {
           </div>
         </div>
 
-        {accountOpen && <div className="mobile-account-menu flex lg:hidden"><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} /></div>}
+        {accountOpen && <div className="mobile-account-menu flex lg:hidden"><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} onSignOut={signOutAccount} /></div>}
 
         {/* Mobile dropdown */}
         {mobileMenuOpen && (
@@ -990,15 +989,16 @@ function CartDrawer({
   )
 }
 
-function AccountMenu({ customer, onClose }: { customer: CustomerAccount | null; onClose: () => void }) {
+function AccountMenu({ customer, onClose, onSignOut }: { customer: CustomerAccount | null; onClose: () => void; onSignOut: () => Promise<void> }) {
   const go = (section: string) => {
     onClose()
     window.location.href = `/account?section=${section}`
   }
   const name = customerName(customer)
   return <div className="account-menu" role="menu">
-    <div className="account-menu-head"><span>{customer ? "GLÜCK AUF" : "MEIN POTTLERKINDER"}</span>{customer ? <strong>{name || "MEIN KONTO"}</strong> : <button type="button" className="account-menu-login btn-red" onClick={() => go("overview")}>ANMELDEN</button>}</div>
+    <div className="account-menu-head"><span>{customer ? "GLÜCK AUF" : "MEIN POTTLERKINDER"}</span>{customer ? <strong>{name || "MEIN KONTO"}</strong> : <button type="button" className="account-menu-login btn-red" onClick={() => go("personal")}>ANMELDEN</button>}</div>
     {ACCOUNT_SECTIONS.map((item) => <button type="button" key={item.id} onClick={() => go(item.id)} role="menuitem"><span>{item.label}</span></button>)}
+    {customer && <div className="account-menu-footer"><button type="button" className="btn-glass account-menu-logout" onClick={async () => { await onSignOut(); onClose() }}>ABMELDEN</button></div>}
   </div>
 }
 
@@ -3822,9 +3822,22 @@ type CustomerAccount = {
   emailAddress?: { emailAddress?: string }
   defaultAddress?: CustomerAddress
   addresses?: { nodes?: CustomerAddress[] }
-  orders?: { nodes?: Array<{ id: string; name?: string; processedAt?: string; financialStatus?: string; fulfillmentStatus?: string; totalPrice?: { amount: string; currencyCode: string } }> }
+  orders?: { nodes?: CustomerOrder[] }
 }
 type CustomerAddress = { id: string; firstName?: string; lastName?: string; address1?: string; address2?: string; city?: string; zip?: string; country?: string; territoryCode?: string }
+type CustomerOrder = {
+  id: string
+  name?: string
+  confirmationNumber?: string
+  processedAt?: string
+  createdAt?: string
+  cancelledAt?: string
+  cancelReason?: string
+  financialStatus?: string
+  fulfillmentStatus?: string
+  totalPrice?: { amount: string; currencyCode: string }
+  lineItems?: { nodes?: Array<{ id: string; name?: string; variantTitle?: string; quantity?: number; image?: { url?: string; altText?: string }; totalPrice?: { amount: string; currencyCode: string } }> }
+}
 
 function AccountCallbackPage() {
   const [message, setMessage] = useState("ANMELDUNG WIRD ABGESCHLOSSEN …")
@@ -3843,7 +3856,7 @@ function AccountCallbackPage() {
           if (saved.ok) window.sessionStorage.removeItem("pottler-registration-details")
           else window.sessionStorage.setItem("pottler-registration-warning", "Dein Konto wurde erstellt. Die Adresse konnte noch nicht gespeichert werden – bitte ergänze sie später in deinem Konto.")
         }
-        const section = window.sessionStorage.getItem("pottler-account-section") || "overview"
+        const section = window.sessionStorage.getItem("pottler-account-section") || "personal"
         window.sessionStorage.removeItem("pottler-account-section")
         window.location.replace(`/account?section=${section}`)
       })
@@ -3853,8 +3866,8 @@ function AccountCallbackPage() {
 }
 
 function AccountPage() {
-  const initialSection = new URLSearchParams(window.location.search).get("section") || "overview"
-  const [section, setSection] = useState(ACCOUNT_SECTIONS.some((item) => item.id === initialSection) ? initialSection : "overview")
+  const initialSection = new URLSearchParams(window.location.search).get("section") || "personal"
+  const [section, setSection] = useState(ACCOUNT_SECTIONS.some((item) => item.id === initialSection) ? initialSection : "personal")
   const { customer, loading, signOut, refresh } = useCustomerAccount()
   const [registration, setRegistration] = useState({ firstName: "", lastName: "", email: "", address1: "", address2: "", zip: "", city: "", privacy: false })
   const [registrationError, setRegistrationError] = useState("")
@@ -3897,10 +3910,8 @@ function AccountPage() {
     beginLogin()
   }
   const accountName = customerName(customer)
-  const name = customer?.firstName || "KUMPEL"
   const orders = customer?.orders?.nodes || []
-  const address = customer?.defaultAddress
-  const activeLabel = ACCOUNT_SECTIONS.find((item) => item.id === section)?.label || "ÜBERSICHT"
+  const activeLabel = ACCOUNT_SECTIONS.find((item) => item.id === section)?.label || "PERSÖNLICHE DATEN"
   const isInvalid = (field: string) => invalidFields.includes(field)
   const [accountMessage, setAccountMessage] = useState("")
   const saveAccount = async (action: string, payload: Record<string, string>) => {
@@ -3914,10 +3925,9 @@ function AccountPage() {
     {loading && <p className="account-loading">KONTO WIRD GELADEN …</p>}
     {!loading && !customer && <div className="account-login-panel"><div className="account-login-intro"><p className="account-kicker">SICHERER ZUGANG</p><h2>DEIN KONTO.<br />DEIN REVIER.</h2><p>Bestehende Kunden melden sich schnell per Code an. Neue Kunden hinterlegen ihre Lieferdaten direkt vor dem ersten Zugang.</p></div><div className="account-access-grid account-access-grid-register"><article className="account-access-card"><div className="account-access-symbol">@</div><p className="account-kicker">ICH BIN BEREITS KUNDE</p><h3>MIT CODE<br />ANMELDEN</h3><p>Melde dich auf der geschützten Anmeldeseite an und bestätige den Code aus deinem Postfach.</p><button type="button" className="btn-red account-login-button" onClick={beginLogin}>ZUR ANMELDUNG</button></article><form className="account-registration-form" onSubmit={beginRegistration} noValidate><p className="account-kicker">ICH BIN NEUER KUNDE</p><h3>KONTO ERSTELLEN</h3><p>Deine Angaben werden nach der Bestätigung sicher in deinem Kundenkonto gespeichert.</p><div className="account-form-grid"><label className={isInvalid("firstName") ? "is-invalid" : ""}>VORNAME*<input value={registration.firstName} onChange={(e) => setRegistration({ ...registration, firstName: e.target.value })} aria-invalid={isInvalid("firstName")} />{isInvalid("firstName") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={isInvalid("lastName") ? "is-invalid" : ""}>NACHNAME*<input value={registration.lastName} onChange={(e) => setRegistration({ ...registration, lastName: e.target.value })} aria-invalid={isInvalid("lastName")} />{isInvalid("lastName") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={`account-form-wide ${isInvalid("email") ? "is-invalid" : ""}`}>E-MAIL-ADRESSE*<input type="email" value={registration.email} onChange={(e) => setRegistration({ ...registration, email: e.target.value })} aria-invalid={isInvalid("email")} />{isInvalid("email") && <small>! GÜLTIGE E-MAIL EINGEBEN</small>}</label><label className={`account-form-wide ${isInvalid("address1") ? "is-invalid" : ""}`}>STRASSE & HAUSNUMMER*<input value={registration.address1} onChange={(e) => setRegistration({ ...registration, address1: e.target.value })} aria-invalid={isInvalid("address1")} />{isInvalid("address1") && <small>! BITTE AUSFÜLLEN</small>}</label><label className="account-form-wide">ADRESSZUSATZ <input value={registration.address2} onChange={(e) => setRegistration({ ...registration, address2: e.target.value })} /></label><label className={isInvalid("zip") ? "is-invalid" : ""}>POSTLEITZAHL*<input value={registration.zip} onChange={(e) => setRegistration({ ...registration, zip: e.target.value })} aria-invalid={isInvalid("zip")} />{isInvalid("zip") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={isInvalid("city") ? "is-invalid" : ""}>ORT*<input value={registration.city} onChange={(e) => setRegistration({ ...registration, city: e.target.value })} aria-invalid={isInvalid("city")} />{isInvalid("city") && <small>! BITTE AUSFÜLLEN</small>}</label></div><label className={`account-privacy ${isInvalid("privacy") ? "is-invalid" : ""}`}><input type="checkbox" checked={registration.privacy} onChange={(e) => setRegistration({ ...registration, privacy: e.target.checked })} aria-invalid={isInvalid("privacy")} /> <span>Ich habe die Datenschutzerklärung gelesen und akzeptiere sie.</span>{isInvalid("privacy") && <small>! BITTE BESTÄTIGEN</small>}</label>{registrationError && <small className="account-form-error">{registrationError}</small>}<button className="btn-red account-login-button" type="submit">KONTO MIT E-MAIL ERSTELLEN</button></form></div><small className="account-login-note">Danach öffnen wir direkt {activeLabel.toLowerCase()}.</small></div>}
             {!loading && customer && <div className="account-layout"><aside className="account-profile"><p className="account-kicker">MEIN POTTLERKINDER</p>{accountName && <h2>{accountName}</h2>}<p>{customer.emailAddress?.emailAddress}</p><nav className="account-side-nav">{ACCOUNT_SECTIONS.map((item) => <button type="button" className={section === item.id ? "is-active" : ""} onClick={() => selectSection(item.id)} key={item.id}>{item.label}</button>)}</nav><button type="button" className="btn-glass account-logout" onClick={signOut}>ABMELDEN</button></aside><div className="account-content">
-      {section === "overview" && <><div className="account-section-head"><div><p className="account-kicker">ÜBERSICHT</p><h2>DEIN REVIER</h2></div><span>{orders.length} {orders.length === 1 ? "BESTELLUNG" : "BESTELLUNGEN"}</span></div><div className="account-overview"><div><small>LETZTE BESTELLUNG</small><strong>{orders[0]?.name || "NOCH KEINE"}</strong></div><div><small>LIEFERADRESSE</small><strong>{address ? `${address.zip || ""} ${address.city || ""}` : "NOCH NICHT HINTERLEGT"}</strong></div></div><div className="account-empty"><strong>{orders.length ? "ALLES IM BLICK" : "NOCH KEINE BESTELLUNGEN"}</strong><p>{orders.length ? "Deine Bestellungen, Angaben und Lieferadresse findest du über das Menü links." : "Deine nächste Auswahl aus dem Pott wartet im Katalog."}</p>{!orders.length && <a href="/katalog" className="btn-red">ZUM KATALOG →</a>}</div></>}
       {section === "personal" && <PersonalDataForm customer={customer} onSave={saveAccount} message={accountMessage} />}
       {section === "addresses" && <AddressManager addresses={customer.addresses?.nodes || []} onSave={saveAccount} message={accountMessage} />}
-      {section === "orders" && <><div className="account-section-head"><div><p className="account-kicker">BESTELLUNGEN</p><h2>DEINE LETZTEN SCHICHTEN</h2></div><span>{orders.length} {orders.length === 1 ? "BESTELLUNG" : "BESTELLUNGEN"}</span></div>{orders.length === 0 ? <div className="account-empty"><strong>NOCH KEINE BESTELLUNGEN</strong><p>Deine nächste Auswahl aus dem Pott wartet im Katalog.</p><a href="/katalog" className="btn-red">ZUM KATALOG →</a></div> : <div className="account-orders">{orders.map((order) => <article key={order.id}><div><strong>{order.name || "BESTELLUNG"}</strong><span>{order.processedAt ? new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(new Date(order.processedAt)) : ""}</span></div><div><small>{order.fulfillmentStatus || order.financialStatus || "IN BEARBEITUNG"}</small><b>{order.totalPrice ? new Intl.NumberFormat("de-DE", { style: "currency", currency: order.totalPrice.currencyCode }).format(Number(order.totalPrice.amount)) : ""}</b></div></article>)}</div>}</>}
+      {section === "orders" && <OrdersList orders={orders} />}
     </div></div>}
   </section></main></PageShell>
 }
@@ -3928,6 +3938,29 @@ function PersonalDataForm({ customer, onSave, message }: { customer: CustomerAcc
   return <section><div className="account-section-head"><div><p className="account-kicker">MEIN KONTO</p><h2>PERSÖNLICHE DATEN</h2></div></div><form className="account-edit-form" onSubmit={(e) => { e.preventDefault(); onSave("update-profile", { firstName, lastName }) }}><label>VORNAME<input value={firstName} onChange={(e) => setFirstName(e.target.value)} /></label><label>NACHNAME<input value={lastName} onChange={(e) => setLastName(e.target.value)} /></label><label className="account-edit-wide">E-MAIL-ADRESSE<input value={customer.emailAddress?.emailAddress || ""} disabled /></label><button className="btn-red" type="submit">ÄNDERUNGEN SPEICHERN</button></form>{message && <p className="account-save-message">{message}</p>}</section>
 }
 
+const formatCustomerMoney = (money?: { amount: string; currencyCode: string }) => money ? new Intl.NumberFormat("de-DE", { style: "currency", currency: money.currencyCode }).format(Number(money.amount)) : "—"
+
+function orderStatusLabel(status?: string, kind: "payment" | "fulfillment" = "fulfillment") {
+  const normalized = (status || "").toUpperCase()
+  const labels: Record<string, string> = kind === "payment"
+    ? { PENDING: "ZAHLUNG AUSSTEHEND", AUTHORIZED: "ZAHLUNG AUTORISIERT", PAID: "BEZAHLT", PARTIALLY_PAID: "TEILWEISE BEZAHLT", REFUNDED: "ERSTATTET", PARTIALLY_REFUNDED: "TEILWEISE ERSTATTET", VOIDED: "STORNIERT", EXPIRED: "ABGELAUFEN" }
+    : { UNFULFILLED: "NOCH NICHT VERSENDET", PARTIALLY_FULFILLED: "TEILWEISE VERSENDET", FULFILLED: "VERSENDET", RESTOCKED: "STORNIERT", IN_PROGRESS: "IN BEARBEITUNG", ON_HOLD: "ANGEHALTEN", SCHEDULED: "GEPLANT" }
+  return labels[normalized] || (kind === "payment" ? "ZAHLUNG WIRD GEPRÜFT" : "IN BEARBEITUNG")
+}
+
+function OrdersList({ orders }: { orders: CustomerOrder[] }) {
+  const [openOrderId, setOpenOrderId] = useState<string | null>(null)
+  return <section><div className="account-section-head"><div><p className="account-kicker">BESTELLUNGEN</p><h2>DEINE LETZTEN SCHICHTEN</h2></div><span>{orders.length} {orders.length === 1 ? "BESTELLUNG" : "BESTELLUNGEN"}</span></div>{orders.length === 0 ? <div className="account-empty"><strong>NOCH KEINE BESTELLUNGEN</strong><p>Deine nächste Auswahl aus dem Pott wartet im Katalog.</p><a href="/katalog" className="btn-red">ZUM KATALOG →</a></div> : <div className="account-orders">{orders.map((order) => {
+    const isOpen = openOrderId === order.id
+    const isCancelled = Boolean(order.cancelledAt) || order.financialStatus?.toUpperCase() === "VOIDED"
+    const date = order.processedAt || order.createdAt
+    const fulfillment = isCancelled ? "STORNIERT" : orderStatusLabel(order.fulfillmentStatus)
+    const payment = orderStatusLabel(order.financialStatus, "payment")
+    const items = order.lineItems?.nodes || []
+    return <article className={`account-order ${isOpen ? "is-open" : ""}`} key={order.id}><button type="button" className="account-order-summary" aria-expanded={isOpen} aria-controls={`order-${order.id}`} onClick={() => setOpenOrderId(isOpen ? null : order.id)}><div><strong>{order.name || order.confirmationNumber || "BESTELLUNG"}</strong><span>{date ? new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(new Date(date)) : ""}</span></div><div className="account-order-total"><small className={isCancelled ? "is-cancelled" : ""}>{fulfillment}</small><b>{formatCustomerMoney(order.totalPrice)}</b><i aria-hidden="true">{isOpen ? "−" : "+"}</i></div></button>{isOpen && <div className="account-order-details" id={`order-${order.id}`}><div className="account-order-meta"><div><small>BESTELLNUMMER</small><b>{order.name || order.confirmationNumber || "—"}</b></div><div><small>ZAHLUNGSSTATUS</small><b>{payment}</b></div><div><small>VERSANDSTATUS</small><b className={isCancelled ? "is-cancelled" : ""}>{fulfillment}</b></div></div>{isCancelled && <p className="account-order-notice">DIESE BESTELLUNG WURDE STORNIERT{order.cancelReason ? ` · ${order.cancelReason.replaceAll("_", " ")}` : ""}.</p>}<div className="account-order-items">{items.length ? items.map((item) => <div className="account-order-item" key={item.id}>{item.image?.url ? <img src={item.image.url} alt={item.image.altText || item.name || "Produkt"} /> : <div className="account-order-item-placeholder" aria-hidden="true" />}<div><strong>{item.name || "ARTIKEL"}</strong>{item.variantTitle && item.variantTitle !== "Default Title" && <span>{item.variantTitle}</span>}<small>{item.quantity || 1} × {formatCustomerMoney(item.totalPrice)}</small></div><b>{formatCustomerMoney(item.totalPrice)}</b></div>) : <p className="account-order-items-empty">DIE ARTIKEL DIESER BESTELLUNG WERDEN VON SHOPIFY NOCH GELADEN.</p>}</div></div>}</article>
+  })}</div>}</section>
+}
+
 function AddressManager({ addresses, onSave, message }: { addresses: CustomerAddress[]; onSave: (action: string, payload: Record<string, string>) => Promise<boolean>; message: string }) {
   const empty = { firstName: "", lastName: "", address1: "", address2: "", zip: "", city: "" }
   const [editing, setEditing] = useState<CustomerAddress | null>(null)
@@ -3935,7 +3968,7 @@ function AddressManager({ addresses, onSave, message }: { addresses: CustomerAdd
   const [form, setForm] = useState<Record<string, string>>(empty)
   const open = (item?: CustomerAddress) => { setEditing(item || null); setEditorOpen(true); setForm(item ? { firstName: item.firstName || "", lastName: item.lastName || "", address1: item.address1 || "", address2: item.address2 || "", zip: item.zip || "", city: item.city || "" } : empty) }
   const submit = async (e: React.FormEvent) => { e.preventDefault(); if (!form.address1 || !form.zip || !form.city) return; const ok = await onSave(editing ? "update-address" : "create-address", editing ? { ...form, id: editing.id } : form); if (ok) { setEditing(null); setEditorOpen(false) } }
-  return <section><div className="account-section-head"><div><p className="account-kicker">MEIN KONTO</p><h2>ADRESSEN</h2></div><span>{addresses.length}/3 GESPEICHERT</span></div><div className="account-address-list">{addresses.map((item) => <article key={item.id}><p>{item.firstName} {item.lastName}<br />{item.address1}{item.address2 && `, ${item.address2}`}<br />{item.zip} {item.city}</p><div><button type="button" onClick={() => open(item)}>BEARBEITEN</button><button type="button" onClick={() => onSave("delete-address", { id: item.id })}>LÖSCHEN</button></div></article>)}</div>{addresses.length < 3 && <button className="account-add-address" type="button" onClick={() => open()}>+ NEUE ADRESSE HINZUFÜGEN</button>}{editorOpen ? <form className="account-edit-form account-address-form" onSubmit={submit}><h3>{editing ? "ADRESSE BEARBEITEN" : "NEUE ADRESSE"}</h3><label>VORNAME<input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} /></label><label>NACHNAME<input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} /></label><label className="account-edit-wide">STRASSE & HAUSNUMMER*<input value={form.address1} onChange={(e) => setForm({ ...form, address1: e.target.value })} required /></label><label className="account-edit-wide">ADRESSZUSATZ<input value={form.address2} onChange={(e) => setForm({ ...form, address2: e.target.value })} /></label><label>PLZ*<input value={form.zip} onChange={(e) => setForm({ ...form, zip: e.target.value })} required /></label><label>ORT*<input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required /></label><button className="btn-red" type="submit">ADRESSE SPEICHERN</button>{editing && <button type="button" className="account-cancel" onClick={() => { setEditing(null); setEditorOpen(false) }}>ABBRECHEN</button>}</form> : null}{message && <p className="account-save-message">{message}</p>}</section>
+  return <section><div className="account-section-head"><div><p className="account-kicker">MEIN KONTO</p><h2>ADRESSEN</h2></div><span>{addresses.length}/3 GESPEICHERT</span></div><div className="account-address-list">{addresses.map((item) => <article key={item.id}><p>{item.firstName} {item.lastName}<br />{item.address1}{item.address2 && `, ${item.address2}`}<br />{item.zip} {item.city}</p><div><button type="button" className="account-address-action" onClick={() => open(item)}>BEARBEITEN</button><button type="button" className="account-address-action is-danger" onClick={() => onSave("delete-address", { id: item.id })}>LÖSCHEN</button></div></article>)}</div>{addresses.length < 3 && <button className="account-add-address" type="button" onClick={() => open()}>+ NEUE ADRESSE HINZUFÜGEN</button>}{editorOpen ? <form className="account-edit-form account-address-form" onSubmit={submit}><h3>{editing ? "ADRESSE BEARBEITEN" : "NEUE ADRESSE"}</h3><label>VORNAME<input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} /></label><label>NACHNAME<input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} /></label><label className="account-edit-wide">STRASSE & HAUSNUMMER*<input value={form.address1} onChange={(e) => setForm({ ...form, address1: e.target.value })} required /></label><label className="account-edit-wide">ADRESSZUSATZ<input value={form.address2} onChange={(e) => setForm({ ...form, address2: e.target.value })} /></label><label>PLZ*<input value={form.zip} onChange={(e) => setForm({ ...form, zip: e.target.value })} required /></label><label>ORT*<input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required /></label><button className="btn-red" type="submit">ADRESSE SPEICHERN</button>{editing && <button type="button" className="account-cancel" onClick={() => { setEditing(null); setEditorOpen(false) }}>ABBRECHEN</button>}</form> : null}{message && <p className="account-save-message">{message}</p>}</section>
 }
 
 function AccountInformation({ title, rows }: { title: string; rows: Array<[string, string | undefined]> }) {
