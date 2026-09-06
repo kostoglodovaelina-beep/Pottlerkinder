@@ -3128,13 +3128,16 @@ function shopifyCatalogProduct(product: any) {
   const selectedColors = Array.from(new Set(option("farbe").concat(option("color")))).map((item: string) => SHOPIFY_COLORS[item.toLowerCase()] || "#777")
   const selectedSizes = Array.from(new Set(option("größe").concat(option("groesse"), option("size"))))
   const firstVariant = variants[0]
-  const images = (product.images?.nodes || []).slice(0, 5)
+  const images = (product.media?.nodes || [])
+    .map((media: any) => media.preview?.image)
+    .filter(Boolean)
+    .slice(0, 5)
   const formatPrice = (value: string | null | undefined) => value ? new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(Number(value)) : "–"
   return {
     id: product.id,
     slug: product.handle,
-    image: product.featuredImage?.url || imgProduct1,
-    images: images.length ? images : [{ url: product.featuredImage?.url || imgProduct1, altText: product.title }],
+    image: product.featuredMedia?.preview?.image?.url || imgProduct1,
+    images: images.length ? images : [{ url: product.featuredMedia?.preview?.image?.url || imgProduct1, altText: product.title }],
     name: product.title,
     category,
     sub: tag("sub_") ? SHOPIFY_SUBCATEGORY_MAP[normalizeTag(tag("sub_")!)] : undefined,

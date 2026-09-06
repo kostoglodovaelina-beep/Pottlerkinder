@@ -1,9 +1,9 @@
-import { sendError, storefront } from "./_shopify.js"
+import { admin, sendError } from "./_shopify.js"
 
 const productFields = `
   id title handle description productType tags
-  featuredImage { url altText }
-  images(first:5) { nodes { url altText } }
+  featuredMedia { preview { image { url altText } } }
+  media(first:5) { nodes { preview { image { url altText } } } }
   variants(first:100) {
     nodes {
       id title price compareAtPrice availableForSale
@@ -19,9 +19,10 @@ export default async function handler(req, res) {
     const query = handle
       ? `query($handle:String!){productByHandle(handle:$handle){${productFields}}}`
       : `query{products(first:250,sortKey:UPDATED_AT,reverse:true){nodes{${productFields}}}}`
-    // Public storefront data must never be fetched with the Admin API. The
-    // Storefront API only exposes products that are published to this channel.
-    const data = await storefront(query, handle ? { handle } : {})
+    // This route is server-side only. The Admin token never reaches the
+    // browser and lets the custom storefront list the products you manage in
+    // Shopify, without requiring a separate Headless sales-channel publish.
+    const data = await admin(query, handle ? { handle } : {})
     const products = handle ? (data.productByHandle ? [data.productByHandle] : []) : data.products.nodes
     res.status(200).json({ products })
   } catch (error) { sendError(res, error) }
