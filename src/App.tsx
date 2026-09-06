@@ -3867,7 +3867,9 @@ function AccountPage() {
     fetch("/api/customer-account?action=complete-registration", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: window.sessionStorage.getItem("pottler-registration-details") || "{}" })
       .then(async (response) => {
         if (!response.ok) return
+        const result = await response.json()
         window.sessionStorage.removeItem("pottler-registration-details")
+        if (!result.saved) return
         // The Customer Account session was loaded before the registration
         // details were written. Reload it so name and address appear now.
         await refresh()
