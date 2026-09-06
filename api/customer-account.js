@@ -32,7 +32,10 @@ function clearCookie(res, name) {
 }
 
 async function discovery() {
-  const response = await fetch(`https://${shop()}/.well-known/customer-account`)
+  // Shopify publishes Customer Account OAuth endpoints as OpenID metadata.
+  // The former `customer-account` URL is not a Shopify discovery endpoint
+  // and returns a 404 for every correctly configured shop.
+  const response = await fetch(`https://${shop()}/.well-known/openid-configuration`)
   if (!response.ok) throw new Error("Customer Account API discovery failed")
   return response.json()
 }
