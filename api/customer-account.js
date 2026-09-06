@@ -120,6 +120,9 @@ const customerQuery = `query CustomerAccount {
         financialStatus
         fulfillmentStatus
         totalPrice { amount currencyCode }
+        totalShipping { amount currencyCode }
+        shippingLine { title originalPrice { amount currencyCode } }
+        shippingAddress { firstName lastName address1 address2 zip city country }
         lineItems(first: 50) {
           nodes {
             id

@@ -707,6 +707,7 @@ function Header() {
                 {accountLoading ? "LOGIN" : accountCustomer ? "KONTO" : "LOGIN"}
               </span>
             </button>
+            {accountOpen && <div className="desktop-account-menu hidden lg:block"><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} onSignOut={signOutAccount} /></div>}
             </div>
             {/* WARENKORB */}
             <button
@@ -813,8 +814,6 @@ function Header() {
             ))}
           </div>
         )}
-        {accountOpen && <div className="desktop-account-menu hidden lg:block" style={{ right: "max(16px, calc((100% - 1440px) / 2 + clamp(16px, 12vw, 210px)))" }}><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} onSignOut={signOutAccount} /></div>}
-
         {/* ── Mobile header row ── */}
         <div
           className="mobile-header flex lg:hidden items-center justify-between px-4"
@@ -949,6 +948,11 @@ function CartDrawer({
   const [removing, setRemoving] = useState<string | null>(null)
   const lines = cart?.lines?.edges || []
   const total = cart?.cost?.totalAmount
+  const subtotal = cart?.cost?.subtotalAmount || total
+  const currency = subtotal?.currencyCode || "EUR"
+  const subtotalValue = Number(subtotal?.amount || 0)
+  const shippingValue = subtotalValue >= 80 ? 0 : 9.99
+  const formatCartMoney = (amount: number) => new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(amount)
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setRemoving(lineId)
@@ -980,7 +984,8 @@ function CartDrawer({
           })}
         </div>
         <footer className="cart-drawer-foot">
-          <div><span>ZWISCHENSUMME</span><strong>{total ? new Intl.NumberFormat("de-DE", { style: "currency", currency: total.currencyCode }).format(Number(total.amount)) : "—"}</strong></div>
+          <div className="cart-drawer-costs"><div><span>ZWISCHENSUMME</span><strong>{subtotal ? formatCartMoney(subtotalValue) : "—"}</strong></div><div><span>VERSAND · DHL / GLS</span><strong className={shippingValue === 0 ? "is-free" : ""}>{shippingValue === 0 ? "KOSTENLOS" : formatCartMoney(shippingValue)}</strong></div><div className="cart-drawer-grand-total"><span>VORAUSSICHTLICH GESAMT</span><strong>{subtotal ? formatCartMoney(subtotalValue + shippingValue) : "—"}</strong></div></div>
+          <p className="cart-shipping-note">* KOSTENLOSER VERSAND AB 80,00 € WARENWERT.</p>
           <a href="/katalog" onClick={onClose} className="cart-drawer-continue">← WEITER EINKAUFEN</a>
           {cart?.checkoutUrl && lines.length > 0 && <a href={cart.checkoutUrl} className="btn-red cart-drawer-checkout">SICHER ZUR KASSE <span>→</span></a>}
         </footer>
@@ -997,7 +1002,7 @@ function AccountMenu({ customer, onClose, onSignOut }: { customer: CustomerAccou
   const name = customerName(customer)
   return <div className="account-menu" role="menu">
     <div className="account-menu-head"><span>{customer ? "GLÜCK AUF" : "MEIN POTTLERKINDER"}</span>{customer ? <strong>{name || "MEIN KONTO"}</strong> : <button type="button" className="account-menu-login btn-red" onClick={() => go("personal")}>ANMELDEN</button>}</div>
-    {ACCOUNT_SECTIONS.map((item) => <button type="button" key={item.id} onClick={() => go(item.id)} role="menuitem"><span>{item.label}</span></button>)}
+    {ACCOUNT_SECTIONS.map((item) => <button type="button" key={item.id} onClick={() => go(item.id)} role="menuitem"><span>{item.label}</span><b aria-hidden="true">›</b></button>)}
     {customer && <div className="account-menu-footer"><button type="button" className="btn-glass account-menu-logout" onClick={async () => { await onSignOut(); onClose() }}>ABMELDEN</button></div>}
   </div>
 }
@@ -3777,6 +3782,11 @@ function CartPage() {
   const { cart, loading, refreshCart } = useShopifyCart()
   const [updating, setUpdating] = useState<string | null>(null)
   const lines = cart?.lines?.edges || []
+  const subtotal = cart?.cost?.subtotalAmount || cart?.cost?.totalAmount
+  const currency = subtotal?.currencyCode || "EUR"
+  const subtotalValue = Number(subtotal?.amount || 0)
+  const shippingValue = subtotalValue >= 80 ? 0 : 9.99
+  const formatCartMoney = (amount: number) => new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(amount)
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setUpdating(lineId)
@@ -3807,7 +3817,7 @@ function CartPage() {
                 </article>
               })}
             </div>
-            <aside className="cart-summary"><p>ZWISCHENSUMME</p><strong>{new Intl.NumberFormat("de-DE", { style: "currency", currency: cart.cost.totalAmount.currencyCode }).format(Number(cart.cost.totalAmount.amount))}</strong><a className="btn-red" href={cart.checkoutUrl}>SICHER ZUR KASSE →</a><span>Bezahlung und Versand erfolgen sicher über Shopify.</span></aside>
+            <aside className="cart-summary"><p>ZWISCHENSUMME</p><strong>{formatCartMoney(subtotalValue)}</strong><div className="cart-summary-shipping"><span>VERSAND · DHL / GLS</span><b className={shippingValue === 0 ? "is-free" : ""}>{shippingValue === 0 ? "KOSTENLOS" : formatCartMoney(shippingValue)}</b></div><div className="cart-summary-total"><span>VORAUSSICHTLICH GESAMT</span><b>{formatCartMoney(subtotalValue + shippingValue)}</b></div><small>* KOSTENLOSER VERSAND AB 80,00 € WARENWERT.</small><a className="btn-red" href={cart.checkoutUrl}>SICHER ZUR KASSE →</a><span>Bezahlung und Versand erfolgen sicher über Shopify.</span></aside>
           </div>}
         </section>
       </main>
@@ -3836,6 +3846,9 @@ type CustomerOrder = {
   financialStatus?: string
   fulfillmentStatus?: string
   totalPrice?: { amount: string; currencyCode: string }
+  totalShipping?: { amount: string; currencyCode: string }
+  shippingLine?: { title?: string; originalPrice?: { amount: string; currencyCode: string } }
+  shippingAddress?: CustomerAddress
   lineItems?: { nodes?: Array<{ id: string; name?: string; variantTitle?: string; quantity?: number; image?: { url?: string; altText?: string }; totalPrice?: { amount: string; currencyCode: string } }> }
 }
 
@@ -3957,7 +3970,9 @@ function OrdersList({ orders }: { orders: CustomerOrder[] }) {
     const fulfillment = isCancelled ? "STORNIERT" : orderStatusLabel(order.fulfillmentStatus)
     const payment = orderStatusLabel(order.financialStatus, "payment")
     const items = order.lineItems?.nodes || []
-    return <article className={`account-order ${isOpen ? "is-open" : ""}`} key={order.id}><button type="button" className="account-order-summary" aria-expanded={isOpen} aria-controls={`order-${order.id}`} onClick={() => setOpenOrderId(isOpen ? null : order.id)}><div><strong>{order.name || order.confirmationNumber || "BESTELLUNG"}</strong><span>{date ? new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(new Date(date)) : ""}</span></div><div className="account-order-total"><small className={isCancelled ? "is-cancelled" : ""}>{fulfillment}</small><b>{formatCustomerMoney(order.totalPrice)}</b><i aria-hidden="true">{isOpen ? "−" : "+"}</i></div></button>{isOpen && <div className="account-order-details" id={`order-${order.id}`}><div className="account-order-meta"><div><small>BESTELLNUMMER</small><b>{order.name || order.confirmationNumber || "—"}</b></div><div><small>ZAHLUNGSSTATUS</small><b>{payment}</b></div><div><small>VERSANDSTATUS</small><b className={isCancelled ? "is-cancelled" : ""}>{fulfillment}</b></div></div>{isCancelled && <p className="account-order-notice">DIESE BESTELLUNG WURDE STORNIERT{order.cancelReason ? ` · ${order.cancelReason.replaceAll("_", " ")}` : ""}.</p>}<div className="account-order-items">{items.length ? items.map((item) => <div className="account-order-item" key={item.id}>{item.image?.url ? <img src={item.image.url} alt={item.image.altText || item.name || "Produkt"} /> : <div className="account-order-item-placeholder" aria-hidden="true" />}<div><strong>{item.name || "ARTIKEL"}</strong>{item.variantTitle && item.variantTitle !== "Default Title" && <span>{item.variantTitle}</span>}<small>{item.quantity || 1} × {formatCustomerMoney(item.totalPrice)}</small></div><b>{formatCustomerMoney(item.totalPrice)}</b></div>) : <p className="account-order-items-empty">DIE ARTIKEL DIESER BESTELLUNG WERDEN VON SHOPIFY NOCH GELADEN.</p>}</div></div>}</article>
+    const shippingAddress = order.shippingAddress
+    const addressLines = shippingAddress ? [shippingAddress.firstName, shippingAddress.lastName, shippingAddress.address1, shippingAddress.address2, [shippingAddress.zip, shippingAddress.city].filter(Boolean).join(" "), shippingAddress.country].filter(Boolean) : []
+    return <article className={`account-order ${isOpen ? "is-open" : ""}`} key={order.id}><button type="button" className="account-order-summary" aria-expanded={isOpen} aria-controls={`order-${order.id}`} onClick={() => setOpenOrderId(isOpen ? null : order.id)}><div><strong>{order.name || order.confirmationNumber || "BESTELLUNG"}</strong><span>{date ? new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(new Date(date)) : ""}</span></div><div className="account-order-total"><small className={isCancelled ? "is-cancelled" : ""}>{fulfillment}</small><b>{formatCustomerMoney(order.totalPrice)}</b><i aria-hidden="true">{isOpen ? "−" : "+"}</i></div></button>{isOpen && <div className="account-order-details" id={`order-${order.id}`}><div className="account-order-meta"><div><small>BESTELLNUMMER</small><b>{order.name || order.confirmationNumber || "—"}</b></div><div><small>ZAHLUNGSSTATUS</small><b>{payment}</b></div><div><small>VERSANDSTATUS</small><b className={isCancelled ? "is-cancelled" : ""}>{fulfillment}</b></div><div><small>VERSANDART</small><b>{order.shippingLine?.title || "VERSAND"}</b></div><div><small>VERSANDKOSTEN</small><b>{formatCustomerMoney(order.totalShipping || order.shippingLine?.originalPrice)}</b></div></div>{addressLines.length > 0 && <div className="account-order-delivery"><small>LIEFERADRESSE</small><address>{addressLines.map((line) => <span key={line}>{line}</span>)}</address></div>}{isCancelled && <p className="account-order-notice">DIESE BESTELLUNG WURDE STORNIERT{order.cancelReason ? ` · ${order.cancelReason.replaceAll("_", " ")}` : ""}.</p>}<div className="account-order-items">{items.length ? items.map((item) => <div className="account-order-item" key={item.id}>{item.image?.url ? <img src={item.image.url} alt={item.image.altText || item.name || "Produkt"} /> : <div className="account-order-item-placeholder" aria-hidden="true" />}<div><strong>{item.name || "ARTIKEL"}</strong>{item.variantTitle && item.variantTitle !== "Default Title" && <span>{item.variantTitle}</span>}<small>{item.quantity || 1} × {formatCustomerMoney(item.totalPrice)}</small></div><b>{formatCustomerMoney(item.totalPrice)}</b></div>) : <p className="account-order-items-empty">DIE ARTIKEL DIESER BESTELLUNG WERDEN VON SHOPIFY NOCH GELADEN.</p>}</div></div>}</article>
   })}</div>}</section>
 }
 
