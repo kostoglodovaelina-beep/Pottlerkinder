@@ -3125,7 +3125,7 @@ const SHOPIFY_COLORS: Record<string, string> = { schwarz: "#161616", black: "#16
 function shopifyCatalogProduct(product: any) {
   const tags = product.tags || []
   const tag = (prefix: string) => tags.find((item: string) => item.toLowerCase().startsWith(prefix))?.slice(prefix.length)
-  const variants = product.variants?.nodes || []
+  const variants = (product.variants?.nodes || []).filter((variant: any) => variant.availableForSale)
   const option = (name: string) => variants.flatMap((variant: any) => variant.selectedOptions || []).filter((item: any) => item.name.toLowerCase() === name).map((item: any) => item.value)
   const normalizeTag = (value: string) => value.toUpperCase().replace(/Ä/g, "AE").replace(/Ö/g, "OE").replace(/Ü/g, "UE").replace(/ß/g, "SS").replace(/[\s&-]+/g, "_")
   const categoryValue = normalizeTag(tag("category_") || product.productType || "T-SHIRTS")
@@ -3140,6 +3140,7 @@ function shopifyCatalogProduct(product: any) {
     .filter(Boolean)
     .slice(0, 5)
   const formatPrice = (value: string | null | undefined) => value ? new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(Number(value)) : "–"
+  if (!variants.length) return null
   return {
     id: product.id,
     slug: product.handle,
@@ -3166,11 +3167,14 @@ function useShopifyCatalog(handle?: string) {
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
     let active = true
-    fetch(`/api/products${handle ? `?handle=${encodeURIComponent(handle)}` : ""}`)
+    const loadCatalog = () => fetch(`/api/products${handle ? `?handle=${encodeURIComponent(handle)}` : ""}`, { cache: "no-store" })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error("Shopify products unavailable")))
-      .then((data) => active && setProducts((data.products || []).map(shopifyCatalogProduct)))
+      .then((data) => active && setProducts((data.products || []).map(shopifyCatalogProduct).filter(Boolean)))
       .catch((requestError) => active && setError(requestError.message))
-    return () => { active = false }
+    const refreshOnFocus = () => { if (document.visibilityState === "visible") loadCatalog() }
+    loadCatalog()
+    window.addEventListener("focus", refreshOnFocus)
+    return () => { active = false; window.removeEventListener("focus", refreshOnFocus) }
   }, [handle])
   return { products, error }
 }
@@ -3641,7 +3645,7 @@ function ShopifyProductPage({ handle }: { handle: string }) {
   return (
     <PageShell inner>
       <main className="flex-1 flex items-center justify-center min-h-[55vh] px-6">
-        <p className="catalog-no-results">{error ? "DIESER ARTIKEL IST NICHT VERFÜGBAR." : "ARTIKEL WIRD GELADEN."}</p>
+        <p className="catalog-no-results">{error || products ? "DIESER ARTIKEL IST NICHT VERFÜGBAR." : "ARTIKEL WIRD GELADEN."}</p>
       </main>
     </PageShell>
   )
