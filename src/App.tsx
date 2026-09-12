@@ -1,6 +1,27 @@
+// @refresh reset
 import { useState, useEffect, useMemo, useRef } from "react"
-import { FaBeer, FaChild, FaFemale, FaGem, FaHatCowboy, FaMale, FaMugHot, FaRegSquare, FaRegStickyNote, FaShoppingBag, FaTags, FaThumbtack, FaTshirt, FaUsers } from "react-icons/fa"
+import {
+  FaBeer,
+  FaArrowsAlt,
+  FaChild,
+  FaEyeDropper,
+  FaExpandArrowsAlt,
+  FaFemale,
+  FaGem,
+  FaHatCowboy,
+  FaMale,
+  FaMugHot,
+  FaRegSquare,
+  FaRegStickyNote,
+  FaShoppingBag,
+  FaTags,
+  FaThumbtack,
+  FaTrash,
+  FaTshirt,
+  FaUsers,
+} from "react-icons/fa"
 import { GiPoloShirt } from "react-icons/gi"
+import { HexColorPicker } from "react-colorful"
 
 import imgHeroStripe from "@/imports/assets/sections/ticker-stripe.webp"
 import imgBannerImage from "@/imports/assets/sections/design-banner-photo.webp"
@@ -30,6 +51,55 @@ import imgWordmarkLogo from "@/imports/assets/header/logo-wordmark.webp"
 import imgZubehorPhoto from "@/imports/assets/categories/accessories.webp"
 import imgHeaderCoal from "@/imports/assets/header/coal-texture.webp"
 import imgGlobe from "@/imports/assets/header/language-globe.webp"
+import customHoodie from "@/imports/Hoodie.jpg"
+import customPolo from "@/imports/Polo.jpg"
+import solsStockholmRed from "@/assets/designer/shopper/sols-stockholm-red.webp"
+import customSweatshirt from "@/imports/Sweatshirt-1.jpg"
+import staminaBierkrugWhite from "@/assets/designer/mug/stamina-bierkrug-white.webp"
+import customTshirt from "@/imports/t-shirt.jpg"
+import customShirt from "@/imports/Hemd.jpg"
+import customCap from "@/imports/Kappe.jpg"
+import womenCapBlack from "@/assets/designer/women-cap/front/black-verified.webp"
+import womenCapRed from "@/assets/designer/women-cap/front/red-verified.webp"
+import womenCapWhite from "@/assets/designer/women-cap/front/white-verified.webp"
+import womenCapRedWhite from "@/assets/designer/women-cap/front/red_white-verified.webp"
+import womenCapKellyGreen from "@/assets/designer/women-cap/front/kelly_green-verified.webp"
+import womenCapBottleGreen from "@/assets/designer/women-cap/front/bottle_green-verified.webp"
+import womenCapFrenchNavyWhite from "@/assets/designer/women-cap/front/french_navy_white-verified.webp"
+import womenCapRoyalBlue from "@/assets/designer/women-cap/front/royal_blue-verified.webp"
+import womenCapFrenchNavy from "@/assets/designer/women-cap/front/french_navy-verified.webp"
+import womenCapBlackBack from "@/assets/designer/women-cap/back/black-verified.webp"
+import womenCapRedBack from "@/assets/designer/women-cap/back/red-verified.webp"
+import womenCapWhiteBack from "@/assets/designer/women-cap/back/white-verified.webp"
+import womenCapRedWhiteBack from "@/assets/designer/women-cap/back/red_white-verified.webp"
+import womenCapKellyGreenBack from "@/assets/designer/women-cap/back/kelly_green-verified.webp"
+import womenCapBottleGreenBack from "@/assets/designer/women-cap/back/bottle_green-verified.webp"
+import womenCapFrenchNavyWhiteBack from "@/assets/designer/women-cap/back/french_navy_white-verified.webp"
+import womenCapRoyalBlueBack from "@/assets/designer/women-cap/back/royal_blue-verified.webp"
+import womenCapFrenchNavyBack from "@/assets/designer/women-cap/back/french_navy-verified.webp"
+import sizeGuideShirt from "@/assets/designer/size-guide-shirt-white.png"
+import hoodieBlack from "@/imports/9d.jpg"
+import hoodieFireRed from "@/imports/36.jpg"
+import hoodieNavy from "@/imports/54.jpg"
+import hoodieAzureBlue from "@/imports/az.jpg"
+import hoodieCharcoal from "@/imports/ca.jpg"
+import hoodieFrenchNavy from "@/imports/fn.jpg"
+import hoodieHeatherNavy from "@/imports/hn.jpg"
+import hoodieHeatherGrey from "@/imports/hy.jpg"
+import hoodieNewLightGrey from "@/imports/nw.jpg"
+import hoodieOlive from "@/imports/ol.jpg"
+import hoodieWhite from "@/imports/00.jpg"
+import womenHoodieWhiteBack from "@/assets/designer/women-hoodie/back/white-back.jpg"
+import womenHoodieFireRedBack from "@/assets/designer/women-hoodie/back/fire_red-back.jpg"
+import womenHoodieOliveBack from "@/assets/designer/women-hoodie/back/olive-back.jpg"
+import womenHoodieAzureBlueBack from "@/assets/designer/women-hoodie/back/azure_blue-back.jpg"
+import womenHoodieNavyBack from "@/assets/designer/women-hoodie/back/navy-back.jpg"
+import womenHoodieHeatherNavyBack from "@/assets/designer/women-hoodie/back/heather_navy-back.jpg"
+import womenHoodieFrenchNavyBack from "@/assets/designer/women-hoodie/back/french_navy-back.jpg"
+import womenHoodieCharcoalBack from "@/assets/designer/women-hoodie/back/charcoal-back.jpg"
+import womenHoodieHeatherGreyBack from "@/assets/designer/women-hoodie/back/heather_grey-back.jpg"
+import womenHoodieNewLightGreyBack from "@/assets/designer/women-hoodie/back/new_light_grey-back.jpg"
+import womenHoodieBlackBack from "@/assets/designer/women-hoodie/back/black-back.jpg"
 import pageCompany from "@/imports/assets/pages/company.webp"
 import pageHistory from "@/imports/assets/pages/history.webp"
 import pageCollieries from "@/imports/assets/pages/collieries.webp"
@@ -129,6 +199,32 @@ const PRODUCTS = [
 ]
 
 const TICKER_ITEMS = ["GLÜCK AUF", "◆", "MADE IM POTT", "◆", "RUHRGEBIET", "◆"]
+const TEXT_FONTS = [
+  "Oswald",
+  "Montserrat",
+  "Inter",
+  "Anton",
+  "Russo One",
+  "Roboto Slab",
+  "Playfair Display",
+  "Lobster",
+  "Pacifico",
+  "Caveat",
+  "Comfortaa",
+  "Arial",
+  "Arial Black",
+  "Impact",
+  "Georgia",
+  "Times New Roman",
+  "Courier New",
+  "Verdana",
+]
+const TEXT_COLOR_SWATCHES = [
+  "#FFFFFF", "#D9D9D9", "#777777", "#111111", "#443D37", "#C1AF9B",
+  "#962F3A", "#D92F2E", "#EC8B70", "#FF9918", "#FFE021", "#7FA964",
+  "#305E34", "#26767B", "#4EAED0", "#1F4C68", "#A9A3D2", "#824A80",
+  "#64205D", "#E1A3A7", "#EBC9D7", "#FFE7C0", "#D7762C", "#8E2714",
+]
 const PAGE_BACKDROPS = {
   company: pageCompany,
   history: pageHistory,
@@ -359,24 +455,44 @@ function useCustomerAccount() {
   const refresh = async () => {
     setLoading(true)
     try {
-      const response = await fetch("/api/customer-account?action=profile", { credentials: "same-origin", cache: "no-store" })
-      if (response.status === 401) { setCustomer(null); return null }
+      const response = await fetch("/api/customer-account?action=profile", {
+        credentials: "same-origin",
+        cache: "no-store",
+      })
+      if (response.status === 401) {
+        setCustomer(null)
+        return null
+      }
       const data = await response.json()
       if (!response.ok) throw new Error(data.error)
       setCustomer(data.customer)
       return data.customer as CustomerAccount
-    } catch { setCustomer(null); return null } finally { setLoading(false) }
+    } catch {
+      setCustomer(null)
+      return null
+    } finally {
+      setLoading(false)
+    }
   }
-  useEffect(() => { refresh() }, [])
   useEffect(() => {
-    const clearLocalSession = () => { setCustomer(null); setLoading(false) }
+    refresh()
+  }, [])
+  useEffect(() => {
+    const clearLocalSession = () => {
+      setCustomer(null)
+      setLoading(false)
+    }
     window.addEventListener("pottler-account-logout", clearLocalSession)
-    return () => window.removeEventListener("pottler-account-logout", clearLocalSession)
+    return () =>
+      window.removeEventListener("pottler-account-logout", clearLocalSession)
   }, [])
   const signOut = async () => {
     const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
     if (cartId) await shopCart.detach(cartId).catch(() => undefined)
-    await fetch("/api/customer-account?action=logout", { method: "POST", credentials: "same-origin" })
+    await fetch("/api/customer-account?action=logout", {
+      method: "POST",
+      credentials: "same-origin",
+    })
     setCustomer(null)
     window.sessionStorage.removeItem("pottler-registration-details")
     window.sessionStorage.removeItem("pottler-registration-warning")
@@ -392,15 +508,25 @@ function Header() {
   const [cartOpen, setCartOpen] = useState(false)
   const [accountOpen, setAccountOpen] = useState(false)
   const { cart, refreshCart } = useShopifyCart()
-  const { customer: accountCustomer, loading: accountLoading, signOut: signOutAccount } = useCustomerAccount()
+  const {
+    customer: accountCustomer,
+    loading: accountLoading,
+    signOut: signOutAccount,
+  } = useCustomerAccount()
   const cartQuantity = cart?.totalQuantity || 0
   useEffect(() => {
     if (!accountOpen) return
     const closeOnOutsideClick = (event: PointerEvent) => {
       const target = event.target as HTMLElement
-      if (!target.closest(".account-menu") && !target.closest("[data-account-trigger]")) setAccountOpen(false)
+      if (
+        !target.closest(".account-menu") &&
+        !target.closest("[data-account-trigger]")
+      )
+        setAccountOpen(false)
     }
-    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setAccountOpen(false) }
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setAccountOpen(false)
+    }
     document.addEventListener("pointerdown", closeOnOutsideClick)
     document.addEventListener("keydown", closeOnEscape)
     return () => {
@@ -664,6 +790,9 @@ function Header() {
           <div className="flex items-center gap-2 flex-shrink-0 relative z-[30]">
             {/* EIGENER DESIGN */}
             <button
+              onClick={() => {
+                window.location.href = "/designer"
+              }}
               className="btn-red flex items-center gap-2 whitespace-nowrap rounded-[5px]"
               style={{ padding: "9px 16px" }}
             >
@@ -689,30 +818,52 @@ function Header() {
             </button>
             {/* LOGIN */}
             <div className="relative z-[30]">
-            <button type="button" data-account-trigger onClick={() => setAccountOpen((open) => !open)} aria-expanded={accountOpen} className="btn-glass flex items-center gap-2 whitespace-nowrap" style={{ padding: "9px 14px" }}>
-              <img
-                src={imgAccount}
-                alt=""
-                className="w-4 h-4 object-contain mix-blend-screen flex-shrink-0"
-              />
-              <span
-                style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 800,
-                  fontSize: "clamp(10px, 0.9vw, 13px)",
-                  letterSpacing: "2px",
-                  color: "white",
-                }}
+              <button
+                type="button"
+                data-account-trigger
+                onClick={() => setAccountOpen((open) => !open)}
+                aria-expanded={accountOpen}
+                className="btn-glass flex items-center gap-2 whitespace-nowrap"
+                style={{ padding: "9px 14px" }}
               >
-                {accountLoading ? "LOGIN" : accountCustomer ? "KONTO" : "LOGIN"}
-              </span>
-            </button>
-            {accountOpen && <div className="desktop-account-menu hidden lg:block"><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} onSignOut={signOutAccount} /></div>}
+                <img
+                  src={imgAccount}
+                  alt=""
+                  className="w-4 h-4 object-contain mix-blend-screen flex-shrink-0"
+                />
+                <span
+                  style={{
+                    fontFamily: "Montserrat, sans-serif",
+                    fontWeight: 800,
+                    fontSize: "clamp(10px, 0.9vw, 13px)",
+                    letterSpacing: "2px",
+                    color: "white",
+                  }}
+                >
+                  {accountLoading
+                    ? "LOGIN"
+                    : accountCustomer
+                      ? "KONTO"
+                      : "LOGIN"}
+                </span>
+              </button>
+              {accountOpen && (
+                <div className="desktop-account-menu hidden lg:block">
+                  <AccountMenu
+                    customer={accountCustomer}
+                    onClose={() => setAccountOpen(false)}
+                    onSignOut={signOutAccount}
+                  />
+                </div>
+              )}
             </div>
             {/* WARENKORB */}
             <button
               type="button"
-              onClick={() => { refreshCart(); setCartOpen(true) }}
+              onClick={() => {
+                refreshCart()
+                setCartOpen(true)
+              }}
               className="btn-glass flex items-center gap-2 whitespace-nowrap"
               style={{ padding: "9px 14px" }}
             >
@@ -732,7 +883,9 @@ function Header() {
               >
                 WARENKORB
               </span>
-              {cartQuantity > 0 && <span className="cart-count">{cartQuantity}</span>}
+              {cartQuantity > 0 && (
+                <span className="cart-count">{cartQuantity}</span>
+              )}
             </button>
           </div>
         </div>
@@ -759,6 +912,11 @@ function Header() {
               {
                 label: "KINDER",
                 icon: "kids" as const,
+                children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
+              },
+              {
+                label: "UNISEX",
+                icon: "unisex" as const,
                 children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
               },
               {
@@ -848,17 +1006,31 @@ function Header() {
             />
           </a>
           <div className="mobile-actions flex items-center gap-3">
-            <div className="relative"><button type="button" data-account-trigger onClick={() => setAccountOpen((open) => !open)} aria-label="Login" aria-expanded={accountOpen} className="btn-glass mobile-icon-btn">
-              <img src={imgAccount} alt="" className="mobile-icon-glyph" />
-            </button></div>
+            <div className="relative">
+              <button
+                type="button"
+                data-account-trigger
+                onClick={() => setAccountOpen((open) => !open)}
+                aria-label="Login"
+                aria-expanded={accountOpen}
+                className="btn-glass mobile-icon-btn"
+              >
+                <img src={imgAccount} alt="" className="mobile-icon-glyph" />
+              </button>
+            </div>
             <button
               type="button"
-              onClick={() => { refreshCart(); setCartOpen(true) }}
+              onClick={() => {
+                refreshCart()
+                setCartOpen(true)
+              }}
               aria-label="Warenkorb"
               className="btn-glass mobile-icon-btn"
             >
               <img src={imgCart} alt="" className="mobile-icon-glyph" />
-              {cartQuantity > 0 && <span className="cart-count">{cartQuantity}</span>}
+              {cartQuantity > 0 && (
+                <span className="cart-count">{cartQuantity}</span>
+              )}
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -871,7 +1043,15 @@ function Header() {
           </div>
         </div>
 
-        {accountOpen && <div className="mobile-account-menu flex lg:hidden"><AccountMenu customer={accountCustomer} onClose={() => setAccountOpen(false)} onSignOut={signOutAccount} /></div>}
+        {accountOpen && (
+          <div className="mobile-account-menu flex lg:hidden">
+            <AccountMenu
+              customer={accountCustomer}
+              onClose={() => setAccountOpen(false)}
+              onSignOut={signOutAccount}
+            />
+          </div>
+        )}
 
         {/* Mobile dropdown */}
         {mobileMenuOpen && (
@@ -918,7 +1098,8 @@ function Header() {
             >
               FÜR UNTERNEHMEN
             </a>
-            <button
+            <a
+              href="/designer"
               className="mobile-menu-action mobile-menu-design text-left mt-1"
               style={{
                 fontFamily: "Montserrat, sans-serif",
@@ -928,11 +1109,17 @@ function Header() {
               }}
             >
               EIGENER DESIGN
-            </button>
+            </a>
           </div>
         )}
       </div>
-      {cartOpen && <CartDrawer cart={cart} onClose={() => setCartOpen(false)} onChanged={refreshCart} />}
+      {cartOpen && (
+        <CartDrawer
+          cart={cart}
+          onClose={() => setCartOpen(false)}
+          onChanged={refreshCart}
+        />
+      )}
     </header>
   )
 }
@@ -953,7 +1140,10 @@ function CartDrawer({
   const currency = subtotal?.currencyCode || "EUR"
   const subtotalValue = Number(subtotal?.amount || 0)
   const shippingValue = subtotalValue >= 80 ? 0 : 9.99
-  const formatCartMoney = (amount: number) => new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(amount)
+  const formatCartMoney = (amount: number) =>
+    new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(
+      amount,
+    )
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setRemoving(lineId)
@@ -966,47 +1156,169 @@ function CartDrawer({
     }
   }
   return (
-    <div className="cart-drawer-layer" role="dialog" aria-modal="true" aria-label="Warenkorb">
-      <button type="button" className="cart-drawer-backdrop" onClick={onClose} aria-label="Warenkorb schließen" />
+    <div
+      className="cart-drawer-layer"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Warenkorb"
+    >
+      <button
+        type="button"
+        className="cart-drawer-backdrop"
+        onClick={onClose}
+        aria-label="Warenkorb schließen"
+      />
       <aside className="cart-drawer">
-        <header className="cart-drawer-head"><div><span>DEINE AUSWAHL</span><h2>WARENKORB <b>{cart?.totalQuantity || 0}</b></h2></div><button type="button" onClick={onClose} aria-label="Schließen">×</button></header>
+        <header className="cart-drawer-head">
+          <div>
+            <span>DEINE AUSWAHL</span>
+            <h2>
+              WARENKORB <b>{cart?.totalQuantity || 0}</b>
+            </h2>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Schließen">
+            ×
+          </button>
+        </header>
         <div className="cart-drawer-lines">
-          {!cart && <p className="cart-drawer-empty">WARENKORB WIRD GELADEN.</p>}
-          {cart && lines.length === 0 && <p className="cart-drawer-empty">DEIN WARENKORB IST LEER.</p>}
+          {!cart && (
+            <p className="cart-drawer-empty">WARENKORB WIRD GELADEN.</p>
+          )}
+          {cart && lines.length === 0 && (
+            <p className="cart-drawer-empty">DEIN WARENKORB IST LEER.</p>
+          )}
           {lines.map(({ node }: any) => {
             const variant = node.merchandise
             const image = variant.product.featuredImage
-            const price = new Intl.NumberFormat("de-DE", { style: "currency", currency: variant.price.currencyCode }).format(Number(variant.price.amount))
-            return <article className="cart-drawer-line" key={node.id}>
-              <div className="cart-drawer-image">{image?.url && <img src={image.url} alt={image.altText || variant.product.title} />}</div>
-              <div className="cart-drawer-copy"><p>{variant.product.title}</p><span>{variant.title}</span><strong>{node.quantity} × {price}</strong></div>
-              <button type="button" onClick={() => removeLine(node.id)} disabled={removing === node.id} className="cart-drawer-remove">ENTFERNEN</button>
-            </article>
+            const price = new Intl.NumberFormat("de-DE", {
+              style: "currency",
+              currency: variant.price.currencyCode,
+            }).format(Number(variant.price.amount))
+            return (
+              <article className="cart-drawer-line" key={node.id}>
+                <div className="cart-drawer-image">
+                  {image?.url && (
+                    <img
+                      src={image.url}
+                      alt={image.altText || variant.product.title}
+                    />
+                  )}
+                </div>
+                <div className="cart-drawer-copy">
+                  <p>{variant.product.title}</p>
+                  <span>{variant.title}</span>
+                  <strong>
+                    {node.quantity} × {price}
+                  </strong>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeLine(node.id)}
+                  disabled={removing === node.id}
+                  className="cart-drawer-remove"
+                >
+                  ENTFERNEN
+                </button>
+              </article>
+            )
           })}
         </div>
         <footer className="cart-drawer-foot">
-          <div className="cart-drawer-costs"><div><span>ZWISCHENSUMME</span><strong>{subtotal ? formatCartMoney(subtotalValue) : "—"}</strong></div><div><span>VERSAND · DHL / GLS</span><strong className={shippingValue === 0 ? "is-free" : ""}>{shippingValue === 0 ? "KOSTENLOS" : formatCartMoney(shippingValue)}</strong></div><div className="cart-drawer-grand-total"><span>VORAUSSICHTLICH GESAMT</span><strong>{subtotal ? formatCartMoney(subtotalValue + shippingValue) : "—"}</strong></div></div>
-          <p className="cart-shipping-note">* KOSTENLOSER VERSAND AB 80,00 € WARENWERT.</p>
-          <a href="/katalog" onClick={onClose} className="cart-drawer-continue">← WEITER EINKAUFEN</a>
-          {cart?.checkoutUrl && lines.length > 0 && <a href={cart.checkoutUrl} className="btn-red cart-drawer-checkout">SICHER ZUR KASSE <span>→</span></a>}
+          <div className="cart-drawer-costs">
+            <div>
+              <span>ZWISCHENSUMME</span>
+              <strong>{subtotal ? formatCartMoney(subtotalValue) : "—"}</strong>
+            </div>
+            <div>
+              <span>VERSAND · DHL / GLS</span>
+              <strong className={shippingValue === 0 ? "is-free" : ""}>
+                {shippingValue === 0
+                  ? "KOSTENLOS"
+                  : formatCartMoney(shippingValue)}
+              </strong>
+            </div>
+            <div className="cart-drawer-grand-total">
+              <span>VORAUSSICHTLICH GESAMT</span>
+              <strong>
+                {subtotal
+                  ? formatCartMoney(subtotalValue + shippingValue)
+                  : "—"}
+              </strong>
+            </div>
+          </div>
+          <p className="cart-shipping-note">
+            * KOSTENLOSER VERSAND AB 80,00 € WARENWERT.
+          </p>
+          <a href="/katalog" onClick={onClose} className="cart-drawer-continue">
+            ← WEITER EINKAUFEN
+          </a>
+          {cart?.checkoutUrl && lines.length > 0 && (
+            <a href={cart.checkoutUrl} className="btn-red cart-drawer-checkout">
+              SICHER ZUR KASSE <span>→</span>
+            </a>
+          )}
         </footer>
       </aside>
     </div>
   )
 }
 
-function AccountMenu({ customer, onClose, onSignOut }: { customer: CustomerAccount | null; onClose: () => void; onSignOut: () => Promise<void> }) {
+function AccountMenu({
+  customer,
+  onClose,
+  onSignOut,
+}: {
+  customer: CustomerAccount | null
+  onClose: () => void
+  onSignOut: () => Promise<void>
+}) {
   const go = (section: string) => {
     onClose()
     window.location.href = `/account?section=${section}`
   }
   const name = customerName(customer)
-  return <div className="account-menu" role="menu">
-    <div className="account-menu-head"><span>GLÜCK AUF</span>{customer && <strong>{name || "MEIN KONTO"}</strong>}</div>
-    {!customer && <button type="button" className="account-menu-login btn-red" onClick={() => go("personal")}>ANMELDEN</button>}
-    {ACCOUNT_SECTIONS.map((item) => <button type="button" key={item.id} onClick={() => go(item.id)} role="menuitem"><span>{item.label}</span><b aria-hidden="true">›</b></button>)}
-    {customer && <div className="account-menu-footer"><button type="button" className="btn-glass account-menu-logout" onClick={async () => { await onSignOut(); onClose() }}>ABMELDEN</button></div>}
-  </div>
+  return (
+    <div className="account-menu" role="menu">
+      <div className="account-menu-head">
+        <span>GLÜCK AUF</span>
+        {customer && <strong>{name || "MEIN KONTO"}</strong>}
+      </div>
+      {!customer && (
+        <button
+          type="button"
+          className="account-menu-login btn-red"
+          onClick={() => go("personal")}
+        >
+          ANMELDEN
+        </button>
+      )}
+      {ACCOUNT_SECTIONS.map((item) => (
+        <button
+          type="button"
+          key={item.id}
+          onClick={() => go(item.id)}
+          role="menuitem"
+        >
+          <span>{item.label}</span>
+          <b aria-hidden="true">›</b>
+        </button>
+      ))}
+      {customer && (
+        <div className="account-menu-footer">
+          <button
+            type="button"
+            className="btn-glass account-menu-logout"
+            onClick={async () => {
+              await onSignOut()
+              onClose()
+            }}
+          >
+            ABMELDEN
+          </button>
+        </div>
+      )}
+    </div>
+  )
 }
 
 // ─── Hero Carousel ─────────────────────────────────────────────────────────────
@@ -1146,7 +1458,8 @@ function HeroCarousel() {
                 ZUM KATALOG
               </span>
             </a>
-            <button
+            <a
+              href="/designer"
               className="btn-outline flex items-center justify-center rounded-[4px]"
               style={{
                 height: "clamp(48px, 4vw, 58px)",
@@ -1165,7 +1478,7 @@ function HeroCarousel() {
               >
                 EIGENES DESIGN
               </span>
-            </button>
+            </a>
           </div>
 
           {/* Mini stats */}
@@ -1532,9 +1845,12 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
       className="product-card relative rounded-[8px] flex-shrink-0 overflow-hidden"
       role="link"
       tabIndex={0}
-      onClick={() => { window.location.href = `/katalog/${product.slug}` }}
+      onClick={() => {
+        window.location.href = `/katalog/${product.slug}`
+      }}
       onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") window.location.href = `/katalog/${product.slug}`
+        if (event.key === "Enter" || event.key === " ")
+          window.location.href = `/katalog/${product.slug}`
       }}
       style={{
         background: "#202020",
@@ -1578,7 +1894,10 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
           </span>
         </div>
         {/* Wishlist */}
-        <button onClick={(event) => event.stopPropagation()} className="btn-wishlist absolute top-3 right-3 w-9 h-9 rounded-full bg-black/45 flex items-center justify-center">
+        <button
+          onClick={(event) => event.stopPropagation()}
+          className="btn-wishlist absolute top-3 right-3 w-9 h-9 rounded-full bg-black/45 flex items-center justify-center"
+        >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
             <path
               d={svgPaths.p3bd7ee70}
@@ -1694,17 +2013,17 @@ function BestsellerSection() {
   const bestsellers = useMemo<BestsellerProduct[]>(
     () =>
       [...(shopifyProducts ?? [])]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 20)
-      .map((product) => ({
-        slug: product.slug,
-        img: product.image,
-        badge: "BESTSELLER",
-        category: product.category,
-        name: product.name,
-        price: product.price,
-        swatches: product.colors,
-      })),
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 20)
+        .map((product) => ({
+          slug: product.slug,
+          img: product.image,
+          badge: "BESTSELLER",
+          category: product.category,
+          name: product.name,
+          price: product.price,
+          swatches: product.colors,
+        })),
     [shopifyProducts],
   )
   const carouselRef = useRef<HTMLDivElement>(null)
@@ -1786,7 +2105,9 @@ function BestsellerSection() {
 
       {/* Scrolling carousel */}
       <div
-        className={`bestseller-viewport w-full overflow-hidden ${drag ? "is-dragging" : ""}`}
+        className={`bestseller-viewport w-full overflow-hidden ${
+          drag ? "is-dragging" : ""
+        }`}
         ref={carouselRef}
         onPointerDown={(event) => {
           if (!canLoopBestsellers || event.button !== 0) return
@@ -1796,7 +2117,10 @@ function BestsellerSection() {
         onPointerMove={(event) => {
           if (!canLoopBestsellers || !drag || !carouselTrackRef.current) return
           let next = drag.position - (event.clientX - drag.x)
-          const unit = carouselTrackRef.current.querySelector<HTMLElement>(".bestseller-group")?.offsetWidth ?? 0
+          const unit =
+            carouselTrackRef.current.querySelector<HTMLElement>(
+              ".bestseller-group",
+            )?.offsetWidth ?? 0
           if (unit) {
             while (next <= 0) next += unit
             while (next >= unit * 2) next -= unit
@@ -1810,7 +2134,9 @@ function BestsellerSection() {
         <div style={{ paddingLeft: SECTION_PAD }}>
           <div
             ref={carouselTrackRef}
-            className={`bestseller-track flex ${canLoopBestsellers ? "" : "justify-center"}`}
+            className={`bestseller-track flex ${
+              canLoopBestsellers ? "" : "justify-center"
+            }`}
             style={{ width: canLoopBestsellers ? "max-content" : "100%" }}
           >
             {(canLoopBestsellers ? [0, 1, 2] : [0]).map((group) => (
@@ -2411,9 +2737,19 @@ function Footer() {
 
 // ─── Pages ────────────────────────────────────────────────────────────────────
 
-function PageShell({ children, inner = false }: { children: React.ReactNode; inner?: boolean }) {
+function PageShell({
+  children,
+  inner = false,
+}: {
+  children: React.ReactNode
+  inner?: boolean
+}) {
   return (
-    <div className={`w-full min-h-screen flex flex-col ${inner ? "page-shell-inner" : "bg-[#0a0a0a]"}`}>
+    <div
+      className={`w-full min-h-screen flex flex-col ${
+        inner ? "page-shell-inner" : "bg-[#0a0a0a]"
+      }`}
+    >
       <Header />
       {children}
       <Footer />
@@ -3097,7 +3433,9 @@ const CATALOG_PRODUCTS = Array.from({ length: 100 }, (_, index) => {
   return {
     ...source,
     slug: `test-${number}-${source.slug}`,
-    name: `${TEST_PREFIXES[index % TEST_PREFIXES.length]} ${category === "T-SHIRTS" ? "T-SHIRT" : category.slice(0, -1)} ${number}`,
+    name: `${TEST_PREFIXES[index % TEST_PREFIXES.length]} ${
+      category === "T-SHIRTS" ? "T-SHIRT" : category.slice(0, -1)
+    } ${number}`,
     category,
     sub: subcategories?.[index % subcategories.length],
     gender: textile ? TEST_GENDERS[index % TEST_GENDERS.length] : "UNISEX",
@@ -3115,40 +3453,114 @@ const CATALOG_PRODUCTS = Array.from({ length: 100 }, (_, index) => {
 })
 
 const SHOPIFY_CATEGORY_MAP: Record<string, string> = {
-  HOODIES: "HOODIES", SWEATSHIRTS: "SWEATSHIRTS", TSHIRTS: "T-SHIRTS", T_SHIRTS: "T-SHIRTS", POLOS: "POLOS",
-  ACCESSOIRES: "ACCESSOIRES", ACCESSORIES: "ACCESSOIRES", GLAESER_TASSEN: "GLÄSER & TASSEN", DTF_TRANSFERS: "DTF-TRANSFERS",
+  HOODIES: "HOODIES",
+  SWEATSHIRTS: "SWEATSHIRTS",
+  TSHIRTS: "T-SHIRTS",
+  T_SHIRTS: "T-SHIRTS",
+  POLOS: "POLOS",
+  ACCESSOIRES: "ACCESSOIRES",
+  ACCESSORIES: "ACCESSOIRES",
+  GLAESER_TASSEN: "GLÄSER & TASSEN",
+  DTF_TRANSFERS: "DTF-TRANSFERS",
 }
-const SHOPIFY_GENDER_MAP: Record<string, string> = { MAENNER: "MÄNNER", MANNER: "MÄNNER", FRAUEN: "FRAUEN", KINDER: "KINDER", UNISEX: "UNISEX" }
-const SHOPIFY_SUBCATEGORY_MAP: Record<string, string> = { KOPFBEDECKUNG: "KOPFBEDECKUNG", SHOPPER: "SHOPPER", SCHMUCK: "SCHMUCK", PINS: "PINS", TASSEN: "TASSEN", BIERGLAESER: "BIERGLÄSER", UNTERSETZER: "UNTERSETZER", FUER_KLEIDUNG_TEXTILIEN: "FÜR KLEIDUNG & TEXTILIEN" }
-const SHOPIFY_COLORS: Record<string, string> = { schwarz: "#161616", black: "#161616", weiß: "#f4f4f4", weiss: "#f4f4f4", white: "#f4f4f4", rot: "#cf3131", red: "#cf3131", grau: "#777", grey: "#777", gray: "#777", blau: "#3189d6", blue: "#3189d6", grün: "#36b95a", green: "#36b95a" }
+const SHOPIFY_GENDER_MAP: Record<string, string> = {
+  MAENNER: "MÄNNER",
+  MANNER: "MÄNNER",
+  FRAUEN: "FRAUEN",
+  KINDER: "KINDER",
+  UNISEX: "UNISEX",
+}
+const SHOPIFY_SUBCATEGORY_MAP: Record<string, string> = {
+  KOPFBEDECKUNG: "KOPFBEDECKUNG",
+  SHOPPER: "SHOPPER",
+  SCHMUCK: "SCHMUCK",
+  PINS: "PINS",
+  TASSEN: "TASSEN",
+  BIERGLAESER: "BIERGLÄSER",
+  UNTERSETZER: "UNTERSETZER",
+  FUER_KLEIDUNG_TEXTILIEN: "FÜR KLEIDUNG & TEXTILIEN",
+}
+const SHOPIFY_COLORS: Record<string, string> = {
+  schwarz: "#161616",
+  black: "#161616",
+  weiß: "#f4f4f4",
+  weiss: "#f4f4f4",
+  white: "#f4f4f4",
+  rot: "#cf3131",
+  red: "#cf3131",
+  grau: "#777",
+  grey: "#777",
+  gray: "#777",
+  blau: "#3189d6",
+  blue: "#3189d6",
+  grün: "#36b95a",
+  green: "#36b95a",
+}
 
 function shopifyCatalogProduct(product: any) {
   const tags = product.tags || []
-  const tag = (prefix: string) => tags.find((item: string) => item.toLowerCase().startsWith(prefix))?.slice(prefix.length)
-  const variants = (product.variants?.nodes || []).filter((variant: any) => variant.availableForSale)
-  const option = (name: string) => variants.flatMap((variant: any) => variant.selectedOptions || []).filter((item: any) => item.name.toLowerCase() === name).map((item: any) => item.value)
-  const normalizeTag = (value: string) => value.toUpperCase().replace(/Ä/g, "AE").replace(/Ö/g, "OE").replace(/Ü/g, "UE").replace(/ß/g, "SS").replace(/[\s&-]+/g, "_")
-  const categoryValue = normalizeTag(tag("category_") || product.productType || "T-SHIRTS")
+  const tag = (prefix: string) =>
+    tags
+      .find((item: string) => item.toLowerCase().startsWith(prefix))
+      ?.slice(prefix.length)
+  const variants = (product.variants?.nodes || []).filter(
+    (variant: any) => variant.availableForSale,
+  )
+  const option = (name: string) =>
+    variants
+      .flatMap((variant: any) => variant.selectedOptions || [])
+      .filter((item: any) => item.name.toLowerCase() === name)
+      .map((item: any) => item.value)
+  const normalizeTag = (value: string) =>
+    value
+      .toUpperCase()
+      .replace(/Ä/g, "AE")
+      .replace(/Ö/g, "OE")
+      .replace(/Ü/g, "UE")
+      .replace(/ß/g, "SS")
+      .replace(/[\s&-]+/g, "_")
+  const categoryValue = normalizeTag(
+    tag("category_") || product.productType || "T-SHIRTS",
+  )
   const category = SHOPIFY_CATEGORY_MAP[categoryValue] || "T-SHIRTS"
   const genderValue = normalizeTag(tag("gender_") || "UNISEX")
   const gender = SHOPIFY_GENDER_MAP[genderValue] || "UNISEX"
-  const selectedColors = Array.from(new Set(option("farbe").concat(option("color")))).map((item: string) => SHOPIFY_COLORS[item.toLowerCase()] || "#777")
-  const selectedSizes = Array.from(new Set(option("größe").concat(option("groesse"), option("size"))))
+  const selectedColors = Array.from(
+    new Set(option("farbe").concat(option("color"))),
+  ).map((item: string) => SHOPIFY_COLORS[item.toLowerCase()] || "#777")
+  const selectedSizes = Array.from(
+    new Set(option("größe").concat(option("groesse"), option("size"))),
+  )
   const firstVariant = variants[0]
   const images = (product.media?.nodes || [])
     .map((media: any) => media.preview?.image)
     .filter(Boolean)
     .slice(0, 5)
-  const formatPrice = (value: string | null | undefined) => value ? new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(Number(value)) : "–"
+  const formatPrice = (value: string | null | undefined) =>
+    value
+      ? new Intl.NumberFormat("de-DE", {
+          style: "currency",
+          currency: "EUR",
+        }).format(Number(value))
+      : "–"
   if (!variants.length) return null
   return {
     id: product.id,
     slug: product.handle,
     image: product.featuredMedia?.preview?.image?.url || imgProduct1,
-    images: images.length ? images : [{ url: product.featuredMedia?.preview?.image?.url || imgProduct1, altText: product.title }],
+    images: images.length
+      ? images
+      : [
+          {
+            url: product.featuredMedia?.preview?.image?.url || imgProduct1,
+            altText: product.title,
+          },
+        ],
     name: product.title,
     category,
-    sub: tag("sub_") ? SHOPIFY_SUBCATEGORY_MAP[normalizeTag(tag("sub_")!)] : undefined,
+    sub: tag("sub_")
+      ? SHOPIFY_SUBCATEGORY_MAP[normalizeTag(tag("sub_")!)]
+      : undefined,
     gender,
     colors: selectedColors.length ? selectedColors : ["#161616"],
     price: formatPrice(firstVariant?.price),
@@ -3167,14 +3579,33 @@ function useShopifyCatalog(handle?: string) {
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
     let active = true
-    const loadCatalog = () => fetch(`/api/products${handle ? `?handle=${encodeURIComponent(handle)}` : ""}`, { cache: "no-store" })
-      .then((response) => response.ok ? response.json() : Promise.reject(new Error("Shopify products unavailable")))
-      .then((data) => active && setProducts((data.products || []).map(shopifyCatalogProduct).filter(Boolean)))
-      .catch((requestError) => active && setError(requestError.message))
-    const refreshOnFocus = () => { if (document.visibilityState === "visible") loadCatalog() }
+    const loadCatalog = () =>
+      fetch(
+        `/api/products${handle ? `?handle=${encodeURIComponent(handle)}` : ""}`,
+        { cache: "no-store" },
+      )
+        .then((response) =>
+          response.ok
+            ? response.json()
+            : Promise.reject(new Error("Shopify products unavailable")),
+        )
+        .then(
+          (data) =>
+            active &&
+            setProducts(
+              (data.products || []).map(shopifyCatalogProduct).filter(Boolean),
+            ),
+        )
+        .catch((requestError) => active && setError(requestError.message))
+    const refreshOnFocus = () => {
+      if (document.visibilityState === "visible") loadCatalog()
+    }
     loadCatalog()
     window.addEventListener("focus", refreshOnFocus)
-    return () => { active = false; window.removeEventListener("focus", refreshOnFocus) }
+    return () => {
+      active = false
+      window.removeEventListener("focus", refreshOnFocus)
+    }
   }, [handle])
   return { products, error }
 }
@@ -3184,9 +3615,14 @@ function useShopifyCart() {
   const [loading, setLoading] = useState(true)
   const refreshCart = () => {
     const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
-    if (!cartId) { setCart(null); setLoading(false); return }
+    if (!cartId) {
+      setCart(null)
+      setLoading(false)
+      return
+    }
     setLoading(true)
-    shopCart.get(cartId)
+    shopCart
+      .get(cartId)
       .then((response) => {
         const nextCart = (response as { cart: any }).cart
         if (!nextCart) window.localStorage.removeItem("pottlerkinder-cart-id")
@@ -3242,25 +3678,115 @@ function FilterLabel({
   children: React.ReactNode
 }) {
   const paths = {
-    gender: <><circle cx="12" cy="7" r="3" /><path d="M6.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6" /></>,
-    category: <><path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z" /><path d="M4 12.5 12 17l8-4.5M4 17l8 4 8-4" /></>,
-    color: <><path d="M12 3a7 7 0 0 0 0 14h1.2a1.8 1.8 0 0 1 1.7 2.4A1.2 1.2 0 0 0 16 21a7 7 0 0 0-4-18Z" /><circle cx="7.8" cy="10" r=".8" fill="currentColor" /><circle cx="11.5" cy="6.8" r=".8" fill="currentColor" /><circle cx="16" cy="10" r=".8" fill="currentColor" /></>,
-    size: <><path d="m5 5 14 14M7 3l14 14M3 7l14 14" /><path d="M4 20 20 4" /></>,
+    gender: (
+      <>
+        <circle cx="12" cy="7" r="3" />
+        <path d="M6.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6" />
+      </>
+    ),
+    category: (
+      <>
+        <path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z" />
+        <path d="M4 12.5 12 17l8-4.5M4 17l8 4 8-4" />
+      </>
+    ),
+    color: (
+      <>
+        <path d="M12 3a7 7 0 0 0 0 14h1.2a1.8 1.8 0 0 1 1.7 2.4A1.2 1.2 0 0 0 16 21a7 7 0 0 0-4-18Z" />
+        <circle cx="7.8" cy="10" r=".8" fill="currentColor" />
+        <circle cx="11.5" cy="6.8" r=".8" fill="currentColor" />
+        <circle cx="16" cy="10" r=".8" fill="currentColor" />
+      </>
+    ),
+    size: (
+      <>
+        <path d="m5 5 14 14M7 3l14 14M3 7l14 14" />
+        <path d="M4 20 20 4" />
+      </>
+    ),
   }
-  return <p className="catalog-filter-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[type]}</svg>{children}</p>
+  return (
+    <p className="catalog-filter-label">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        {paths[type]}
+      </svg>
+      {children}
+    </p>
+  )
 }
 
 function FilterOptionIcon({ label }: { label: string }) {
-  if (label === "HOODIES") return <svg viewBox="0 0 24 24" aria-hidden="true" className="catalog-filter-option-icon catalog-garment-icon"><path fill="currentColor" fillRule="evenodd" d="M8 3.3c-2 .2-3.5 1.5-4.3 3.3L2 11.8l3.1 2.1 1.7-1.4V21h4.1v-5h2.2v5h4.1v-8.5l1.7 1.4 3.1-2.1-1.7-5.2c-.8-1.8-2.3-3.1-4.3-3.3L15.3 7H8.7L8 3.3Zm2.4 2c.5-.5 2.7-.5 3.2 0L14.1 6H9.9l.5-.7Z"/><path d="M9.2 9.6c.7.6 1.6.9 2.8.9s2.1-.3 2.8-.9" fill="none" stroke="#1a1a1a" strokeWidth="1.15" strokeLinecap="round"/></svg>
-  if (label === "SWEATSHIRTS") return <svg viewBox="0 0 24 24" aria-hidden="true" className="catalog-filter-option-icon catalog-garment-icon"><path fill="currentColor" fillRule="evenodd" d="m8 4.2-4 2.4-2 5.2 3.2 2.1 1.7-1.4V21h10.2v-8.5l1.7 1.4 3.2-2.1-2-5.2-4-2.4-1 2.2H9l-1-2.2Zm2 1.5c.5.5 1.2.8 2 .8s1.5-.3 2-.8l.5 1.1c-.6.6-1.4.9-2.5.9s-1.9-.3-2.5-.9l.5-1.1Z"/><path d="M7 18.7h10M4.1 10.3l1.5 1M19.9 10.3l-1.5 1" fill="none" stroke="#1a1a1a" strokeWidth="1.15" strokeLinecap="round"/></svg>
+  if (label === "HOODIES")
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className="catalog-filter-option-icon catalog-garment-icon"
+      >
+        <path
+          fill="currentColor"
+          fillRule="evenodd"
+          d="M8 3.3c-2 .2-3.5 1.5-4.3 3.3L2 11.8l3.1 2.1 1.7-1.4V21h4.1v-5h2.2v5h4.1v-8.5l1.7 1.4 3.1-2.1-1.7-5.2c-.8-1.8-2.3-3.1-4.3-3.3L15.3 7H8.7L8 3.3Zm2.4 2c.5-.5 2.7-.5 3.2 0L14.1 6H9.9l.5-.7Z"
+        />
+        <path
+          d="M9.2 9.6c.7.6 1.6.9 2.8.9s2.1-.3 2.8-.9"
+          fill="none"
+          stroke="#1a1a1a"
+          strokeWidth="1.15"
+          strokeLinecap="round"
+        />
+      </svg>
+    )
+  if (label === "SWEATSHIRTS")
+    return (
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className="catalog-filter-option-icon catalog-garment-icon"
+      >
+        <path
+          fill="currentColor"
+          fillRule="evenodd"
+          d="m8 4.2-4 2.4-2 5.2 3.2 2.1 1.7-1.4V21h10.2v-8.5l1.7 1.4 3.2-2.1-2-5.2-4-2.4-1 2.2H9l-1-2.2Zm2 1.5c.5.5 1.2.8 2 .8s1.5-.3 2-.8l.5 1.1c-.6.6-1.4.9-2.5.9s-1.9-.3-2.5-.9l.5-1.1Z"
+        />
+        <path
+          d="M7 18.7h10M4.1 10.3l1.5 1M19.9 10.3l-1.5 1"
+          fill="none"
+          stroke="#1a1a1a"
+          strokeWidth="1.15"
+          strokeLinecap="round"
+        />
+      </svg>
+    )
   const icons = {
-    ALLE: FaTags, MÄNNER: FaMale, FRAUEN: FaFemale, KINDER: FaChild, UNISEX: FaUsers,
-    "T-SHIRTS": FaTshirt, POLOS: GiPoloShirt,
-    ACCESSOIRES: FaShoppingBag, "GLÄSER & TASSEN": FaMugHot, "DTF-TRANSFERS": FaRegStickyNote,
-    KOPFBEDECKUNG: FaHatCowboy, SHOPPER: FaShoppingBag, SCHMUCK: FaGem, PINS: FaThumbtack,
-    TASSEN: FaMugHot, BIERGLÄSER: FaBeer, UNTERSETZER: FaRegSquare, "FÜR KLEIDUNG & TEXTILIEN": FaRegStickyNote,
+    ALLE: FaTags,
+    MÄNNER: FaMale,
+    FRAUEN: FaFemale,
+    KINDER: FaChild,
+    UNISEX: FaUsers,
+    "T-SHIRTS": FaTshirt,
+    POLOS: GiPoloShirt,
+    ACCESSOIRES: FaShoppingBag,
+    "GLÄSER & TASSEN": FaMugHot,
+    "DTF-TRANSFERS": FaRegStickyNote,
+    KOPFBEDECKUNG: FaHatCowboy,
+    SHOPPER: FaShoppingBag,
+    SCHMUCK: FaGem,
+    PINS: FaThumbtack,
+    TASSEN: FaMugHot,
+    BIERGLÄSER: FaBeer,
+    UNTERSETZER: FaRegSquare,
+    "FÜR KLEIDUNG & TEXTILIEN": FaRegStickyNote,
   }
-  const Icon = icons[label as keyof typeof icons] || FaTags
+  const Icon = icons[(label as keyof typeof icons)] || FaTags
   return <Icon aria-hidden="true" className="catalog-filter-option-icon" />
 }
 
@@ -3292,29 +3818,34 @@ function CatalogPage() {
         : category === "DTF-TRANSFERS"
           ? ["FÜR KLEIDUNG & TEXTILIEN"]
           : []
-  const products = catalogProducts.filter(
-    (product) =>
-      (category === "ALLE" || product.category === category) &&
-      (sub === "ALLE" || product.sub === sub) &&
-      (category !== "ALLE" ||
-        gender === "ALLE" ||
-        !nonTextileCategories.includes(product.category)) &&
-      (nonTextileCategory ||
-        gender === "ALLE" ||
-        product.gender === gender ||
-        product.gender === "UNISEX") &&
-      (nonTextileCategory || size === "ALLE" || product.sizes.includes(size)) &&
-      (nonTextileCategory ||
-        !color ||
-        (color === "multi" && product.colors.length > 1) ||
-        product.colors.includes(color)),
-  ).sort((a, b) =>
-    sort === "NIEDRIGSTER PREIS"
-      ? Number(a.price.replace(",", ".")) - Number(b.price.replace(",", "."))
-      : sort === "HÖCHSTER PREIS"
-        ? Number(b.price.replace(",", ".")) - Number(a.price.replace(",", "."))
-        : 0,
-  )
+  const products = catalogProducts
+    .filter(
+      (product) =>
+        (category === "ALLE" || product.category === category) &&
+        (sub === "ALLE" || product.sub === sub) &&
+        (category !== "ALLE" ||
+          gender === "ALLE" ||
+          !nonTextileCategories.includes(product.category)) &&
+        (nonTextileCategory ||
+          gender === "ALLE" ||
+          product.gender === gender ||
+          product.gender === "UNISEX") &&
+        (nonTextileCategory ||
+          size === "ALLE" ||
+          product.sizes.includes(size)) &&
+        (nonTextileCategory ||
+          !color ||
+          (color === "multi" && product.colors.length > 1) ||
+          product.colors.includes(color)),
+    )
+    .sort((a, b) =>
+      sort === "NIEDRIGSTER PREIS"
+        ? Number(a.price.replace(",", ".")) - Number(b.price.replace(",", "."))
+        : sort === "HÖCHSTER PREIS"
+          ? Number(b.price.replace(",", ".")) -
+            Number(a.price.replace(",", "."))
+          : 0,
+    )
   const productsPerPage = 50
   const totalPages = Math.max(1, Math.ceil(products.length / productsPerPage))
   const visibleProducts = products.slice(
@@ -3421,12 +3952,31 @@ function CatalogPage() {
               {subcategories.length > 0 && (
                 <div className="catalog-subcategory-filter">
                   <span>UNTERKATEGORIEN</span>
-                  <button onClick={() => setSub("ALLE")} className={sub === "ALLE" ? "is-active" : ""}><FilterOptionIcon label="ALLE" />ALLE</button>
-                  {subcategories.map((item) => <button key={item} onClick={() => setSub(item)} className={sub === item ? "is-active" : ""}><FilterOptionIcon label={item} />{item}</button>)}
+                  <button
+                    onClick={() => setSub("ALLE")}
+                    className={sub === "ALLE" ? "is-active" : ""}
+                  >
+                    <FilterOptionIcon label="ALLE" />
+                    ALLE
+                  </button>
+                  {subcategories.map((item) => (
+                    <button
+                      key={item}
+                      onClick={() => setSub(item)}
+                      className={sub === item ? "is-active" : ""}
+                    >
+                      <FilterOptionIcon label={item} />
+                      {item}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
-            <div className={`catalog-filter ${nonTextileCategory ? "is-disabled" : ""}`}>
+            <div
+              className={`catalog-filter ${
+                nonTextileCategory ? "is-disabled" : ""
+              }`}
+            >
               <FilterLabel type="color">FARBE</FilterLabel>
               <div className="color-filter-grid">
                 {COLOR_FILTERS.map((item) => (
@@ -3450,10 +4000,24 @@ function CatalogPage() {
                 ))}
               </div>
             </div>
-            <div className={`catalog-filter ${nonTextileCategory ? "is-disabled" : ""}`}>
+            <div
+              className={`catalog-filter ${
+                nonTextileCategory ? "is-disabled" : ""
+              }`}
+            >
               <FilterLabel type="size">GRÖSSE</FilterLabel>
-              <span className={`size-filter-label ${gender === "KINDER" ? "is-disabled" : ""}`}>ERWACHSENE</span>
-              <div className={`size-filter-grid ${gender === "KINDER" ? "is-disabled" : ""}`}>
+              <span
+                className={`size-filter-label ${
+                  gender === "KINDER" ? "is-disabled" : ""
+                }`}
+              >
+                ERWACHSENE
+              </span>
+              <div
+                className={`size-filter-grid ${
+                  gender === "KINDER" ? "is-disabled" : ""
+                }`}
+              >
                 {["ALLE", "XS", "S", "M", "L", "XL", "2XL", "3XL"].map(
                   (item) => (
                     <button
@@ -3467,8 +4031,18 @@ function CatalogPage() {
                   ),
                 )}
               </div>
-              <span className={`size-filter-label size-filter-kids ${gender === "KINDER" ? "is-priority" : ""}`}>KINDER</span>
-              <div className={`size-filter-grid ${gender === "KINDER" ? "is-priority" : ""}`}>
+              <span
+                className={`size-filter-label size-filter-kids ${
+                  gender === "KINDER" ? "is-priority" : ""
+                }`}
+              >
+                KINDER
+              </span>
+              <div
+                className={`size-filter-grid ${
+                  gender === "KINDER" ? "is-priority" : ""
+                }`}
+              >
                 {[
                   "04A (104)",
                   "06A (116)",
@@ -3529,11 +4103,15 @@ function CatalogPage() {
               ))}
             </div>
             {shopifyProducts === null && !shopifyError && (
-              <div className="catalog-no-results">SHOPIFY KATALOG WIRD GELADEN.</div>
+              <div className="catalog-no-results">
+                SHOPIFY KATALOG WIRD GELADEN.
+              </div>
             )}
             {shopifyProducts !== null && products.length === 0 && (
               <div className="catalog-no-results">
-                {shopifyError ? "SHOPIFY KATALOG IST MOMENTAN NICHT VERFÜGBAR." : "KEINE PRODUKTE FÜR DIESE AUSWAHL."}
+                {shopifyError
+                  ? "SHOPIFY KATALOG IST MOMENTAN NICHT VERFÜGBAR."
+                  : "KEINE PRODUKTE FÜR DIESE AUSWAHL."}
               </div>
             )}
             {totalPages > 1 && (
@@ -3569,12 +4147,21 @@ function SalePage() {
   const [page, setPage] = useState(1)
   const resultsRef = useRef<HTMLElement>(null)
   const perPage = 20
-  const saleProducts = (shopifyProducts ?? []).filter((product) => product.compareAtPrice)
+  const saleProducts = (shopifyProducts ?? []).filter(
+    (product) => product.compareAtPrice,
+  )
   const totalPages = Math.max(1, Math.ceil(saleProducts.length / perPage))
   const products = saleProducts.slice((page - 1) * perPage, page * perPage)
   const changePage = (nextPage: number) => {
     setPage(nextPage)
-    window.setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0)
+    window.setTimeout(
+      () =>
+        resultsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        }),
+      0,
+    )
   }
   return (
     <PageShell inner>
@@ -3611,8 +4198,7 @@ function SalePage() {
                   <h2>{product.name}</h2>
                   <p className="catalog-product-short">{product.short}</p>
                   <strong>
-                    <s>{product.price}</s>{" "}
-                    {product.price}
+                    <s>{product.price}</s> {product.price}
                   </strong>
                 </div>
               </article>
@@ -3623,14 +4209,30 @@ function SalePage() {
           )}
           {shopifyProducts !== null && products.length === 0 && (
             <div className="catalog-no-results">
-              {shopifyError ? "SHOPIFY SALE IST MOMENTAN NICHT VERFÜGBAR." : "AKTUELL SIND KEINE SALE-ARTIKEL VERFÜGBAR."}
+              {shopifyError
+                ? "SHOPIFY SALE IST MOMENTAN NICHT VERFÜGBAR."
+                : "AKTUELL SIND KEINE SALE-ARTIKEL VERFÜGBAR."}
             </div>
           )}
           {totalPages > 1 && (
             <nav className="catalog-pagination" aria-label="Sale Seiten">
-              <button type="button" onClick={() => changePage(Math.max(1, page - 1))} disabled={page === 1}>← ZURÜCK</button>
-              <span>{page} / {totalPages}</span>
-              <button type="button" onClick={() => changePage(Math.min(totalPages, page + 1))} disabled={page === totalPages}>NÄCHSTE 20 →</button>
+              <button
+                type="button"
+                onClick={() => changePage(Math.max(1, page - 1))}
+                disabled={page === 1}
+              >
+                ← ZURÜCK
+              </button>
+              <span>
+                {page} / {totalPages}
+              </span>
+              <button
+                type="button"
+                onClick={() => changePage(Math.min(totalPages, page + 1))}
+                disabled={page === totalPages}
+              >
+                NÄCHSTE 20 →
+              </button>
             </nav>
           )}
         </section>
@@ -3645,27 +4247,33 @@ function ShopifyProductPage({ handle }: { handle: string }) {
   return (
     <PageShell inner>
       <main className="flex-1 flex items-center justify-center min-h-[55vh] px-6">
-        <p className="catalog-no-results">{error || products ? "DIESER ARTIKEL IST NICHT VERFÜGBAR." : "ARTIKEL WIRD GELADEN."}</p>
+        <p className="catalog-no-results">
+          {error || products
+            ? "DIESER ARTIKEL IST NICHT VERFÜGBAR."
+            : "ARTIKEL WIRD GELADEN."}
+        </p>
       </main>
     </PageShell>
   )
 }
 
-function ProductPage({
-  product,
-}: {
-  product: any
-}) {
+function ProductPage({ product }: { product: any }) {
   const [size, setSize] = useState(product.sizes[0])
   const [selectedImage, setSelectedImage] = useState(0)
-  const productImages = product.images || [{ url: product.image, altText: product.name }]
-  const [cartStatus, setCartStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const productImages = product.images || [
+    { url: product.image, altText: product.name },
+  ]
+  const [cartStatus, setCartStatus] =
+    useState<"idle" | "loading" | "success" | "error">("idle")
   const addToCart = async () => {
-    const variant = product.variants?.find((item: any) =>
-      item.selectedOptions?.some((option: any) =>
-        ["größe", "groesse", "size"].includes(option.name.toLowerCase()) && option.value === size,
-      ),
-    ) || product.variants?.[0]
+    const variant =
+      product.variants?.find((item: any) =>
+        item.selectedOptions?.some(
+          (option: any) =>
+            ["größe", "groesse", "size"].includes(option.name.toLowerCase()) &&
+            option.value === size,
+        ),
+      ) || product.variants?.[0]
     if (!variant?.id) {
       setCartStatus("error")
       return
@@ -3674,13 +4282,17 @@ function ProductPage({
     try {
       const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
       const response = cartId
-        ? await shopCart.add(cartId, [{ merchandiseId: variant.id, quantity: 1 }])
+        ? await shopCart.add(cartId, [
+            { merchandiseId: variant.id, quantity: 1 },
+          ])
         : await shopCart.create([{ merchandiseId: variant.id, quantity: 1 }])
       const cart = (response as { cart: { id: string } }).cart
       window.localStorage.setItem("pottlerkinder-cart-id", cart.id)
       window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
       setCartStatus("success")
-    } catch { setCartStatus("error") }
+    } catch {
+      setCartStatus("error")
+    }
   }
   return (
     <PageShell inner>
@@ -3694,11 +4306,26 @@ function ProductPage({
           </a>
           <div className="product-detail-grid">
             <div className="product-detail-media">
-              {productImages.length > 1 && <div className="product-gallery" aria-label="Produktbilder">
-                {productImages.map((image: any, index: number) => <button type="button" key={image.url} onClick={() => setSelectedImage(index)} className={selectedImage === index ? "is-active" : ""} aria-label={`Bild ${index + 1} anzeigen`}><img src={image.url} alt="" /></button>)}
-              </div>}
+              {productImages.length > 1 && (
+                <div className="product-gallery" aria-label="Produktbilder">
+                  {productImages.map((image: any, index: number) => (
+                    <button
+                      type="button"
+                      key={image.url}
+                      onClick={() => setSelectedImage(index)}
+                      className={selectedImage === index ? "is-active" : ""}
+                      aria-label={`Bild ${index + 1} anzeigen`}
+                    >
+                      <img src={image.url} alt="" />
+                    </button>
+                  ))}
+                </div>
+              )}
               <div className="product-detail-image">
-                <img src={productImages[selectedImage]?.url || product.image} alt={productImages[selectedImage]?.altText || product.name} />
+                <img
+                  src={productImages[selectedImage]?.url || product.image}
+                  alt={productImages[selectedImage]?.altText || product.name}
+                />
               </div>
             </div>
             <div className="product-detail-copy">
@@ -3735,11 +4362,26 @@ function ProductPage({
                   ))}
                 </div>
               </div>
-              <button className="btn-red product-cart-button" onClick={addToCart} disabled={cartStatus === "loading"}>
-                {cartStatus === "loading" ? "WIRD HINZUGEFÜGT" : "IN DEN WARENKORB"} <span>→</span>
+              <button
+                className="btn-red product-cart-button"
+                onClick={addToCart}
+                disabled={cartStatus === "loading"}
+              >
+                {cartStatus === "loading"
+                  ? "WIRD HINZUGEFÜGT"
+                  : "IN DEN WARENKORB"}{" "}
+                <span>→</span>
               </button>
-              {cartStatus === "success" && <p className="product-cart-feedback">IM WARENKORB GESPEICHERT.</p>}
-              {cartStatus === "error" && <p className="product-cart-feedback is-error">WARENKORB KONNTE NICHT AKTUALISIERT WERDEN.</p>}
+              {cartStatus === "success" && (
+                <p className="product-cart-feedback">
+                  IM WARENKORB GESPEICHERT.
+                </p>
+              )}
+              {cartStatus === "error" && (
+                <p className="product-cart-feedback is-error">
+                  WARENKORB KONNTE NICHT AKTUALISIERT WERDEN.
+                </p>
+              )}
             </div>
           </div>
           <section id="details" className="product-more-details">
@@ -3792,7 +4434,10 @@ function CartPage() {
   const currency = subtotal?.currencyCode || "EUR"
   const subtotalValue = Number(subtotal?.amount || 0)
   const shippingValue = subtotalValue >= 80 ? 0 : 9.99
-  const formatCartMoney = (amount: number) => new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(amount)
+  const formatCartMoney = (amount: number) =>
+    new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(
+      amount,
+    )
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setUpdating(lineId)
@@ -3807,24 +4452,84 @@ function CartPage() {
   return (
     <PageShell inner>
       <main className="flex-1">
-        <PageHero compact image={imgHeaderCoal} eyebrow="POTTLERKINDER SHOP" title="WARENKORB" lead="Deine Auswahl aus dem Pott." />
-        <section className="cart-page max-w-[1120px] mx-auto" style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}>
-          {!cart && <p className="catalog-no-results">{loading ? "WARENKORB WIRD GELADEN." : "DEIN WARENKORB IST LEER."}</p>}
-          {cart && lines.length === 0 && <p className="catalog-no-results">DEIN WARENKORB IST LEER.</p>}
-          {lines.length > 0 && <div className="cart-layout">
-            <div className="cart-lines">
-              {lines.map(({ node }: any) => {
-                const variant = node.merchandise
-                const image = variant.product.featuredImage
-                return <article key={node.id} className="cart-line">
-                  {image?.url && <img src={image.url} alt={image.altText || variant.product.title} />}
-                  <div><p>{variant.product.title}</p><span>{variant.title}</span><small>{node.quantity} × {new Intl.NumberFormat("de-DE", { style: "currency", currency: variant.price.currencyCode }).format(Number(variant.price.amount))}</small></div>
-                  <button type="button" onClick={() => removeLine(node.id)} disabled={updating === node.id}>ENTFERNEN</button>
-                </article>
-              })}
+        <PageHero
+          compact
+          image={imgHeaderCoal}
+          eyebrow="POTTLERKINDER SHOP"
+          title="WARENKORB"
+          lead="Deine Auswahl aus dem Pott."
+        />
+        <section
+          className="cart-page max-w-[1120px] mx-auto"
+          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
+        >
+          {!cart && (
+            <p className="catalog-no-results">
+              {loading ? "WARENKORB WIRD GELADEN." : "DEIN WARENKORB IST LEER."}
+            </p>
+          )}
+          {cart && lines.length === 0 && (
+            <p className="catalog-no-results">DEIN WARENKORB IST LEER.</p>
+          )}
+          {lines.length > 0 && (
+            <div className="cart-layout">
+              <div className="cart-lines">
+                {lines.map(({ node }: any) => {
+                  const variant = node.merchandise
+                  const image = variant.product.featuredImage
+                  return (
+                    <article key={node.id} className="cart-line">
+                      {image?.url && (
+                        <img
+                          src={image.url}
+                          alt={image.altText || variant.product.title}
+                        />
+                      )}
+                      <div>
+                        <p>{variant.product.title}</p>
+                        <span>{variant.title}</span>
+                        <small>
+                          {node.quantity} ×{" "}
+                          {new Intl.NumberFormat("de-DE", {
+                            style: "currency",
+                            currency: variant.price.currencyCode,
+                          }).format(Number(variant.price.amount))}
+                        </small>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeLine(node.id)}
+                        disabled={updating === node.id}
+                      >
+                        ENTFERNEN
+                      </button>
+                    </article>
+                  )
+                })}
+              </div>
+              <aside className="cart-summary">
+                <p>ZWISCHENSUMME</p>
+                <strong>{formatCartMoney(subtotalValue)}</strong>
+                <div className="cart-summary-shipping">
+                  <span>VERSAND · DHL / GLS</span>
+                  <b className={shippingValue === 0 ? "is-free" : ""}>
+                    {shippingValue === 0
+                      ? "KOSTENLOS"
+                      : formatCartMoney(shippingValue)}
+                  </b>
+                </div>
+                <div className="cart-summary-total">
+                  <span>VORAUSSICHTLICH GESAMT</span>
+                  <b>{formatCartMoney(subtotalValue + shippingValue)}</b>
+                </div>
+                <small>* KOSTENLOSER VERSAND AB 80,00 € WARENWERT.</small>
+                <a className="btn-red" href={cart.checkoutUrl}>
+                  SICHER ZUR KASSE →
+                </a>
+                <span>Bezahlung und Versand erfolgen sicher über Shopify.</span>
+              </aside>
             </div>
-            <aside className="cart-summary"><p>ZWISCHENSUMME</p><strong>{formatCartMoney(subtotalValue)}</strong><div className="cart-summary-shipping"><span>VERSAND · DHL / GLS</span><b className={shippingValue === 0 ? "is-free" : ""}>{shippingValue === 0 ? "KOSTENLOS" : formatCartMoney(shippingValue)}</b></div><div className="cart-summary-total"><span>VORAUSSICHTLICH GESAMT</span><b>{formatCartMoney(subtotalValue + shippingValue)}</b></div><small>* KOSTENLOSER VERSAND AB 80,00 € WARENWERT.</small><a className="btn-red" href={cart.checkoutUrl}>SICHER ZUR KASSE →</a><span>Bezahlung und Versand erfolgen sicher über Shopify.</span></aside>
-          </div>}
+          )}
         </section>
       </main>
     </PageShell>
@@ -3840,7 +4545,17 @@ type CustomerAccount = {
   addresses?: { nodes?: CustomerAddress[] }
   orders?: { nodes?: CustomerOrder[] }
 }
-type CustomerAddress = { id: string; firstName?: string; lastName?: string; address1?: string; address2?: string; city?: string; zip?: string; country?: string; territoryCode?: string }
+type CustomerAddress = {
+  id: string
+  firstName?: string
+  lastName?: string
+  address1?: string
+  address2?: string
+  city?: string
+  zip?: string
+  country?: string
+  territoryCode?: string
+}
 type CustomerOrder = {
   id: string
   name?: string
@@ -3851,11 +4566,23 @@ type CustomerOrder = {
   cancelReason?: string
   financialStatus?: string
   fulfillmentStatus?: string
-  totalPrice?: { amount: string; currencyCode: string }
-  totalShipping?: { amount: string; currencyCode: string }
-  shippingLine?: { title?: string; originalPrice?: { amount: string; currencyCode: string } }
+  totalPrice?: { amount: string currencyCode: string }
+  totalShipping?: { amount: string currencyCode: string }
+  shippingLine?: {
+    title?: string
+    originalPrice?: { amount: string currencyCode: string }
+  }
   shippingAddress?: CustomerAddress
-  lineItems?: { nodes?: Array<{ id: string; name?: string; variantTitle?: string; quantity?: number; image?: { url?: string; altText?: string }; totalPrice?: { amount: string; currencyCode: string } }> }
+  lineItems?: {
+    nodes?: Array<{
+      id: string
+      name?: string
+      variantTitle?: string
+      quantity?: number
+      image?: { url?: string altText?: string }
+      totalPrice?: { amount: string currencyCode: string }
+    }>
+  }
 }
 
 function AccountCallbackPage() {
@@ -3864,38 +4591,97 @@ function AccountCallbackPage() {
     const params = new URLSearchParams(window.location.search)
     const code = params.get("code")
     const state = params.get("state")
-    if (!code) { setMessage("DIE ANMELDUNG WURDE ABGEBROCHEN."); return }
-    fetch(`/api/customer-account?action=callback&code=${encodeURIComponent(code)}&state=${encodeURIComponent(state || "")}`, { credentials: "same-origin" })
+    if (!code) {
+      setMessage("DIE ANMELDUNG WURDE ABGEBROCHEN.")
+      return
+    }
+    fetch(
+      `/api/customer-account?action=callback&code=${encodeURIComponent(code)}&state=${encodeURIComponent(state || "")}`,
+      { credentials: "same-origin" },
+    )
       .then(async (response) => {
         const data = await response.json()
-        if (!response.ok) throw new Error(data.error || "Anmeldung fehlgeschlagen")
-        const registration = window.sessionStorage.getItem("pottler-registration-details")
+        if (!response.ok)
+          throw new Error(data.error || "Anmeldung fehlgeschlagen")
+        const registration = window.sessionStorage.getItem(
+          "pottler-registration-details",
+        )
         if (registration) {
-          const saved = await fetch("/api/customer-account?action=complete-registration", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: registration })
-          if (saved.ok) window.sessionStorage.removeItem("pottler-registration-details")
-          else window.sessionStorage.setItem("pottler-registration-warning", "Dein Konto wurde erstellt. Die Adresse konnte noch nicht gespeichert werden – bitte ergänze sie später in deinem Konto.")
+          const saved = await fetch(
+            "/api/customer-account?action=complete-registration",
+            {
+              method: "POST",
+              credentials: "same-origin",
+              headers: { "Content-Type": "application/json" },
+              body: registration,
+            },
+          )
+          if (saved.ok)
+            window.sessionStorage.removeItem("pottler-registration-details")
+          else
+            window.sessionStorage.setItem(
+              "pottler-registration-warning",
+              "Dein Konto wurde erstellt. Die Adresse konnte noch nicht gespeichert werden – bitte ergänze sie später in deinem Konto.",
+            )
         }
-        const section = window.sessionStorage.getItem("pottler-account-section") || "personal"
+        const section =
+          window.sessionStorage.getItem("pottler-account-section") || "personal"
         window.sessionStorage.removeItem("pottler-account-section")
         window.location.replace(`/account?section=${section}`)
       })
-      .catch(() => setMessage("DIE ANMELDUNG KONNTE NICHT ABGESCHLOSSEN WERDEN. BITTE VERSUCHE ES ERNEUT."))
+      .catch(() =>
+        setMessage(
+          "DIE ANMELDUNG KONNTE NICHT ABGESCHLOSSEN WERDEN. BITTE VERSUCHE ES ERNEUT.",
+        ),
+      )
   }, [])
-  return <PageShell inner><main className="flex-1"><PageHero compact eyebrow="POTTLERKINDER ACCOUNT" title="EINEN MOMENT" lead={message} image={imgHeaderCoal} /></main></PageShell>
+  return (
+    <PageShell inner>
+      <main className="flex-1">
+        <PageHero
+          compact
+          eyebrow="POTTLERKINDER ACCOUNT"
+          title="EINEN MOMENT"
+          lead={message}
+          image={imgHeaderCoal}
+        />
+      </main>
+    </PageShell>
+  )
 }
 
 function AccountPage() {
-  const initialSection = new URLSearchParams(window.location.search).get("section") || "personal"
-  const [section, setSection] = useState(ACCOUNT_SECTIONS.some((item) => item.id === initialSection) ? initialSection : "personal")
+  const initialSection =
+    new URLSearchParams(window.location.search).get("section") || "personal"
+  const [section, setSection] = useState(
+    ACCOUNT_SECTIONS.some((item) => item.id === initialSection)
+      ? initialSection
+      : "personal",
+  )
   const { customer, loading, signOut, refresh } = useCustomerAccount()
-  const [registration, setRegistration] = useState({ firstName: "", lastName: "", email: "", address1: "", address2: "", zip: "", city: "", privacy: false })
+  const [registration, setRegistration] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    address1: "",
+    address2: "",
+    zip: "",
+    city: "",
+    privacy: false,
+  })
   const [registrationError, setRegistrationError] = useState("")
   const [invalidFields, setInvalidFields] = useState<string[]>([])
   const registrationSaveInProgress = useRef(false)
   useEffect(() => {
     if (!customer || registrationSaveInProgress.current) return
     registrationSaveInProgress.current = true
-    fetch("/api/customer-account?action=complete-registration", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: window.sessionStorage.getItem("pottler-registration-details") || "{}" })
+    fetch("/api/customer-account?action=complete-registration", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body:
+        window.sessionStorage.getItem("pottler-registration-details") || "{}",
+    })
       .then(async (response) => {
         if (!response.ok) return
         const result = await response.json()
@@ -3906,7 +4692,9 @@ function AccountPage() {
         await refresh()
       })
       .catch(() => undefined)
-      .finally(() => { registrationSaveInProgress.current = false })
+      .finally(() => {
+        registrationSaveInProgress.current = false
+      })
   }, [customer])
   const selectSection = (next: string) => {
     setSection(next)
@@ -3918,82 +4706,4947 @@ function AccountPage() {
   }
   const beginRegistration = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const missing = ["firstName", "lastName", "address1", "zip", "city"].filter((field) => !registration[field as keyof typeof registration])
+    const missing = ["firstName", "lastName", "address1", "zip", "city"].filter(
+      (field) => !registration[(field as keyof typeof registration)],
+    )
     if (!/^\S+@\S+\.\S+$/.test(registration.email)) missing.push("email")
     if (!registration.privacy) missing.push("privacy")
-    if (missing.length) { setInvalidFields(missing); setRegistrationError("BITTE PRÜFE DIE MARKIERTEN FELDER."); return }
+    if (missing.length) {
+      setInvalidFields(missing)
+      setRegistrationError("BITTE PRÜFE DIE MARKIERTEN FELDER.")
+      return
+    }
     setInvalidFields([])
     setRegistrationError("")
-    const response = await fetch("/api/customer-account?action=registration-pending", { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(registration) })
-    if (!response.ok) { setRegistrationError("DEINE ANGABEN KONNTEN NICHT GESPEICHERT WERDEN. BITTE VERSUCHE ES ERNEUT."); return }
+    const response = await fetch(
+      "/api/customer-account?action=registration-pending",
+      {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(registration),
+      },
+    )
+    if (!response.ok) {
+      setRegistrationError(
+        "DEINE ANGABEN KONNTEN NICHT GESPEICHERT WERDEN. BITTE VERSUCHE ES ERNEUT.",
+      )
+      return
+    }
     beginLogin()
   }
   const accountName = customerName(customer)
   const orders = customer?.orders?.nodes || []
-  const activeLabel = ACCOUNT_SECTIONS.find((item) => item.id === section)?.label || "PERSÖNLICHE DATEN"
+  const activeLabel =
+    ACCOUNT_SECTIONS.find((item) => item.id === section)?.label ||
+    "PERSÖNLICHE DATEN"
   const isInvalid = (field: string) => invalidFields.includes(field)
   const [accountMessage, setAccountMessage] = useState("")
-  const saveAccount = async (action: string, payload: Record<string, string>) => {
+  const saveAccount = async (
+    action: string,
+    payload: Record<string, string>,
+  ) => {
     setAccountMessage("")
-    const response = await fetch(`/api/customer-account?action=${action}`, { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+    const response = await fetch(`/api/customer-account?action=${action}`, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
     const data = await response.json()
-    if (!response.ok) { setAccountMessage(data.error || "Änderung konnte nicht gespeichert werden."); return false }
-    await refresh(); setAccountMessage("ÄNDERUNGEN WURDEN GESPEICHERT."); return true
+    if (!response.ok) {
+      setAccountMessage(
+        data.error || "Änderung konnte nicht gespeichert werden.",
+      )
+      return false
+    }
+    await refresh()
+    setAccountMessage("ÄNDERUNGEN WURDEN GESPEICHERT.")
+    return true
   }
-  return <PageShell inner><main className="flex-1"><section className="account-page account-page-access max-w-[1440px] mx-auto" style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}>
-    {loading && <p className="account-loading">KONTO WIRD GELADEN …</p>}
-    {!loading && !customer && <div className="account-login-panel"><div className="account-login-intro"><p className="account-kicker">SICHERER ZUGANG</p><h2>DEIN KONTO.<br />DEIN REVIER.</h2><p>Bestehende Kunden melden sich schnell per Code an. Neue Kunden hinterlegen ihre Lieferdaten direkt vor dem ersten Zugang.</p></div><div className="account-access-grid account-access-grid-register"><article className="account-access-card"><div className="account-access-symbol">@</div><p className="account-kicker">ICH BIN BEREITS KUNDE</p><h3>MIT CODE<br />ANMELDEN</h3><p>Melde dich auf der geschützten Anmeldeseite an und bestätige den Code aus deinem Postfach.</p><button type="button" className="btn-red account-login-button" onClick={beginLogin}>ZUR ANMELDUNG</button></article><form className="account-registration-form" onSubmit={beginRegistration} noValidate><p className="account-kicker">ICH BIN NEUER KUNDE</p><h3>KONTO ERSTELLEN</h3><p>Deine Angaben werden nach der Bestätigung sicher in deinem Kundenkonto gespeichert.</p><div className="account-form-grid"><label className={isInvalid("firstName") ? "is-invalid" : ""}>VORNAME*<input value={registration.firstName} onChange={(e) => setRegistration({ ...registration, firstName: e.target.value })} aria-invalid={isInvalid("firstName")} />{isInvalid("firstName") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={isInvalid("lastName") ? "is-invalid" : ""}>NACHNAME*<input value={registration.lastName} onChange={(e) => setRegistration({ ...registration, lastName: e.target.value })} aria-invalid={isInvalid("lastName")} />{isInvalid("lastName") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={`account-form-wide ${isInvalid("email") ? "is-invalid" : ""}`}>E-MAIL-ADRESSE*<input type="email" value={registration.email} onChange={(e) => setRegistration({ ...registration, email: e.target.value })} aria-invalid={isInvalid("email")} />{isInvalid("email") && <small>! GÜLTIGE E-MAIL EINGEBEN</small>}</label><label className={`account-form-wide ${isInvalid("address1") ? "is-invalid" : ""}`}>STRASSE & HAUSNUMMER*<input value={registration.address1} onChange={(e) => setRegistration({ ...registration, address1: e.target.value })} aria-invalid={isInvalid("address1")} />{isInvalid("address1") && <small>! BITTE AUSFÜLLEN</small>}</label><label className="account-form-wide">ADRESSZUSATZ <input value={registration.address2} onChange={(e) => setRegistration({ ...registration, address2: e.target.value })} /></label><label className={isInvalid("zip") ? "is-invalid" : ""}>POSTLEITZAHL*<input value={registration.zip} onChange={(e) => setRegistration({ ...registration, zip: e.target.value })} aria-invalid={isInvalid("zip")} />{isInvalid("zip") && <small>! BITTE AUSFÜLLEN</small>}</label><label className={isInvalid("city") ? "is-invalid" : ""}>ORT*<input value={registration.city} onChange={(e) => setRegistration({ ...registration, city: e.target.value })} aria-invalid={isInvalid("city")} />{isInvalid("city") && <small>! BITTE AUSFÜLLEN</small>}</label></div><label className={`account-privacy ${isInvalid("privacy") ? "is-invalid" : ""}`}><input type="checkbox" checked={registration.privacy} onChange={(e) => setRegistration({ ...registration, privacy: e.target.checked })} aria-invalid={isInvalid("privacy")} /> <span>Ich habe die Datenschutzerklärung gelesen und akzeptiere sie.</span>{isInvalid("privacy") && <small>! BITTE BESTÄTIGEN</small>}</label>{registrationError && <small className="account-form-error">{registrationError}</small>}<button className="btn-red account-login-button" type="submit">KONTO MIT E-MAIL ERSTELLEN</button></form></div><small className="account-login-note">Danach öffnen wir direkt {activeLabel.toLowerCase()}.</small></div>}
-            {!loading && customer && <div className="account-layout"><aside className="account-profile"><p className="account-kicker">MEIN POTTLERKINDER</p>{accountName && <h2>{accountName}</h2>}<p>{customer.emailAddress?.emailAddress}</p><nav className="account-side-nav">{ACCOUNT_SECTIONS.map((item) => <button type="button" className={section === item.id ? "is-active" : ""} onClick={() => selectSection(item.id)} key={item.id}>{item.label}</button>)}</nav><button type="button" className="btn-glass account-logout" onClick={signOut}>ABMELDEN</button></aside><div className="account-content">
-      {section === "personal" && <PersonalDataForm customer={customer} onSave={saveAccount} message={accountMessage} />}
-      {section === "addresses" && <AddressManager addresses={customer.addresses?.nodes || []} onSave={saveAccount} message={accountMessage} />}
-      {section === "orders" && <OrdersList orders={orders} />}
-    </div></div>}
-  </section></main></PageShell>
+  return (
+    <PageShell inner>
+      <main className="flex-1">
+        <section
+          className="account-page account-page-access max-w-[1440px] mx-auto"
+          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
+        >
+          {loading && <p className="account-loading">KONTO WIRD GELADEN …</p>}
+          {!loading && !customer && (
+            <div className="account-login-panel">
+              <div className="account-login-intro">
+                <p className="account-kicker">SICHERER ZUGANG</p>
+                <h2>
+                  DEIN KONTO.
+                  <br />
+                  DEIN REVIER.
+                </h2>
+                <p>
+                  Bestehende Kunden melden sich schnell per Code an. Neue Kunden
+                  hinterlegen ihre Lieferdaten direkt vor dem ersten Zugang.
+                </p>
+              </div>
+              <div className="account-access-grid account-access-grid-register">
+                <article className="account-access-card">
+                  <div className="account-access-symbol">@</div>
+                  <p className="account-kicker">ICH BIN BEREITS KUNDE</p>
+                  <h3>
+                    MIT CODE
+                    <br />
+                    ANMELDEN
+                  </h3>
+                  <p>
+                    Melde dich auf der geschützten Anmeldeseite an und bestätige
+                    den Code aus deinem Postfach.
+                  </p>
+                  <button
+                    type="button"
+                    className="btn-red account-login-button"
+                    onClick={beginLogin}
+                  >
+                    ZUR ANMELDUNG
+                  </button>
+                </article>
+                <form
+                  className="account-registration-form"
+                  onSubmit={beginRegistration}
+                  noValidate
+                >
+                  <p className="account-kicker">ICH BIN NEUER KUNDE</p>
+                  <h3>KONTO ERSTELLEN</h3>
+                  <p>
+                    Deine Angaben werden nach der Bestätigung sicher in deinem
+                    Kundenkonto gespeichert.
+                  </p>
+                  <div className="account-form-grid">
+                    <label
+                      className={isInvalid("firstName") ? "is-invalid" : ""}
+                    >
+                      VORNAME*
+                      <input
+                        value={registration.firstName}
+                        onChange={(e) =>
+                          setRegistration({
+                            ...registration,
+                            firstName: e.target.value,
+                          })
+                        }
+                        aria-invalid={isInvalid("firstName")}
+                      />
+                      {isInvalid("firstName") && (
+                        <small>! BITTE AUSFÜLLEN</small>
+                      )}
+                    </label>
+                    <label
+                      className={isInvalid("lastName") ? "is-invalid" : ""}
+                    >
+                      NACHNAME*
+                      <input
+                        value={registration.lastName}
+                        onChange={(e) =>
+                          setRegistration({
+                            ...registration,
+                            lastName: e.target.value,
+                          })
+                        }
+                        aria-invalid={isInvalid("lastName")}
+                      />
+                      {isInvalid("lastName") && (
+                        <small>! BITTE AUSFÜLLEN</small>
+                      )}
+                    </label>
+                    <label
+                      className={`account-form-wide ${
+                        isInvalid("email") ? "is-invalid" : ""
+                      }`}
+                    >
+                      E-MAIL-ADRESSE*
+                      <input
+                        type="email"
+                        value={registration.email}
+                        onChange={(e) =>
+                          setRegistration({
+                            ...registration,
+                            email: e.target.value,
+                          })
+                        }
+                        aria-invalid={isInvalid("email")}
+                      />
+                      {isInvalid("email") && (
+                        <small>! GÜLTIGE E-MAIL EINGEBEN</small>
+                      )}
+                    </label>
+                    <label
+                      className={`account-form-wide ${
+                        isInvalid("address1") ? "is-invalid" : ""
+                      }`}
+                    >
+                      STRASSE & HAUSNUMMER*
+                      <input
+                        value={registration.address1}
+                        onChange={(e) =>
+                          setRegistration({
+                            ...registration,
+                            address1: e.target.value,
+                          })
+                        }
+                        aria-invalid={isInvalid("address1")}
+                      />
+                      {isInvalid("address1") && (
+                        <small>! BITTE AUSFÜLLEN</small>
+                      )}
+                    </label>
+                    <label className="account-form-wide">
+                      ADRESSZUSATZ{" "}
+                      <input
+                        value={registration.address2}
+                        onChange={(e) =>
+                          setRegistration({
+                            ...registration,
+                            address2: e.target.value,
+                          })
+                        }
+                      />
+                    </label>
+                    <label className={isInvalid("zip") ? "is-invalid" : ""}>
+                      POSTLEITZAHL*
+                      <input
+                        value={registration.zip}
+                        onChange={(e) =>
+                          setRegistration({
+                            ...registration,
+                            zip: e.target.value,
+                          })
+                        }
+                        aria-invalid={isInvalid("zip")}
+                      />
+                      {isInvalid("zip") && <small>! BITTE AUSFÜLLEN</small>}
+                    </label>
+                    <label className={isInvalid("city") ? "is-invalid" : ""}>
+                      ORT*
+                      <input
+                        value={registration.city}
+                        onChange={(e) =>
+                          setRegistration({
+                            ...registration,
+                            city: e.target.value,
+                          })
+                        }
+                        aria-invalid={isInvalid("city")}
+                      />
+                      {isInvalid("city") && <small>! BITTE AUSFÜLLEN</small>}
+                    </label>
+                  </div>
+                  <label
+                    className={`account-privacy ${
+                      isInvalid("privacy") ? "is-invalid" : ""
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={registration.privacy}
+                      onChange={(e) =>
+                        setRegistration({
+                          ...registration,
+                          privacy: e.target.checked,
+                        })
+                      }
+                      aria-invalid={isInvalid("privacy")}
+                    />{" "}
+                    <span>
+                      Ich habe die Datenschutzerklärung gelesen und akzeptiere
+                      sie.
+                    </span>
+                    {isInvalid("privacy") && <small>! BITTE BESTÄTIGEN</small>}
+                  </label>
+                  {registrationError && (
+                    <small className="account-form-error">
+                      {registrationError}
+                    </small>
+                  )}
+                  <button
+                    className="btn-red account-login-button"
+                    type="submit"
+                  >
+                    KONTO MIT E-MAIL ERSTELLEN
+                  </button>
+                </form>
+              </div>
+              <small className="account-login-note">
+                Danach öffnen wir direkt {activeLabel.toLowerCase()}.
+              </small>
+            </div>
+          )}
+          {!loading && customer && (
+            <div className="account-layout">
+              <aside className="account-profile">
+                <p className="account-kicker">MEIN POTTLERKINDER</p>
+                {accountName && <h2>{accountName}</h2>}
+                <p>{customer.emailAddress?.emailAddress}</p>
+                <nav className="account-side-nav">
+                  {ACCOUNT_SECTIONS.map((item) => (
+                    <button
+                      type="button"
+                      className={section === item.id ? "is-active" : ""}
+                      onClick={() => selectSection(item.id)}
+                      key={item.id}
+                    >
+                      {item.label}
+                    </button>
+                  ))}
+                </nav>
+                <button
+                  type="button"
+                  className="btn-glass account-logout"
+                  onClick={signOut}
+                >
+                  ABMELDEN
+                </button>
+              </aside>
+              <div className="account-content">
+                {section === "personal" && (
+                  <PersonalDataForm
+                    customer={customer}
+                    onSave={saveAccount}
+                    message={accountMessage}
+                  />
+                )}
+                {section === "addresses" && (
+                  <AddressManager
+                    addresses={customer.addresses?.nodes || []}
+                    onSave={saveAccount}
+                    message={accountMessage}
+                  />
+                )}
+                {section === "orders" && <OrdersList orders={orders} />}
+              </div>
+            </div>
+          )}
+        </section>
+      </main>
+    </PageShell>
+  )
 }
 
-function PersonalDataForm({ customer, onSave, message }: { customer: CustomerAccount; onSave: (action: string, payload: Record<string, string>) => Promise<boolean>; message: string }) {
+function PersonalDataForm({
+  customer,
+  onSave,
+  message,
+}: {
+  customer: CustomerAccount
+  onSave: (action: string, payload: Record<string, string>) => Promise<boolean>
+  message: string
+}) {
   const [firstName, setFirstName] = useState(customer.firstName || "")
   const [lastName, setLastName] = useState(customer.lastName || "")
-  return <section><div className="account-section-head"><div><p className="account-kicker">MEIN KONTO</p><h2>PERSÖNLICHE DATEN</h2></div></div><form className="account-edit-form" onSubmit={(e) => { e.preventDefault(); onSave("update-profile", { firstName, lastName }) }}><label>VORNAME<input value={firstName} onChange={(e) => setFirstName(e.target.value)} /></label><label>NACHNAME<input value={lastName} onChange={(e) => setLastName(e.target.value)} /></label><label className="account-edit-wide">E-MAIL-ADRESSE<input value={customer.emailAddress?.emailAddress || ""} disabled /></label><button className="btn-red" type="submit">ÄNDERUNGEN SPEICHERN</button></form>{message && <p className="account-save-message">{message}</p>}</section>
+  return (
+    <section>
+      <div className="account-section-head">
+        <div>
+          <p className="account-kicker">MEIN KONTO</p>
+          <h2>PERSÖNLICHE DATEN</h2>
+        </div>
+      </div>
+      <form
+        className="account-edit-form"
+        onSubmit={(e) => {
+          e.preventDefault()
+          onSave("update-profile", { firstName, lastName })
+        }}
+      >
+        <label>
+          VORNAME
+          <input
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+          />
+        </label>
+        <label>
+          NACHNAME
+          <input
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+          />
+        </label>
+        <label className="account-edit-wide">
+          E-MAIL-ADRESSE
+          <input value={customer.emailAddress?.emailAddress || ""} disabled />
+        </label>
+        <button className="btn-red" type="submit">
+          ÄNDERUNGEN SPEICHERN
+        </button>
+      </form>
+      {message && <p className="account-save-message">{message}</p>}
+    </section>
+  )
 }
 
-const formatCustomerMoney = (money?: { amount: string; currencyCode: string }) => money ? new Intl.NumberFormat("de-DE", { style: "currency", currency: money.currencyCode }).format(Number(money.amount)) : "—"
+const formatCustomerMoney = (money?: {
+  amount: string
+  currencyCode: string
+}) =>
+  money
+    ? new Intl.NumberFormat("de-DE", {
+        style: "currency",
+        currency: money.currencyCode,
+      }).format(Number(money.amount))
+    : "—"
 
-function orderStatusLabel(status?: string, kind: "payment" | "fulfillment" = "fulfillment") {
+function orderStatusLabel(
+  status?: string,
+  kind: "payment" | "fulfillment" = "fulfillment",
+) {
   const normalized = (status || "").toUpperCase()
-  const labels: Record<string, string> = kind === "payment"
-    ? { PENDING: "ZAHLUNG AUSSTEHEND", AUTHORIZED: "ZAHLUNG AUTORISIERT", PAID: "BEZAHLT", PARTIALLY_PAID: "TEILWEISE BEZAHLT", REFUNDED: "ERSTATTET", PARTIALLY_REFUNDED: "TEILWEISE ERSTATTET", VOIDED: "STORNIERT", EXPIRED: "ABGELAUFEN" }
-    : { UNFULFILLED: "NOCH NICHT VERSENDET", PARTIALLY_FULFILLED: "TEILWEISE VERSENDET", FULFILLED: "VERSENDET", RESTOCKED: "STORNIERT", IN_PROGRESS: "IN BEARBEITUNG", ON_HOLD: "ANGEHALTEN", SCHEDULED: "GEPLANT" }
-  return labels[normalized] || (kind === "payment" ? "ZAHLUNG WIRD GEPRÜFT" : "IN BEARBEITUNG")
+  const labels: Record<string, string> =
+    kind === "payment"
+      ? {
+          PENDING: "ZAHLUNG AUSSTEHEND",
+          AUTHORIZED: "ZAHLUNG AUTORISIERT",
+          PAID: "BEZAHLT",
+          PARTIALLY_PAID: "TEILWEISE BEZAHLT",
+          REFUNDED: "ERSTATTET",
+          PARTIALLY_REFUNDED: "TEILWEISE ERSTATTET",
+          VOIDED: "STORNIERT",
+          EXPIRED: "ABGELAUFEN",
+        }
+      : {
+          UNFULFILLED: "NOCH NICHT VERSENDET",
+          PARTIALLY_FULFILLED: "TEILWEISE VERSENDET",
+          FULFILLED: "VERSENDET",
+          RESTOCKED: "STORNIERT",
+          IN_PROGRESS: "IN BEARBEITUNG",
+          ON_HOLD: "ANGEHALTEN",
+          SCHEDULED: "GEPLANT",
+        }
+  return (
+    labels[normalized] ||
+    (kind === "payment" ? "ZAHLUNG WIRD GEPRÜFT" : "IN BEARBEITUNG")
+  )
 }
 
 function OrdersList({ orders }: { orders: CustomerOrder[] }) {
   const [openOrderId, setOpenOrderId] = useState<string | null>(null)
-  return <section><div className="account-section-head"><div><p className="account-kicker">BESTELLUNGEN</p><h2>DEINE LETZTEN SCHICHTEN</h2></div><span>{orders.length} {orders.length === 1 ? "BESTELLUNG" : "BESTELLUNGEN"}</span></div>{orders.length === 0 ? <div className="account-empty"><strong>NOCH KEINE BESTELLUNGEN</strong><p>Deine nächste Auswahl aus dem Pott wartet im Katalog.</p><a href="/katalog" className="btn-red">ZUM KATALOG →</a></div> : <div className="account-orders">{orders.map((order) => {
-    const isOpen = openOrderId === order.id
-    const isCancelled = Boolean(order.cancelledAt) || order.financialStatus?.toUpperCase() === "VOIDED"
-    const date = order.processedAt || order.createdAt
-    const fulfillment = isCancelled ? "STORNIERT" : orderStatusLabel(order.fulfillmentStatus)
-    const payment = orderStatusLabel(order.financialStatus, "payment")
-    const items = order.lineItems?.nodes || []
-    const shippingAddress = order.shippingAddress
-    const addressLines = shippingAddress ? [shippingAddress.firstName, shippingAddress.lastName, shippingAddress.address1, shippingAddress.address2, [shippingAddress.zip, shippingAddress.city].filter(Boolean).join(" "), shippingAddress.country].filter(Boolean) : []
-    return <article className={`account-order ${isOpen ? "is-open" : ""}`} key={order.id}><button type="button" className="account-order-summary" aria-expanded={isOpen} aria-controls={`order-${order.id}`} onClick={() => setOpenOrderId(isOpen ? null : order.id)}><div><strong>{order.name || order.confirmationNumber || "BESTELLUNG"}</strong><span>{date ? new Intl.DateTimeFormat("de-DE", { dateStyle: "medium" }).format(new Date(date)) : ""}</span></div><div className="account-order-total"><small className={isCancelled ? "is-cancelled" : ""}>{fulfillment}</small><b>{formatCustomerMoney(order.totalPrice)}</b><i aria-hidden="true">{isOpen ? "−" : "+"}</i></div></button>{isOpen && <div className="account-order-details" id={`order-${order.id}`}><div className="account-order-meta"><div><small>BESTELLNUMMER</small><b>{order.name || order.confirmationNumber || "—"}</b></div><div><small>ZAHLUNGSSTATUS</small><b>{payment}</b></div><div><small>VERSANDSTATUS</small><b className={isCancelled ? "is-cancelled" : ""}>{fulfillment}</b></div><div><small>VERSANDART</small><b>{order.shippingLine?.title || "VERSAND"}</b></div><div><small>VERSANDKOSTEN</small><b>{formatCustomerMoney(order.totalShipping || order.shippingLine?.originalPrice)}</b></div></div>{addressLines.length > 0 && <div className="account-order-delivery"><small>LIEFERADRESSE</small><address>{addressLines.map((line) => <span key={line}>{line}</span>)}</address></div>}{isCancelled && <p className="account-order-notice">DIESE BESTELLUNG WURDE STORNIERT{order.cancelReason ? ` · ${order.cancelReason.replaceAll("_", " ")}` : ""}.</p>}<div className="account-order-items">{items.length ? items.map((item) => <div className="account-order-item" key={item.id}>{item.image?.url ? <img src={item.image.url} alt={item.image.altText || item.name || "Produkt"} /> : <div className="account-order-item-placeholder" aria-hidden="true" />}<div><strong>{item.name || "ARTIKEL"}</strong>{item.variantTitle && item.variantTitle !== "Default Title" && <span>{item.variantTitle}</span>}<small>{item.quantity || 1} × {formatCustomerMoney(item.totalPrice)}</small></div><b>{formatCustomerMoney(item.totalPrice)}</b></div>) : <p className="account-order-items-empty">DIE ARTIKEL DIESER BESTELLUNG WERDEN VON SHOPIFY NOCH GELADEN.</p>}</div></div>}</article>
-  })}</div>}</section>
+  return (
+    <section>
+      <div className="account-section-head">
+        <div>
+          <p className="account-kicker">BESTELLUNGEN</p>
+          <h2>DEINE LETZTEN SCHICHTEN</h2>
+        </div>
+        <span>
+          {orders.length} {orders.length === 1 ? "BESTELLUNG" : "BESTELLUNGEN"}
+        </span>
+      </div>
+      {orders.length === 0 ? (
+        <div className="account-empty">
+          <strong>NOCH KEINE BESTELLUNGEN</strong>
+          <p>Deine nächste Auswahl aus dem Pott wartet im Katalog.</p>
+          <a href="/katalog" className="btn-red">
+            ZUM KATALOG →
+          </a>
+        </div>
+      ) : (
+        <div className="account-orders">
+          {orders.map((order) => {
+            const isOpen = openOrderId === order.id
+            const isCancelled =
+              Boolean(order.cancelledAt) ||
+              order.financialStatus?.toUpperCase() === "VOIDED"
+            const date = order.processedAt || order.createdAt
+            const fulfillment = isCancelled
+              ? "STORNIERT"
+              : orderStatusLabel(order.fulfillmentStatus)
+            const payment = orderStatusLabel(order.financialStatus, "payment")
+            const items = order.lineItems?.nodes || []
+            const shippingAddress = order.shippingAddress
+            const addressLines = shippingAddress
+              ? [
+                  shippingAddress.firstName,
+                  shippingAddress.lastName,
+                  shippingAddress.address1,
+                  shippingAddress.address2,
+                  [shippingAddress.zip, shippingAddress.city]
+                    .filter(Boolean)
+                    .join(" "),
+                  shippingAddress.country,
+                ].filter(Boolean)
+              : []
+            return (
+              <article
+                className={`account-order ${isOpen ? "is-open" : ""}`}
+                key={order.id}
+              >
+                <button
+                  type="button"
+                  className="account-order-summary"
+                  aria-expanded={isOpen}
+                  aria-controls={`order-${order.id}`}
+                  onClick={() => setOpenOrderId(isOpen ? null : order.id)}
+                >
+                  <div>
+                    <strong>
+                      {order.name || order.confirmationNumber || "BESTELLUNG"}
+                    </strong>
+                    <span>
+                      {date
+                        ? new Intl.DateTimeFormat("de-DE", {
+                            dateStyle: "medium",
+                          }).format(new Date(date))
+                        : ""}
+                    </span>
+                  </div>
+                  <div className="account-order-total">
+                    <small className={isCancelled ? "is-cancelled" : ""}>
+                      {fulfillment}
+                    </small>
+                    <b>{formatCustomerMoney(order.totalPrice)}</b>
+                    <i aria-hidden="true">{isOpen ? "−" : "+"}</i>
+                  </div>
+                </button>
+                {isOpen && (
+                  <div
+                    className="account-order-details"
+                    id={`order-${order.id}`}
+                  >
+                    <div className="account-order-meta">
+                      <div>
+                        <small>BESTELLNUMMER</small>
+                        <b>{order.name || order.confirmationNumber || "—"}</b>
+                      </div>
+                      <div>
+                        <small>ZAHLUNGSSTATUS</small>
+                        <b>{payment}</b>
+                      </div>
+                      <div>
+                        <small>VERSANDSTATUS</small>
+                        <b className={isCancelled ? "is-cancelled" : ""}>
+                          {fulfillment}
+                        </b>
+                      </div>
+                      <div>
+                        <small>VERSANDART</small>
+                        <b>{order.shippingLine?.title || "VERSAND"}</b>
+                      </div>
+                      <div>
+                        <small>VERSANDKOSTEN</small>
+                        <b>
+                          {formatCustomerMoney(
+                            order.totalShipping ||
+                              order.shippingLine?.originalPrice,
+                          )}
+                        </b>
+                      </div>
+                    </div>
+                    {addressLines.length > 0 && (
+                      <div className="account-order-delivery">
+                        <small>LIEFERADRESSE</small>
+                        <address>
+                          {addressLines.map((line) => (
+                            <span key={line}>{line}</span>
+                          ))}
+                        </address>
+                      </div>
+                    )}
+                    {isCancelled && (
+                      <p className="account-order-notice">
+                        DIESE BESTELLUNG WURDE STORNIERT
+                        {order.cancelReason
+                          ? ` · ${order.cancelReason.replaceAll("_", " ")}`
+                          : ""}
+                        .
+                      </p>
+                    )}
+                    <div className="account-order-items">
+                      {items.length ? (
+                        items.map((item) => (
+                          <div className="account-order-item" key={item.id}>
+                            {item.image?.url ? (
+                              <img
+                                src={item.image.url}
+                                alt={
+                                  item.image.altText || item.name || "Produkt"
+                                }
+                              />
+                            ) : (
+                              <div
+                                className="account-order-item-placeholder"
+                                aria-hidden="true"
+                              />
+                            )}
+                            <div>
+                              <strong>{item.name || "ARTIKEL"}</strong>
+                              {item.variantTitle &&
+                                item.variantTitle !== "Default Title" && (
+                                  <span>{item.variantTitle}</span>
+                                )}
+                              <small>
+                                {item.quantity || 1} ×{" "}
+                                {formatCustomerMoney(item.totalPrice)}
+                              </small>
+                            </div>
+                            <b>{formatCustomerMoney(item.totalPrice)}</b>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="account-order-items-empty">
+                          DIE ARTIKEL DIESER BESTELLUNG WERDEN VON SHOPIFY NOCH
+                          GELADEN.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </article>
+            )
+          })}
+        </div>
+      )}
+    </section>
+  )
 }
 
-function AddressManager({ addresses, onSave, message }: { addresses: CustomerAddress[]; onSave: (action: string, payload: Record<string, string>) => Promise<boolean>; message: string }) {
-  const empty = { firstName: "", lastName: "", address1: "", address2: "", zip: "", city: "" }
+function AddressManager({
+  addresses,
+  onSave,
+  message,
+}: {
+  addresses: CustomerAddress[]
+  onSave: (action: string, payload: Record<string, string>) => Promise<boolean>
+  message: string
+}) {
+  const empty = {
+    firstName: "",
+    lastName: "",
+    address1: "",
+    address2: "",
+    zip: "",
+    city: "",
+  }
   const [editing, setEditing] = useState<CustomerAddress | null>(null)
   const [editorOpen, setEditorOpen] = useState(addresses.length === 0)
   const [form, setForm] = useState<Record<string, string>>(empty)
-  const open = (item?: CustomerAddress) => { setEditing(item || null); setEditorOpen(true); setForm(item ? { firstName: item.firstName || "", lastName: item.lastName || "", address1: item.address1 || "", address2: item.address2 || "", zip: item.zip || "", city: item.city || "" } : empty) }
-  const submit = async (e: React.FormEvent) => { e.preventDefault(); if (!form.address1 || !form.zip || !form.city) return; const ok = await onSave(editing ? "update-address" : "create-address", editing ? { ...form, id: editing.id } : form); if (ok) { setEditing(null); setEditorOpen(false) } }
-  return <section><div className="account-section-head"><div><p className="account-kicker">MEIN KONTO</p><h2>ADRESSEN</h2></div><span>{addresses.length}/3 GESPEICHERT</span></div><div className="account-address-list">{addresses.map((item) => <article key={item.id}><p>{item.firstName} {item.lastName}<br />{item.address1}{item.address2 && `, ${item.address2}`}<br />{item.zip} {item.city}</p><div><button type="button" className="account-address-action" onClick={() => open(item)}>BEARBEITEN</button><button type="button" className="account-address-action is-danger" onClick={() => onSave("delete-address", { id: item.id })}>LÖSCHEN</button></div></article>)}</div>{addresses.length < 3 && <button className="account-add-address" type="button" onClick={() => open()}>+ NEUE ADRESSE HINZUFÜGEN</button>}{editorOpen ? <form className="account-edit-form account-address-form" onSubmit={submit}><h3>{editing ? "ADRESSE BEARBEITEN" : "NEUE ADRESSE"}</h3><label>VORNAME<input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} /></label><label>NACHNAME<input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} /></label><label className="account-edit-wide">STRASSE & HAUSNUMMER*<input value={form.address1} onChange={(e) => setForm({ ...form, address1: e.target.value })} required /></label><label className="account-edit-wide">ADRESSZUSATZ<input value={form.address2} onChange={(e) => setForm({ ...form, address2: e.target.value })} /></label><label>PLZ*<input value={form.zip} onChange={(e) => setForm({ ...form, zip: e.target.value })} required /></label><label>ORT*<input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} required /></label><button className="btn-red" type="submit">ADRESSE SPEICHERN</button>{editing && <button type="button" className="account-cancel" onClick={() => { setEditing(null); setEditorOpen(false) }}>ABBRECHEN</button>}</form> : null}{message && <p className="account-save-message">{message}</p>}</section>
+  const open = (item?: CustomerAddress) => {
+    setEditing(item || null)
+    setEditorOpen(true)
+    setForm(
+      item
+        ? {
+            firstName: item.firstName || "",
+            lastName: item.lastName || "",
+            address1: item.address1 || "",
+            address2: item.address2 || "",
+            zip: item.zip || "",
+            city: item.city || "",
+          }
+        : empty,
+    )
+  }
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!form.address1 || !form.zip || !form.city) return
+    const ok = await onSave(
+      editing ? "update-address" : "create-address",
+      editing ? { ...form, id: editing.id } : form,
+    )
+    if (ok) {
+      setEditing(null)
+      setEditorOpen(false)
+    }
+  }
+  return (
+    <section>
+      <div className="account-section-head">
+        <div>
+          <p className="account-kicker">MEIN KONTO</p>
+          <h2>ADRESSEN</h2>
+        </div>
+        <span>{addresses.length}/3 GESPEICHERT</span>
+      </div>
+      <div className="account-address-list">
+        {addresses.map((item) => (
+          <article key={item.id}>
+            <p>
+              {item.firstName} {item.lastName}
+              <br />
+              {item.address1}
+              {item.address2 && `, ${item.address2}`}
+              <br />
+              {item.zip} {item.city}
+            </p>
+            <div>
+              <button
+                type="button"
+                className="account-address-action"
+                onClick={() => open(item)}
+              >
+                BEARBEITEN
+              </button>
+              <button
+                type="button"
+                className="account-address-action is-danger"
+                onClick={() => onSave("delete-address", { id: item.id })}
+              >
+                LÖSCHEN
+              </button>
+            </div>
+          </article>
+        ))}
+      </div>
+      {addresses.length < 3 && (
+        <button
+          className="account-add-address"
+          type="button"
+          onClick={() => open()}
+        >
+          + NEUE ADRESSE HINZUFÜGEN
+        </button>
+      )}
+      {editorOpen ? (
+        <form
+          className="account-edit-form account-address-form"
+          onSubmit={submit}
+        >
+          <h3>{editing ? "ADRESSE BEARBEITEN" : "NEUE ADRESSE"}</h3>
+          <label>
+            VORNAME
+            <input
+              value={form.firstName}
+              onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+            />
+          </label>
+          <label>
+            NACHNAME
+            <input
+              value={form.lastName}
+              onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+            />
+          </label>
+          <label className="account-edit-wide">
+            STRASSE & HAUSNUMMER*
+            <input
+              value={form.address1}
+              onChange={(e) => setForm({ ...form, address1: e.target.value })}
+              required
+            />
+          </label>
+          <label className="account-edit-wide">
+            ADRESSZUSATZ
+            <input
+              value={form.address2}
+              onChange={(e) => setForm({ ...form, address2: e.target.value })}
+            />
+          </label>
+          <label>
+            PLZ*
+            <input
+              value={form.zip}
+              onChange={(e) => setForm({ ...form, zip: e.target.value })}
+              required
+            />
+          </label>
+          <label>
+            ORT*
+            <input
+              value={form.city}
+              onChange={(e) => setForm({ ...form, city: e.target.value })}
+              required
+            />
+          </label>
+          <button className="btn-red" type="submit">
+            ADRESSE SPEICHERN
+          </button>
+          {editing && (
+            <button
+              type="button"
+              className="account-cancel"
+              onClick={() => {
+                setEditing(null)
+                setEditorOpen(false)
+              }}
+            >
+              ABBRECHEN
+            </button>
+          )}
+        </form>
+      ) : null}
+      {message && <p className="account-save-message">{message}</p>}
+    </section>
+  )
 }
 
-function AccountInformation({ title, rows }: { title: string; rows: Array<[string, string | undefined]> }) {
-  return <><div className="account-section-head"><div><p className="account-kicker">MEIN KONTO</p><h2>{title}</h2></div></div><div className="account-information">{rows.map(([label, value]) => <div key={label}><small>{label}</small><p>{value || "NICHT HINTERLEGT"}</p></div>)}</div></>
+function AccountInformation({
+  title,
+  rows,
+}: {
+  title: string
+  rows: Array<[string, string | undefined]>
+}) {
+  return (
+    <>
+      <div className="account-section-head">
+        <div>
+          <p className="account-kicker">MEIN KONTO</p>
+          <h2>{title}</h2>
+        </div>
+      </div>
+      <div className="account-information">
+        {rows.map(([label, value]) => (
+          <div key={label}>
+            <small>{label}</small>
+            <p>{value || "NICHT HINTERLEGT"}</p>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
+
+const DESIGNER_PRODUCTS = [
+  {
+    id: "hoodie",
+    title: "HOODIE",
+    name: "Herren Hoodie",
+    image: customHoodie,
+    type: "textile",
+    zone: "standard",
+  },
+  {
+    id: "tshirt",
+    title: "T-SHIRT",
+    name: "Herren T-Shirt",
+    image: customTshirt,
+    type: "textile",
+    zone: "standard",
+  },
+  {
+    id: "polo",
+    title: "POLO",
+    name: "Herren Polo",
+    image: customPolo,
+    type: "textile",
+    zone: "standard",
+  },
+  {
+    id: "sweatshirt",
+    title: "SWEATSHIRT",
+    name: "Herren Sweatshirt",
+    image: customSweatshirt,
+    type: "textile",
+    zone: "standard",
+  },
+  {
+    id: "shirt",
+    title: "HEMD",
+    name: "Herren Hemd",
+    image: customShirt,
+    type: "textile",
+    zone: "standard",
+  },
+  {
+    id: "mug",
+    title: "GLÄSER & TASSEN",
+    name: "Bierkrug",
+    image: staminaBierkrugWhite,
+    type: "single",
+    zone: "mug",
+  },
+  {
+    id: "shopper",
+    title: "SHOPPER",
+    name: "Shopper",
+    image: solsStockholmRed,
+    type: "single",
+    zone: "shopper",
+  },
+  {
+    id: "headwear",
+    title: "KOPFBEDECKUNG",
+    name: "Kopfbedeckung",
+    image: customCap,
+    type: "single",
+    zone: "cap",
+  },
+] as const
+
+const OTHER_DESIGNER_PRODUCTS = DESIGNER_PRODUCTS.filter((item) =>
+  ["mug", "shopper"].includes(item.id),
+)
+
+const FRAUEN_HOODIE_COLORS = [
+  {
+    id: "00",
+    label: "WHITE",
+    swatch: "#f4f4f1",
+    image: hoodieWhite,
+    backImage: womenHoodieWhiteBack,
+  },
+  {
+    id: "36",
+    label: "FIRE RED",
+    swatch: "#c62830",
+    image: hoodieFireRed,
+    backImage: womenHoodieFireRedBack,
+  },
+  {
+    id: "OL",
+    label: "OLIVE",
+    swatch: "#667347",
+    image: hoodieOlive,
+    backImage: womenHoodieOliveBack,
+  },
+  {
+    id: "AZ",
+    label: "AZURE BLUE",
+    swatch: "#147fbd",
+    image: hoodieAzureBlue,
+    backImage: womenHoodieAzureBlueBack,
+  },
+  {
+    id: "54",
+    label: "NAVY",
+    swatch: "#172e57",
+    image: hoodieNavy,
+    backImage: womenHoodieNavyBack,
+  },
+  {
+    id: "HN",
+    label: "HEATHER NAVY",
+    swatch: "#3f506b",
+    image: hoodieHeatherNavy,
+    backImage: womenHoodieHeatherNavyBack,
+  },
+  {
+    id: "FN",
+    label: "FRENCH NAVY",
+    swatch: "#283a59",
+    image: hoodieFrenchNavy,
+    backImage: womenHoodieFrenchNavyBack,
+  },
+  {
+    id: "CA",
+    label: "CHARCOAL",
+    swatch: "#3d3d3c",
+    image: hoodieCharcoal,
+    backImage: womenHoodieCharcoalBack,
+  },
+  {
+    id: "HY",
+    label: "HEATHER GREY",
+    swatch: "#a7a8a7",
+    image: hoodieHeatherGrey,
+    backImage: womenHoodieHeatherGreyBack,
+  },
+  {
+    id: "NW",
+    label: "NEW LIGHT GREY",
+    swatch: "#d1d1cf",
+    image: hoodieNewLightGrey,
+    backImage: womenHoodieNewLightGreyBack,
+  },
+  {
+    id: "9D",
+    label: "BLACK",
+    swatch: "#151515",
+    image: hoodieBlack,
+    backImage: womenHoodieBlackBack,
+  },
+] as const
+
+const menHoodieFrontImages = import.meta.glob(
+  "./assets/designer/men-hoodie/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const menHoodieBackImages = import.meta.glob(
+  "./assets/designer/men-hoodie/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const MAENNER_HOODIE_COLORS = [
+  ["36", "FIRE RED", "#c62830", "fire_red"],
+  ["OL", "OLIVE", "#667347", "olive"],
+  ["AZ", "AZURE BLUE", "#147fbd", "azure_blue"],
+  ["54", "NAVY", "#172e57", "navy"],
+  ["HN", "HEATHER NAVY", "#3f506b", "heather_navy"],
+  ["FN", "FRENCH NAVY", "#283a59", "french_navy"],
+  ["A5", "BERRY", "#692842", "berry"],
+  ["CA", "CHARCOAL", "#3d3d3c", "charcoal"],
+  ["HY", "HEATHER GREY", "#a7a8a7", "heather_grey"],
+  ["NW", "NEW LIGHT GREY", "#d1d1cf", "new_light_grey"],
+  ["9D", "BLACK", "#151515", "black"],
+  ["00", "WHITE", "#f4f4f1", "white"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    menHoodieFrontImages[`./assets/designer/men-hoodie/front/${imageKey}.webp`],
+  backImage:
+    menHoodieBackImages[`./assets/designer/men-hoodie/back/${imageKey}.webp`],
+}))
+
+const unisexHoodieFrontImages = import.meta.glob(
+  "./assets/designer/unisex-hoodie/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const unisexHoodieBackImages = import.meta.glob(
+  "./assets/designer/unisex-hoodie/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const UNISEX_HOODIE_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["143", "CREAMY PINK", "#f4e1d9", "creamy_pink"],
+  ["146", "BURGUNDY", "#521323", "burgundy"],
+  ["161", "BRIGHT RED", "#e00404", "bright_red"],
+  ["171", "ASTRAL PURPLE", "#662c55", "astral_purple"],
+  ["199", "ARTIC BLUE", "#c5e7e1", "artic_blue"],
+  ["205", "BLUE", "#65769a", "blue"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["251", "CREAMY BLUE", "#bad4dd", "creamy_blue"],
+  ["260", "LIGHT YELLOW", "#fffe94", "light_yellow"],
+  ["264", "BOTTLE GREEN", "#384e42", "bottle_green"],
+  ["269", "ARMY", "#605e51", "army"],
+  ["290", "SPRING GREEN", "#57ab6e", "spring_green"],
+  ["292", "FROZEN GREEN", "#b4d4b2", "frozen_green"],
+  ["295", "POOL BLUE", "#51b9b3", "pool_blue"],
+  ["300", "ASH", "#dcd8d3", "ash"],
+  ["301", "GOLD", "#f8b61a", "gold"],
+  ["312", "BLACK", "#29282d", "black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["323", "CREAMY GREEN", "#cbdbd3", "creamy_green"],
+  ["348", "CHARCOAL MELANGE", "#38393b", "charcoal_melange"],
+  ["360", "GREY MELANGE 2", "#b1b3b4", "grey_melange_2"],
+  ["411", "POP ORANGE", "#f35c53", "pop_orange"],
+  ["701", "LILAC", "#d8c9d7", "lilac"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    unisexHoodieFrontImages[
+      `./assets/designer/unisex-hoodie/front/${imageKey}.webp`
+    ],
+  backImage:
+    unisexHoodieBackImages[
+      `./assets/designer/unisex-hoodie/back/${imageKey}.webp`
+    ],
+}))
+
+const kidsHoodieFrontImages = import.meta.glob(
+  "./assets/designer/kids-hoodie/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const kidsHoodieBackImages = import.meta.glob(
+  "./assets/designer/kids-hoodie/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const KINDER_HOODIE_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["143", "CREAMY PINK", "#f4e1d9", "creamy_pink"],
+  ["161", "BRIGHT RED", "#e00404", "bright_red"],
+  ["205", "BLUE", "#65769a", "blue"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["260", "LIGHT YELLOW", "#fffe94", "light_yellow"],
+  ["272", "KELLY GREEN", "#27964e", "kelly_green"],
+  ["312", "BLACK", "#29282d", "black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["360", "GREY MELANGE 2", "#b1b3b4", "grey_melange_2"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    kidsHoodieFrontImages[
+      `./assets/designer/kids-hoodie/front/${imageKey}.webp`
+    ],
+  backImage:
+    kidsHoodieBackImages[`./assets/designer/kids-hoodie/back/${imageKey}.webp`],
+}))
+
+const kidsTshirtFrontImages = import.meta.glob(
+  "./assets/designer/kids-tshirt/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const kidsTshirtBackImages = import.meta.glob(
+  "./assets/designer/kids-tshirt/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const KINDER_TSHIRT_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["117", "ABSOLUTE WHITE", "#f4f9fe", "absolute_white"],
+  ["137", "MEDIUM PINK", "#f6cdc4", "medium_pink"],
+  ["145", "RED", "#c41e39", "red"],
+  ["220", "SKY BLUE", "#a1b8d9", "sky_blue"],
+  ["272", "KELLY GREEN", "#27964e", "kelly_green"],
+  ["301", "GOLD", "#f8b61a", "gold"],
+  ["309", "DEEP BLACK", "#2d2927", "deep_black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["321", "AQUA", "#008caf", "aqua"],
+  ["350", "GREY MELANGE", "#b1b3b4", "grey_melange"],
+  ["398", "CHOCOLATE", "#3b3129", "chocolate"],
+  ["400", "ORANGE", "#fe5001", "orange"],
+  ["712", "DARK PURPLE", "#553e7c", "dark_purple"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    kidsTshirtFrontImages[
+      `./assets/designer/kids-tshirt/front/${imageKey}.webp`
+    ],
+  backImage:
+    kidsTshirtBackImages[
+      `./assets/designer/kids-tshirt/back/${imageKey}.webp`
+    ] ||
+    kidsTshirtFrontImages[
+      `./assets/designer/kids-tshirt/front/${imageKey}.webp`
+    ],
+}))
+
+const womenTshirtFrontImages = import.meta.glob(
+  "./assets/designer/women-tshirt/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const womenTshirtBackImages = import.meta.glob(
+  "./assets/designer/women-tshirt/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const FRAUEN_TSHIRT_COLORS = [
+  ["101", "NATURAL", "#f2efd9", "natural"],
+  ["102", "WHITE", "#ffffff", "white"],
+  ["140", "FUCHSIA", "#ac005b", "fuchsia"],
+  ["145", "RED", "#c41e39", "red"],
+  ["146", "BURGUNDY", "#521323", "burgundy"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["244", "DENIM", "#364254", "denim"],
+  ["264", "BOTTLE GREEN", "#384e42", "bottle_green"],
+  ["268", "KHAKI", "#9d9882", "khaki"],
+  ["272", "KELLY GREEN", "#27964e", "kelly_green"],
+  ["280", "APPLE GREEN", "#bace70", "apple_green"],
+  ["300", "ASH", "#dcd8d3", "ash"],
+  ["301", "GOLD", "#f8b61a", "gold"],
+  ["309", "DEEP BLACK", "#2d2927", "deep_black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["321", "AQUA", "#008caf", "aqua"],
+  ["350", "GREY MELANGE", "#b1b3b4", "grey_melange"],
+  ["381", "MOUSE GREY", "#3c3e4c", "mouse_grey"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    womenTshirtFrontImages[
+      `./assets/designer/women-tshirt/front/${imageKey}.webp`
+    ],
+  backImage:
+    womenTshirtBackImages[
+      `./assets/designer/women-tshirt/back/${imageKey}.webp`
+    ],
+}))
+
+const menTshirtFrontImages = import.meta.glob(
+  "./assets/designer/men-tshirt/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const menTshirtBackImages = import.meta.glob(
+  "./assets/designer/men-tshirt/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const MAENNER_TSHIRT_COLORS = [
+  ["146", "BURGUNDY", "#521323", "burgundy"],
+  ["145", "RED", "#c41e39", "red"],
+  ["400", "ORANGE", "#fe5001", "orange"],
+  ["301", "GOLD", "#f8b61a", "gold"],
+  ["268", "KHAKI", "#9d9882", "khaki"],
+  ["101", "NATURAL", "#f2efd9", "natural"],
+  ["280", "APPLE GREEN", "#bace70", "apple_green"],
+  ["272", "KELLY GREEN", "#27964e", "kelly_green"],
+  ["264", "BOTTLE GREEN", "#384e42", "bottle_green"],
+  ["321", "AQUA", "#008caf", "aqua"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["244", "DENIM", "#364254", "denim"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["140", "FUCHSIA", "#ac005b", "fuchsia"],
+  ["300", "ASH", "#dcd8d3", "ash"],
+  ["350", "GREY MELANGE", "#b1b3b4", "grey_melange"],
+  ["381", "MOUSE GREY", "#3c3e4c", "mouse_grey"],
+  ["309", "DEEP BLACK", "#2d2927", "deep_black"],
+  ["102", "WHITE", "#ffffff", "white"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    menTshirtFrontImages[`./assets/designer/men-tshirt/front/${imageKey}.webp`],
+  backImage:
+    menTshirtBackImages[`./assets/designer/men-tshirt/back/${imageKey}.webp`],
+}))
+
+const unisexTshirtFrontImages = import.meta.glob(
+  "./assets/designer/unisex-tshirt/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const unisexTshirtBackImages = import.meta.glob(
+  "./assets/designer/unisex-tshirt/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const UNISEX_TSHIRT_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["104", "OFF WHITE", "#faf6ef", "off_white"],
+  ["119", "LINEN", "#cfbfb3", "linen"],
+  ["123", "ROPE", "#c7c0b1", "rope"],
+  ["126", "DARK BEIGE", "#b9986e", "dark_beige"],
+  ["127", "CANDY PINK", "#f4b0bc", "candy_pink"],
+  ["161", "BRIGHT RED", "#e00404", "bright_red"],
+  ["171", "ASTRAL PURPLE", "#662c55", "astral_purple"],
+  ["172", "FOLK PINK", "#cf6977", "folk_pink"],
+  ["173", "FOLK RED", "#902d44", "folk_red"],
+  ["199", "ARTIC BLUE", "#c5e7e1", "artic_blue"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["244", "DENIM", "#364254", "denim"],
+  ["260", "LIGHT YELLOW", "#fffe94", "light_yellow"],
+  ["268", "KHAKI", "#9d9882", "khaki"],
+  ["290", "SPRING GREEN", "#57ab6e", "spring_green"],
+  ["291", "EMPIRE GREEN", "#01351e", "empire_green"],
+  ["292", "FROZEN GREEN", "#b4d4b2", "frozen_green"],
+  ["295", "POOL BLUE", "#51b9b3", "pool_blue"],
+  ["309", "DEEP BLACK", "#2d2927", "deep_black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["321", "AQUA", "#008caf", "aqua"],
+  ["342", "PURE GREY", "#b9c2cb", "pure_grey"],
+  ["350", "GREY MELANGE", "#b1b3b4", "grey_melange"],
+  ["409", "PEACH", "#fc9d5d", "peach"],
+  ["411", "POP ORANGE", "#f35c53", "pop_orange"],
+  ["701", "LILAC", "#d8c9d7", "lilac"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    unisexTshirtFrontImages[
+      `./assets/designer/unisex-tshirt/front/${imageKey}.webp`
+    ],
+  backImage:
+    unisexTshirtBackImages[
+      `./assets/designer/unisex-tshirt/back/${imageKey}.webp`
+    ],
+}))
+
+const womenPoloFrontImages = import.meta.glob(
+  "./assets/designer/women-polo/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const womenPoloBackImages = import.meta.glob(
+  "./assets/designer/women-polo/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const FRAUEN_POLO_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["104", "OFF WHITE", "#faf6ef", "off_white"],
+  ["119", "LINEN", "#cfbfb3", "linen"],
+  ["123", "ROPE", "#c7c0b1", "rope"],
+  ["127", "CANDY PINK", "#f4b0bc", "candy_pink"],
+  ["145", "RED", "#c41e39", "red"],
+  ["200", "SKY BLUE", "#a1b8d9", "sky_blue"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["244", "DENIM", "#364254", "denim"],
+  ["264", "BOTTLE GREEN", "#384e42", "bottle_green"],
+  ["272", "KELLY GREEN", "#27964e", "kelly_green"],
+  ["301", "GOLD", "#f8b61a", "gold"],
+  ["312", "BLACK", "#29282d", "black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["321", "AQUA", "#008caf", "aqua"],
+  ["342", "PURE GREY", "#b9c2cb", "pure_grey"],
+  ["360", "GREY MELANGE", "#b1b3b4", "grey_melange_2"],
+  ["381", "MOUSE GREY", "#3c3e4c", "mouse_grey"],
+  ["400", "ORANGE", "#fe5001", "orange"],
+  ["701", "LILAC", "#d8c9d7", "lilac"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    womenPoloFrontImages[`./assets/designer/women-polo/front/${imageKey}.webp`],
+  backImage:
+    womenPoloBackImages[`./assets/designer/women-polo/back/${imageKey}.webp`],
+}))
+
+const menPoloFrontImages = import.meta.glob(
+  "./assets/designer/men-polo/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const menPoloBackImages = import.meta.glob(
+  "./assets/designer/men-polo/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const MAENNER_POLO_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["104", "OFF WHITE", "#faf6ef", "off_white"],
+  ["119", "LINEN", "#cfbfb3", "linen"],
+  ["123", "ROPE", "#c7c0b1", "rope"],
+  ["127", "CANDY PINK", "#f4b0bc", "candy_pink"],
+  ["145", "RED", "#c41e39", "red"],
+  ["200", "SKY BLUE", "#a1b8d9", "sky_blue"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["244", "DENIM", "#364254", "denim"],
+  ["264", "BOTTLE GREEN", "#384e42", "bottle_green"],
+  ["272", "KELLY GREEN", "#27964e", "kelly_green"],
+  ["301", "GOLD", "#f8b61a", "gold"],
+  ["312", "BLACK", "#29282d", "black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["321", "AQUA", "#008caf", "aqua"],
+  ["342", "PURE GREY", "#b9c2cb", "pure_grey"],
+  ["360", "GREY MELANGE 2", "#b1b3b4", "grey_melange_2"],
+  ["381", "MOUSE GREY", "#3c3e4c", "mouse_grey"],
+  ["400", "ORANGE", "#fe5001", "orange"],
+  ["701", "LILAC", "#d8c9d7", "lilac"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    menPoloFrontImages[`./assets/designer/men-polo/front/${imageKey}.webp`],
+  backImage:
+    menPoloBackImages[`./assets/designer/men-polo/back/${imageKey}.webp`],
+}))
+
+const unisexPoloFrontImages = import.meta.glob(
+  "./assets/designer/unisex-polo/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const unisexPoloBackImages = import.meta.glob(
+  "./assets/designer/unisex-polo/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const UNISEX_POLO_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["145", "RED", "#c41e39", "red"],
+  ["174", "RIBBON PINK", "#f04e98", "ribbon_pink"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["269", "ARMY", "#605e51", "army"],
+  ["295", "POOL BLUE", "#51b9b3", "pool_blue"],
+  ["312", "BLACK", "#29282d", "black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["321", "AQUA", "#008caf", "aqua"],
+  ["342", "PURE GREY", "#b9c2cb", "pure_grey"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    unisexPoloFrontImages[
+      `./assets/designer/unisex-polo/front/${imageKey}.webp`
+    ],
+  backImage:
+    unisexPoloBackImages[`./assets/designer/unisex-polo/back/${imageKey}.webp`],
+}))
+
+const kidsPoloFrontImages = import.meta.glob(
+  "./assets/designer/kids-polo/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const kidsPoloBackImages = import.meta.glob(
+  "./assets/designer/kids-polo/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const KINDER_POLO_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["145", "RED", "#c41e39", "red"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["318", "NAVY", "#1b2432", "navy"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    kidsPoloFrontImages[`./assets/designer/kids-polo/front/${imageKey}.webp`],
+  backImage:
+    kidsPoloBackImages[`./assets/designer/kids-polo/back/${imageKey}.webp`],
+}))
+
+const kidsSweatshirtFrontImages = import.meta.glob(
+  "./assets/designer/kids-sweatshirt/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const kidsSweatshirtBackImages = import.meta.glob(
+  "./assets/designer/kids-sweatshirt/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const shopperImages = import.meta.glob("./assets/designer/shopper/*.webp", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>
+const SHOPPER_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["145", "RED", "#c41e39", "red"],
+  ["205", "BLUE", "#65769a", "blue"],
+  ["268", "KHAKI", "#9d9882", "khaki"],
+  ["312", "BLACK", "#29282d", "black"],
+  ["318", "NAVY", "#1b2432", "navy"],
+  ["409", "PEACH", "#fc9d5d", "peach"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image: shopperImages[`./assets/designer/shopper/${imageKey}.webp`],
+  backImage: shopperImages[`./assets/designer/shopper/${imageKey}.webp`],
+}))
+const KINDER_SWEATSHIRT_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["143", "CREAMY PINK", "#f4e1d9", "creamy_pink"],
+  ["161", "BRIGHT RED", "#e00404", "bright_red"],
+  ["205", "BLUE", "#65769a", "blue"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["260", "LIGHT YELLOW", "#fffe94", "light_yellow"],
+  ["272", "KELLY GREEN", "#27964e", "kelly_green"],
+  ["312", "BLACK", "#29282d", "black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["360", "GREY MELANGE 2", "#b1b3b4", "grey_melange_2"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    kidsSweatshirtFrontImages[
+      `./assets/designer/kids-sweatshirt/front/${imageKey}.webp`
+    ],
+  backImage:
+    kidsSweatshirtBackImages[
+      `./assets/designer/kids-sweatshirt/back/${imageKey}.webp`
+    ],
+}))
+
+const columbiaFrontImages = import.meta.glob(
+  "./assets/designer/columbia-sweatshirt/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const columbiaBackImages = import.meta.glob(
+  "./assets/designer/columbia-sweatshirt/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const COLUMBIA_SWEATSHIRT_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["143", "CREAMY PINK", "#f4e1d9", "creamy_pink"],
+  ["146", "BURGUNDY", "#521323", "burgundy"],
+  ["161", "BRIGHT RED", "#e00404", "bright_red"],
+  ["205", "BLUE", "#65769a", "blue"],
+  ["241", "ROYAL BLUE", "#003373", "royal_blue"],
+  ["251", "CREAMY BLUE", "#bad4dd", "creamy_blue"],
+  ["260", "LIGHT YELLOW", "#fffe94", "light_yellow"],
+  ["264", "BOTTLE GREEN", "#384e42", "bottle_green"],
+  ["269", "ARMY", "#605e51", "army"],
+  ["272", "KELLY GREEN", "#27964e", "kelly_green"],
+  ["295", "POOL BLUE", "#51b9b3", "pool_blue"],
+  ["312", "BLACK", "#29282d", "black"],
+  ["319", "FRENCH NAVY", "#2a2d3d", "french_navy"],
+  ["323", "CREAMY GREEN", "#cbdbd3", "creamy_green"],
+  ["348", "CHARCOAL MELANGE", "#38393b", "charcoal_melange"],
+  ["360", "GREY MELANGE", "#b1b3b4", "grey_melange_2"],
+  ["400", "ORANGE", "#fe5001", "orange"],
+  ["701", "LILAC", "#d8c9d7", "lilac"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    columbiaFrontImages[
+      `./assets/designer/columbia-sweatshirt/front/${imageKey}.webp`
+    ],
+  backImage:
+    columbiaBackImages[
+      `./assets/designer/columbia-sweatshirt/back/${imageKey}.webp`
+    ],
+}))
+
+const womenShirtFrontImages = import.meta.glob(
+  "./assets/designer/women-shirt/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const womenShirtBackImages = import.meta.glob(
+  "./assets/designer/women-shirt/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const FRAUEN_SHIRT_COLORS = [
+  ["219", "BRIGHT SKY", "#b6c1db", "bright_sky"],
+  ["228", "DARK BLUE", "#0d1223", "dark_blue"],
+  ["312", "BLACK", "#29282d", "black"],
+  ["102", "WHITE", "#ffffff", "white"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    womenShirtFrontImages[
+      `./assets/designer/women-shirt/front/${imageKey}.webp`
+    ],
+  backImage:
+    womenShirtBackImages[`./assets/designer/women-shirt/back/${imageKey}.webp`],
+}))
+
+const menShirtFrontImages = import.meta.glob(
+  "./assets/designer/men-shirt/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const menShirtBackImages = import.meta.glob(
+  "./assets/designer/men-shirt/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const MAENNER_SHIRT_COLORS = [
+  ["102", "WHITE", "#ffffff", "white"],
+  ["219", "BRIGHT SKY", "#b6c1db", "bright_sky"],
+  ["228", "DARK BLUE", "#0d1223", "dark_blue"],
+  ["312", "BLACK", "#29282d", "black"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    menShirtFrontImages[`./assets/designer/men-shirt/front/${imageKey}.webp`],
+  backImage:
+    menShirtBackImages[`./assets/designer/men-shirt/back/${imageKey}.webp`],
+}))
+
+const FRAUEN_HOODIE_SIZES: Record<string, string[]> = {
+  "00": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "36": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  OL: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  AZ: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "54": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  HN: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  FN: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  CA: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  HY: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  NW: ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "9D": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+}
+const MAENNER_HOODIE_SIZES: Record<string, string[]> = Object.fromEntries(
+  MAENNER_HOODIE_COLORS.map(({ id }) => [
+    id,
+    ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  ]),
+)
+const UNISEX_HOODIE_SIZES: Record<string, string[]> = Object.fromEntries(
+  UNISEX_HOODIE_COLORS.map(({ id }) => [
+    id,
+    ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+  ]),
+)
+const KINDER_HOODIE_SIZES: Record<string, string[]> = Object.fromEntries(
+  KINDER_HOODIE_COLORS.map(({ id }) => [
+    id,
+    ["04A", "06A", "08A", "10A", "12A", "14A"],
+  ]),
+)
+const KINDER_TSHIRT_SIZES: Record<string, string[]> = Object.fromEntries(
+  KINDER_TSHIRT_COLORS.map(({ id }) => [
+    id,
+    ["02A", "04A", "06A", "08A", "10A", "12A"],
+  ]),
+)
+const FRAUEN_TSHIRT_SIZES: Record<string, string[]> = {
+  "101": ["S", "M", "L", "XL", "XXL"],
+  "102": ["S", "M", "L", "XL", "XXL", "3XL"],
+  "140": ["S", "M", "L", "XL", "XXL"],
+  "145": ["S", "M", "L", "XL", "XXL", "3XL"],
+  "146": ["S", "M", "L", "XL", "XXL"],
+  "241": ["S", "M", "L", "XL", "XXL", "3XL"],
+  "244": ["S", "M", "L", "XL", "XXL"],
+  "264": ["S", "M", "L", "XL", "XXL", "3XL"],
+  "268": ["S", "M", "L", "XL", "XXL"],
+  "272": ["S", "M", "L", "XL", "XXL"],
+  "280": ["S", "M", "L", "XL", "XXL"],
+  "300": ["S", "M", "L", "XL", "XXL", "3XL"],
+  "301": ["S", "M", "L", "XL", "XXL"],
+  "309": ["S", "M", "L", "XL", "XXL", "3XL"],
+  "319": ["S", "M", "L", "XL", "XXL", "3XL"],
+  "321": ["S", "M", "L", "XL", "XXL"],
+  "350": ["S", "M", "L", "XL", "XXL", "3XL"],
+  "381": ["S", "M", "L", "XL", "XXL"],
+}
+const MAENNER_TSHIRT_SIZES: Record<string, string[]> = Object.fromEntries(
+  MAENNER_TSHIRT_COLORS.map(({ id }) => [
+    id,
+    ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"],
+  ]),
+)
+const UNISEX_TSHIRT_SIZES: Record<string, string[]> = Object.fromEntries(
+  UNISEX_TSHIRT_COLORS.map(({ id }) => [
+    id,
+    ["XXS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"],
+  ]),
+)
+
+const FRAUEN_POLO_SIZES: Record<string, string[]> = {
+  "102": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "312": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "319": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "104": ["XS", "S", "M", "L", "XL", "XXL"],
+  "119": ["XS", "S", "M", "L", "XL", "XXL"],
+  "123": ["XS", "S", "M", "L", "XL", "XXL"],
+  "127": ["XS", "S", "M", "L", "XL", "XXL"],
+  "145": ["XS", "S", "M", "L", "XL", "XXL"],
+  "200": ["XS", "S", "M", "L", "XL", "XXL"],
+  "241": ["XS", "S", "M", "L", "XL", "XXL"],
+  "244": ["XS", "S", "M", "L", "XL", "XXL"],
+  "264": ["XS", "S", "M", "L", "XL", "XXL"],
+  "272": ["XS", "S", "M", "L", "XL", "XXL"],
+  "301": ["XS", "S", "M", "L", "XL", "XXL"],
+  "321": ["XS", "S", "M", "L", "XL", "XXL"],
+  "342": ["XS", "S", "M", "L", "XL", "XXL"],
+  "360": ["XS", "S", "M", "L", "XL", "XXL"],
+  "381": ["XS", "S", "M", "L", "XL", "XXL"],
+  "400": ["XS", "S", "M", "L", "XL", "XXL"],
+  "701": ["XS", "S", "M", "L", "XL", "XXL"],
+}
+const MAENNER_POLO_SIZES: Record<string, string[]> = Object.fromEntries(
+  MAENNER_POLO_COLORS.map(({ id }) => [
+    id,
+    ["S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+  ]),
+)
+const UNISEX_POLO_SIZES: Record<string, string[]> = Object.fromEntries(
+  UNISEX_POLO_COLORS.map(({ id }) => [
+    id,
+    ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  ]),
+)
+const KINDER_POLO_SIZES: Record<string, string[]> = Object.fromEntries(
+  KINDER_POLO_COLORS.map(({ id }) => [id, ["04A", "06A", "08A", "10A", "12A"]]),
+)
+const KINDER_SWEATSHIRT_SIZES: Record<string, string[]> = Object.fromEntries(
+  KINDER_SWEATSHIRT_COLORS.map(({ id }) => [
+    id,
+    ["04A", "06A", "08A", "10A", "12A", "14A"],
+  ]),
+)
+const MAENNER_SHIRT_SIZES: Record<string, string[]> = Object.fromEntries(
+  MAENNER_SHIRT_COLORS.map(({ id }) => [
+    id,
+    ["S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+  ]),
+)
+
+const COLUMBIA_SWEATSHIRT_SIZES: Record<string, string[]> = {
+  "102": ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+  "241": ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+  "264": ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+  "312": ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+  "319": ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"],
+  "143": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "146": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "161": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "205": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "251": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "260": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "269": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "272": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "295": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "323": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "348": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "360": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "400": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "701": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+}
+const FRAUEN_SHIRT_SIZES: Record<string, string[]> = {
+  "219": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "228": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "312": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+  "102": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+}
+
+const kidsCapFrontImages = import.meta.glob(
+  "./assets/designer/kids-cap/front/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const kidsCapBackImages = import.meta.glob(
+  "./assets/designer/kids-cap/back/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const KINDER_CAP_COLORS = [
+  ["AQ", "AQUA", "#84c2ea", "aqua"],
+  ["BL", "BLACK", "#000000", "black"],
+  ["BU", "BURGUNDY", "#69292d", "burgundy"],
+  ["DGR", "DARK GREEN", "#005b57", "dark_green"],
+  ["DGRE", "DARK GREY", "#535353", "dark_grey"],
+  ["DKH", "DARK KHAKI", "#746c4b", "dark_khaki"],
+  ["GOYE", "GOLD YELLOW", "#fdba13", "gold_yellow"],
+  ["GR", "GREEN", "#345d35", "green"],
+  ["LGRE", "LIGHT GREY", "#c2c4c6", "light_grey"],
+  ["LIM", "LIME GREEN", "#99c279", "lime_green"],
+  ["NY", "NAVY", "#092e56", "navy"],
+  ["OR", "ORANGE", "#f57f20", "orange"],
+  ["PI", "PINK", "#f07fb2", "pink"],
+  ["RY", "ROYAL", "#005393", "royal"],
+  ["SRD", "SIGNAL RED", "#cd203c", "signal_red"],
+  ["TU", "TURQUOISE", "#42beda", "turquoise"],
+  ["WH", "WHITE", "#ffffff", "white"],
+  ["YE", "YELLOW", "#f5dc54", "yellow"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image:
+    kidsCapFrontImages[`./assets/designer/kids-cap/front/${imageKey}.webp`],
+  backImage:
+    kidsCapBackImages[`./assets/designer/kids-cap/back/${imageKey}.webp`],
+}))
+
+const FRAUEN_CAP_COLORS = [
+  {
+    id: "908",
+    label: "RED / WHITE",
+    swatch: "#b02530",
+    image: womenCapRedWhite,
+    backImage: womenCapRedWhiteBack,
+  },
+  {
+    id: "145",
+    label: "RED",
+    swatch: "#c51f35",
+    image: womenCapRed,
+    backImage: womenCapRedBack,
+  },
+  {
+    id: "272",
+    label: "KELLY GREEN",
+    swatch: "#258947",
+    image: womenCapKellyGreen,
+    backImage: womenCapKellyGreenBack,
+  },
+  {
+    id: "264",
+    label: "BOTTLE GREEN",
+    swatch: "#304e3d",
+    image: womenCapBottleGreen,
+    backImage: womenCapBottleGreenBack,
+  },
+  {
+    id: "912",
+    label: "FRENCH NAVY / WHITE",
+    swatch: "#233357",
+    image: womenCapFrenchNavyWhite,
+    backImage: womenCapFrenchNavyWhiteBack,
+  },
+  {
+    id: "241",
+    label: "ROYAL BLUE",
+    swatch: "#003682",
+    image: womenCapRoyalBlue,
+    backImage: womenCapRoyalBlueBack,
+  },
+  {
+    id: "319",
+    label: "FRENCH NAVY",
+    swatch: "#252b40",
+    image: womenCapFrenchNavy,
+    backImage: womenCapFrenchNavyBack,
+  },
+  {
+    id: "312",
+    label: "BLACK",
+    swatch: "#181818",
+    image: womenCapBlack,
+    backImage: womenCapBlackBack,
+  },
+  {
+    id: "102",
+    label: "WHITE",
+    swatch: "#f6f6f4",
+    image: womenCapWhite,
+    backImage: womenCapWhiteBack,
+  },
+] as const
+
+type DesignerStoredImage = { id: string; blob: Blob }
+
+const DESIGNER_IMAGE_DB = "pottlerkinder-designer-images"
+const DESIGNER_IMAGE_STORE = "images"
+
+const openDesignerImageDb = () =>
+  new Promise<IDBDatabase>((resolve, reject) => {
+    const request = window.indexedDB.open(DESIGNER_IMAGE_DB, 1)
+    request.onupgradeneeded = () => request.result.createObjectStore(DESIGNER_IMAGE_STORE, { keyPath: "id" })
+    request.onsuccess = () => resolve(request.result)
+    request.onerror = () => reject(request.error)
+  })
+
+const saveDesignerImage = async (blob: Blob) => {
+  const db = await openDesignerImageDb()
+  const id = window.crypto.randomUUID()
+  await new Promise<void>((resolve, reject) => {
+    const request = db.transaction(DESIGNER_IMAGE_STORE, "readwrite").objectStore(DESIGNER_IMAGE_STORE).put({ id, blob } satisfies DesignerStoredImage)
+    request.onsuccess = () => resolve()
+    request.onerror = () => reject(request.error)
+  })
+  db.close()
+  return id
+}
+
+const loadDesignerImages = async (ids: string[]) => {
+  const db = await openDesignerImageDb()
+  const images = await Promise.all(ids.map((id) => new Promise<{ id: string; url: string } | null>((resolve, reject) => {
+    const request = db.transaction(DESIGNER_IMAGE_STORE, "readonly").objectStore(DESIGNER_IMAGE_STORE).get(id)
+    request.onsuccess = () => {
+      const image = request.result as DesignerStoredImage | undefined
+      resolve(image ? { id, url: URL.createObjectURL(image.blob) } : null)
+    }
+    request.onerror = () => reject(request.error)
+  })))
+  db.close()
+  return images.filter((image): image is { id: string; url: string } => Boolean(image))
+}
+
+const deleteDesignerImage = async (id: string) => {
+  const db = await openDesignerImageDb()
+  await new Promise<void>((resolve, reject) => {
+    const request = db.transaction(DESIGNER_IMAGE_STORE, "readwrite").objectStore(DESIGNER_IMAGE_STORE).delete(id)
+    request.onsuccess = () => resolve()
+    request.onerror = () => reject(request.error)
+  })
+  db.close()
+}
+
+const migrateLegacyDesignerImage = async (dataUrl: string) => {
+  const response = await fetch(dataUrl)
+  return saveDesignerImage(await response.blob())
+}
+
+function DesignerStudio() {
+  const id = new URLSearchParams(window.location.search).get("product")
+  const initialProduct =
+    DESIGNER_PRODUCTS.find((item) => item.id === id) || DESIGNER_PRODUCTS[0]
+  const [productId, setProductId] = useState(initialProduct.id)
+  const product =
+    DESIGNER_PRODUCTS.find((item) => item.id === productId) ||
+    DESIGNER_PRODUCTS[0]
+  const [panel, setPanel] = useState<"design" | "text">("design")
+  const [object, setObject] = useState<"image" | "text">("image")
+  const [uploadedImage, setUploadedImage] = useState("")
+  const [imageLibrary, setImageLibrary] = useState<string[]>([])
+  const [imageLibraryIds, setImageLibraryIds] = useState<string[]>([])
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const [uploadedImage2, setUploadedImage2] = useState("")
+  const [text, setText] = useState("")
+  const [text2, setText2] = useState("")
+  const [isTextInputFocused, setIsTextInputFocused] = useState(false)
+  const [text2Color, setText2Color] = useState("#ffffff")
+  const [text2Font, setText2Font] = useState("Oswald")
+  const [text2Scale, setText2Scale] = useState(1)
+  const [text2Rotation, setText2Rotation] = useState(0)
+  const [text2X, setText2X] = useState(0)
+  const [text2Y, setText2Y] = useState(0)
+  const [activeSlot, setActiveSlot] = useState<"text1" | "text2">("text1")
+  const [textColor, setTextColor] = useState("#ffffff")
+  const [font, setFont] = useState("Oswald")
+  const [fontPickerOpen, setFontPickerOpen] = useState(false)
+  const [colorPaletteOpen, setColorPaletteOpen] = useState(false)
+  const [objectScale, setObjectScale] = useState(1)
+  const [objectRotation, setObjectRotation] = useState(0)
+  const [objectX, setObjectX] = useState(0)
+  const [objectY, setObjectY] = useState(0)
+  const [textScale, setTextScale] = useState(1)
+  const [textRotation, setTextRotation] = useState(0)
+  const [textX, setTextX] = useState(0)
+  const [textY, setTextY] = useState(0)
+  const [canvasScale, setCanvasScale] = useState(1.4)
+  const [canvasX, setCanvasX] = useState(0)
+  const [canvasY, setCanvasY] = useState(0)
+  const [brightness, setBrightness] = useState(100)
+  const [contrast, setContrast] = useState(100)
+  const [size, setSize] = useState("M")
+  const [gender, setGender] = useState(
+    ["mug", "shopper"].includes(initialProduct.id) ? "" : "FRAUEN",
+  )
+  const [productPickerOpen, setProductPickerOpen] = useState(false)
+  const [modelPickerOpen, setModelPickerOpen] = useState(false)
+  const [model, setModel] = useState("STANDARD")
+  const [hoodieColor, setHoodieColor] =
+    useState<typeof FRAUEN_HOODIE_COLORS[number]["id"]>("9D")
+  const [menHoodieColor, setMenHoodieColor] = useState("9D")
+  const [unisexHoodieColor, setUnisexHoodieColor] = useState("312")
+  const [kidsHoodieColor, setKidsHoodieColor] = useState("312")
+  const [tshirtColor, setTshirtColor] = useState("146")
+  const [menTshirtColor, setMenTshirtColor] = useState("146")
+  const [unisexTshirtColor, setUnisexTshirtColor] = useState("312")
+  const [kidsTshirtColor, setKidsTshirtColor] = useState("309")
+  const [poloColor, setPoloColor] = useState("102")
+  const [menPoloColor, setMenPoloColor] = useState("400")
+  const [unisexPoloColor, setUnisexPoloColor] = useState("312")
+  const [kidsPoloColor, setKidsPoloColor] = useState("318")
+  const [kidsSweatshirtColor, setKidsSweatshirtColor] = useState("312")
+  const [sweatshirtColor, setSweatshirtColor] = useState("269")
+  const [shirtColor, setShirtColor] = useState("228")
+  const [menShirtColor, setMenShirtColor] = useState("228")
+  const [capColor, setCapColor] = useState("312")
+  const [kidsCapColor, setKidsCapColor] = useState("LIM")
+  const [shopperColor, setShopperColor] = useState("268")
+  const [printSide, setPrintSide] = useState<"front" | "back">("front")
+  const [reviewOpen, setReviewOpen] = useState(false)
+  const [productInfoOpen, setProductInfoOpen] = useState(false)
+  const [productInfoTab, setProductInfoTab] = useState<"details" | "size">(
+    "details",
+  )
+  const [helpStep, setHelpStep] = useState<number | null>(null)
+  const [uploadError, setUploadError] = useState("")
+  const [draftReady, setDraftReady] = useState(false)
+  const [historyVersion, setHistoryVersion] = useState(0)
+  const [isObjectHandleDragging, setIsObjectHandleDragging] = useState(false)
+  const [reviewPositionScale, setReviewPositionScale] = useState({ front: 390 / 540, back: 390 / 540 })
+  const drag = useRef<{
+    kind: "canvas" | "image" | "text" | "move" | "resize" | "rotate"
+    x: number
+    y: number
+    scale?: number
+    rotation?: number
+    angle?: number
+    centerX?: number
+    centerY?: number
+    textSlot?: "text1" | "text2"
+    target?: "image" | "text"
+  } | null>(null)
+  const productPickerRef = useRef<HTMLElement | null>(null)
+  const modelPickerRef = useRef<HTMLElement | null>(null)
+  const fontPickerRef = useRef<HTMLDivElement | null>(null)
+  const colorPaletteRef = useRef<HTMLDivElement | null>(null)
+  const emptySideDesign = () => ({
+    uploadedImage: "",
+    text: "",
+    textColor: "#ffffff",
+    font: "Oswald",
+    text2: "",
+    text2Color: "#ffffff",
+    text2Font: "Oswald",
+    objectScale: 1,
+    objectRotation: 0,
+    objectX: 0,
+    objectY: 0,
+    textScale: 1,
+    textRotation: 0,
+    textX: 0,
+    textY: 0,
+    text2Scale: 1,
+    text2Rotation: 0,
+    text2X: 0,
+    text2Y: 0,
+    brightness: 100,
+    contrast: 100,
+  })
+  const sideDesigns =
+    useRef<Record<"front" | "back", ReturnType<typeof emptySideDesign>>>({
+      front: emptySideDesign(),
+      back: emptySideDesign(),
+    })
+  const historyRef = useRef<Array<Record<string, unknown>>>([])
+  const historyIndexRef = useRef(-1)
+  const restoringHistoryRef = useRef(false)
+  const draftHistoryTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const draftSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lastSavedDraftRef = useRef("")
+  const createDraft = () => ({
+    productId,
+    panel,
+    object,
+    uploadedImageId: imageLibraryIds[activeImageIndex] || "",
+    imageLibraryIds,
+    activeImageIndex,
+    text,
+    text2,
+    text2Color,
+    text2Font,
+    text2Scale,
+    text2Rotation,
+    text2X,
+    text2Y,
+    activeSlot,
+    textColor,
+    font,
+    objectScale,
+    objectRotation,
+    objectX,
+    objectY,
+    textScale,
+    textRotation,
+    textX,
+    textY,
+    canvasScale,
+    canvasX,
+    canvasY,
+    brightness,
+    contrast,
+    size,
+    gender,
+    model,
+    printSide,
+    colors: {
+      hoodieColor,
+      menHoodieColor,
+      unisexHoodieColor,
+      kidsHoodieColor,
+      tshirtColor,
+      menTshirtColor,
+      unisexTshirtColor,
+      kidsTshirtColor,
+      poloColor,
+      menPoloColor,
+      unisexPoloColor,
+      kidsPoloColor,
+      kidsSweatshirtColor,
+      sweatshirtColor,
+      shirtColor,
+      menShirtColor,
+      capColor,
+      kidsCapColor,
+      shopperColor,
+    },
+    sideDesigns: Object.fromEntries(
+      Object.entries(sideDesigns.current).map(([side, design]) => [side, {
+        ...design,
+        imageId: imageLibraryIds[imageLibrary.indexOf(design.uploadedImage)] || "",
+        uploadedImage: "",
+      }]),
+    ),
+  })
+  const restoreDraft = (draft: Record<string, any>, loadedImages = imageLibrary, loadedIds = imageLibraryIds) => {
+    const colors = draft.colors || {}
+    setProductId(draft.productId || initialProduct.id)
+    setPanel(draft.panel === "text" ? "text" : "design")
+    setObject(draft.object === "text" ? "text" : "image")
+    const restoredIds = Array.isArray(draft.imageLibraryIds) ? draft.imageLibraryIds : []
+    const restoredLibrary = loadedImages.filter((_, index) => restoredIds.includes(loadedIds[index]))
+    const restoredLibraryIds = loadedIds.filter((id) => restoredIds.includes(id))
+    setImageLibrary(restoredLibrary)
+    setImageLibraryIds(restoredLibraryIds)
+    const restoredImageIndex = Math.max(0, Math.min(restoredLibraryIds.indexOf(draft.uploadedImageId), restoredLibrary.length - 1))
+    setActiveImageIndex(restoredImageIndex)
+    setUploadedImage(restoredLibrary[restoredImageIndex] || "")
+    setText(draft.text || "")
+    setText2(draft.text2 || "")
+    setText2Color(draft.text2Color || "#ffffff")
+    setText2Font(draft.text2Font || "Oswald")
+    setText2Scale(Number(draft.text2Scale) || 1)
+    setText2Rotation(Number(draft.text2Rotation) || 0)
+    setText2X(Number(draft.text2X ?? 0))
+    setText2Y(Number(draft.text2Y ?? 0))
+    setActiveSlot(draft.activeSlot === "text2" ? "text2" : "text1")
+    setTextColor(draft.textColor || "#ffffff")
+    setFont(draft.font || "Oswald")
+    setObjectScale(Number(draft.objectScale) || 1)
+    setObjectRotation(Number(draft.objectRotation) || 0)
+    setObjectX(Number(draft.objectX) || 0)
+    setObjectY(Number(draft.objectY) || 0)
+    setTextScale(Number(draft.textScale) || 1)
+    setTextRotation(Number(draft.textRotation) || 0)
+    setTextX(Number(draft.textX) || 0)
+    setTextY(Number(draft.textY) || 0)
+    setCanvasScale(Number(draft.canvasScale) || 1.4)
+    setCanvasX(Number(draft.canvasX) || 0)
+    setCanvasY(Number(draft.canvasY) || 0)
+    setBrightness(Number(draft.brightness) || 100)
+    setContrast(Number(draft.contrast) || 100)
+    setSize(draft.size || "M")
+    setGender(
+      ["mug", "shopper"].includes(draft.productId)
+        ? ""
+        : draft.gender || "FRAUEN",
+    )
+    setModel(draft.model || "STANDARD")
+    setPrintSide(draft.printSide === "back" ? "back" : "front")
+    setHoodieColor(colors.hoodieColor || "9D")
+    setMenHoodieColor(colors.menHoodieColor || "9D")
+    setUnisexHoodieColor(colors.unisexHoodieColor || "312")
+    setKidsHoodieColor(colors.kidsHoodieColor || "312")
+    setTshirtColor(colors.tshirtColor || "146")
+    setMenTshirtColor(colors.menTshirtColor || "146")
+    setUnisexTshirtColor(colors.unisexTshirtColor || "312")
+    setKidsTshirtColor(colors.kidsTshirtColor || "309")
+    setPoloColor(colors.poloColor || "102")
+    setMenPoloColor(colors.menPoloColor || "400")
+    setUnisexPoloColor(colors.unisexPoloColor || "312")
+    setKidsPoloColor(colors.kidsPoloColor || "318")
+    setKidsSweatshirtColor(colors.kidsSweatshirtColor || "312")
+    setSweatshirtColor(colors.sweatshirtColor || "269")
+    setShirtColor(colors.shirtColor || "228")
+    setMenShirtColor(colors.menShirtColor || "228")
+    setCapColor(colors.capColor || "312")
+    setKidsCapColor(colors.kidsCapColor || "LIM")
+    setShopperColor(colors.shopperColor || "268")
+    const getSide = (side: "front" | "back") => {
+      const design = { ...emptySideDesign(), ...(draft.sideDesigns?.[side] || {}) }
+      return { ...design, uploadedImage: restoredLibrary[restoredLibraryIds.indexOf(design.imageId)] || "" }
+    }
+    sideDesigns.current = { front: getSide("front"), back: getSide("back") }
+  }
+  const draftKey = "pottlerkinder-designer-draft-v1"
+  useEffect(() => {
+    let active = true
+    const initialiseDraft = async () => {
+      try {
+        const saved = window.localStorage.getItem(draftKey)
+        if (saved) {
+          const draft = JSON.parse(saved) as Record<string, any>
+          let imageIds = Array.isArray(draft.imageLibraryIds) ? draft.imageLibraryIds : []
+          if (!imageIds.length && Array.isArray(draft.imageLibrary)) {
+            imageIds = await Promise.all(draft.imageLibrary.filter((image: unknown) => typeof image === "string" && image.startsWith("data:image/")).map(migrateLegacyDesignerImage))
+            draft.imageLibraryIds = imageIds
+            draft.uploadedImageId = imageIds[draft.activeImageIndex || 0] || ""
+            draft.sideDesigns ||= {}
+            for (const side of ["front", "back"] as const) {
+              const legacyImage = draft.sideDesigns?.[side]?.uploadedImage
+              const legacyIndex = draft.imageLibrary.indexOf(legacyImage)
+              if (legacyIndex >= 0) draft.sideDesigns[side].imageId = imageIds[legacyIndex]
+            }
+          }
+          const storedImages = await loadDesignerImages(imageIds)
+          if (!active) return
+          const storedIds = storedImages.map((image) => image.id)
+          restoreDraft(draft, storedImages.map((image) => image.url), storedIds)
+          historyRef.current = [createDraft()]
+          historyIndexRef.current = 0
+        } else {
+          historyRef.current = [createDraft()]
+          historyIndexRef.current = 0
+        }
+      } catch {
+        historyRef.current = [createDraft()]
+        historyIndexRef.current = 0
+      }
+      if (!active) return
+      setDraftReady(true)
+      setHistoryVersion((value) => value + 1)
+    }
+    void initialiseDraft()
+    return () => { active = false }
+  }, [])
+  useEffect(() => {
+    if (!draftReady) return
+    const draft = createDraft()
+    const serializedDraft = JSON.stringify(draft)
+    if (restoringHistoryRef.current) {
+      restoringHistoryRef.current = false
+      return
+    }
+    if (draftHistoryTimer.current) clearTimeout(draftHistoryTimer.current)
+    if (draftSaveTimer.current) clearTimeout(draftSaveTimer.current)
+    draftHistoryTimer.current = setTimeout(() => {
+      const current = historyRef.current[historyIndexRef.current]
+      if (current && JSON.stringify(current) === serializedDraft) return
+      historyRef.current = historyRef.current
+        .slice(0, historyIndexRef.current + 1)
+        .concat(draft)
+        .slice(-10)
+      historyIndexRef.current = historyRef.current.length - 1
+      setHistoryVersion((value) => value + 1)
+    }, 220)
+    draftSaveTimer.current = setTimeout(() => {
+      if (lastSavedDraftRef.current === serializedDraft) return
+      try {
+        window.localStorage.setItem(draftKey, serializedDraft)
+        lastSavedDraftRef.current = serializedDraft
+      } catch {
+        // The editor remains usable if private browsing or storage limits block saving.
+      }
+    }, 800)
+    return () => {
+      if (draftHistoryTimer.current) clearTimeout(draftHistoryTimer.current)
+      if (draftSaveTimer.current) clearTimeout(draftSaveTimer.current)
+    }
+  }, [
+    draftReady,
+    productId,
+    panel,
+    object,
+    uploadedImage,
+    imageLibraryIds,
+    activeImageIndex,
+    text,
+    text2,
+    text2Color,
+    text2Font,
+    text2Scale,
+    text2Rotation,
+    text2X,
+    text2Y,
+    activeSlot,
+    textColor,
+    font,
+    objectScale,
+    objectRotation,
+    objectX,
+    objectY,
+    textScale,
+    textRotation,
+    textX,
+    textY,
+    canvasScale,
+    canvasX,
+    canvasY,
+    brightness,
+    contrast,
+    size,
+    gender,
+    model,
+    printSide,
+    hoodieColor,
+    menHoodieColor,
+    unisexHoodieColor,
+    kidsHoodieColor,
+    tshirtColor,
+    menTshirtColor,
+    unisexTshirtColor,
+    kidsTshirtColor,
+    poloColor,
+    menPoloColor,
+    unisexPoloColor,
+    kidsPoloColor,
+    kidsSweatshirtColor,
+    sweatshirtColor,
+    shirtColor,
+    menShirtColor,
+    capColor,
+    kidsCapColor,
+    shopperColor,
+  ])
+  const undo = () => {
+    if (historyIndexRef.current <= 0) return
+    historyIndexRef.current -= 1
+    restoringHistoryRef.current = true
+    restoreDraft(
+      historyRef.current[historyIndexRef.current] as Record<string, any>,
+    )
+    setHistoryVersion((value) => value + 1)
+  }
+  const redo = () => {
+    if (historyIndexRef.current >= historyRef.current.length - 1) return
+    historyIndexRef.current += 1
+    restoringHistoryRef.current = true
+    restoreDraft(
+      historyRef.current[historyIndexRef.current] as Record<string, any>,
+    )
+    setHistoryVersion((value) => value + 1)
+  }
+  const isFrauenHoodie = gender === "FRAUEN" && product.id === "hoodie"
+  const isMug = product.id === "mug"
+  const isShopper = product.id === "shopper"
+  const isMaennerHoodie = gender === "MÄNNER" && product.id === "hoodie"
+  const isUnisexHoodie = gender === "UNISEX" && product.id === "hoodie"
+  const isKinderHoodie = gender === "KINDER" && product.id === "hoodie"
+  const isFrauenTshirt = gender === "FRAUEN" && product.id === "tshirt"
+  const isMaennerTshirt = gender === "MÄNNER" && product.id === "tshirt"
+  const isUnisexTshirt = gender === "UNISEX" && product.id === "tshirt"
+  const isKinderTshirt = gender === "KINDER" && product.id === "tshirt"
+  const isFrauenPolo = gender === "FRAUEN" && product.id === "polo"
+  const isMaennerPolo = gender === "MÄNNER" && product.id === "polo"
+  const isUnisexPolo = gender === "UNISEX" && product.id === "polo"
+  const isKinderPolo = gender === "KINDER" && product.id === "polo"
+  const isKinderSweatshirt = gender === "KINDER" && product.id === "sweatshirt"
+  const isFrauenShirt = gender === "FRAUEN" && product.id === "shirt"
+  const isMaennerShirt = gender === "MÄNNER" && product.id === "shirt"
+  const isKinderCap = gender === "KINDER" && product.id === "headwear"
+  const isFrauenCap =
+    product.id === "headwear" && ["FRAUEN", "MÄNNER", "UNISEX"].includes(gender)
+  const isAnyCap = isFrauenCap || isKinderCap
+  const isOneSizeProduct = isAnyCap || ["mug", "shopper"].includes(product.id)
+  const isColumbiaSweatshirt =
+    product.id === "sweatshirt" &&
+    ["FRAUEN", "MÄNNER", "UNISEX"].includes(gender)
+  const availableDesignerProducts = DESIGNER_PRODUCTS.filter(
+    (item) =>
+      !["mug", "shopper"].includes(item.id) &&
+      (!["UNISEX", "KINDER"].includes(gender) || item.id !== "shirt"),
+  )
+  const productPickerProducts = ["mug", "shopper"].includes(product.id)
+    ? OTHER_DESIGNER_PRODUCTS.filter((item) => item.id === product.id)
+    : availableDesignerProducts
+  const isConfiguredTextile =
+    isFrauenHoodie ||
+    isMaennerHoodie ||
+    isUnisexHoodie ||
+    isKinderHoodie ||
+    isFrauenTshirt ||
+    isMaennerTshirt ||
+    isUnisexTshirt ||
+    isKinderTshirt ||
+    isFrauenPolo ||
+    isMaennerPolo ||
+    isUnisexPolo ||
+    isKinderPolo ||
+    isKinderSweatshirt ||
+    isFrauenShirt ||
+    isMaennerShirt ||
+    isColumbiaSweatshirt
+  const selectedHoodieColor =
+    FRAUEN_HOODIE_COLORS.find((item) => item.id === hoodieColor) ||
+    FRAUEN_HOODIE_COLORS[0]
+  const selectedMenHoodieColor =
+    MAENNER_HOODIE_COLORS.find((item) => item.id === menHoodieColor) ||
+    MAENNER_HOODIE_COLORS[0]
+  const selectedUnisexHoodieColor =
+    UNISEX_HOODIE_COLORS.find((item) => item.id === unisexHoodieColor) ||
+    UNISEX_HOODIE_COLORS[0]
+  const selectedKidsHoodieColor =
+    KINDER_HOODIE_COLORS.find((item) => item.id === kidsHoodieColor) ||
+    KINDER_HOODIE_COLORS[0]
+  const selectedTshirtColor =
+    FRAUEN_TSHIRT_COLORS.find((item) => item.id === tshirtColor) ||
+    FRAUEN_TSHIRT_COLORS[0]
+  const selectedMenTshirtColor =
+    MAENNER_TSHIRT_COLORS.find((item) => item.id === menTshirtColor) ||
+    MAENNER_TSHIRT_COLORS[0]
+  const selectedUnisexTshirtColor =
+    UNISEX_TSHIRT_COLORS.find((item) => item.id === unisexTshirtColor) ||
+    UNISEX_TSHIRT_COLORS[0]
+  const selectedKidsTshirtColor =
+    KINDER_TSHIRT_COLORS.find((item) => item.id === kidsTshirtColor) ||
+    KINDER_TSHIRT_COLORS[0]
+  const selectedPoloColor =
+    FRAUEN_POLO_COLORS.find((item) => item.id === poloColor) ||
+    FRAUEN_POLO_COLORS[0]
+  const selectedMenPoloColor =
+    MAENNER_POLO_COLORS.find((item) => item.id === menPoloColor) ||
+    MAENNER_POLO_COLORS[0]
+  const selectedUnisexPoloColor =
+    UNISEX_POLO_COLORS.find((item) => item.id === unisexPoloColor) ||
+    UNISEX_POLO_COLORS[0]
+  const selectedKidsPoloColor =
+    KINDER_POLO_COLORS.find((item) => item.id === kidsPoloColor) ||
+    KINDER_POLO_COLORS[0]
+  const selectedKidsSweatshirtColor =
+    KINDER_SWEATSHIRT_COLORS.find((item) => item.id === kidsSweatshirtColor) ||
+    KINDER_SWEATSHIRT_COLORS[0]
+  const selectedShirtColor =
+    FRAUEN_SHIRT_COLORS.find((item) => item.id === shirtColor) ||
+    FRAUEN_SHIRT_COLORS[0]
+  const selectedMenShirtColor =
+    MAENNER_SHIRT_COLORS.find((item) => item.id === menShirtColor) ||
+    MAENNER_SHIRT_COLORS[0]
+  const selectedSweatshirtColor =
+    COLUMBIA_SWEATSHIRT_COLORS.find((item) => item.id === sweatshirtColor) ||
+    COLUMBIA_SWEATSHIRT_COLORS[0]
+  const selectedCapColor =
+    FRAUEN_CAP_COLORS.find((item) => item.id === capColor) ||
+    FRAUEN_CAP_COLORS[0]
+  const selectedKidsCapColor =
+    KINDER_CAP_COLORS.find((item) => item.id === kidsCapColor) ||
+    KINDER_CAP_COLORS[0]
+  const selectedShopperColor =
+    SHOPPER_COLORS.find((item) => item.id === shopperColor) || SHOPPER_COLORS[0]
+  const configuredColors = isShopper
+    ? SHOPPER_COLORS
+    : isFrauenHoodie
+      ? FRAUEN_HOODIE_COLORS
+      : isMaennerHoodie
+        ? MAENNER_HOODIE_COLORS
+        : isUnisexHoodie
+          ? UNISEX_HOODIE_COLORS
+          : isKinderHoodie
+            ? KINDER_HOODIE_COLORS
+            : isFrauenTshirt
+              ? FRAUEN_TSHIRT_COLORS
+              : isMaennerTshirt
+                ? MAENNER_TSHIRT_COLORS
+                : isUnisexTshirt
+                  ? UNISEX_TSHIRT_COLORS
+                  : isKinderTshirt
+                    ? KINDER_TSHIRT_COLORS
+                    : isFrauenPolo
+                      ? FRAUEN_POLO_COLORS
+                      : isMaennerPolo
+                        ? MAENNER_POLO_COLORS
+                        : isUnisexPolo
+                          ? UNISEX_POLO_COLORS
+                          : isKinderPolo
+                            ? KINDER_POLO_COLORS
+                            : isKinderSweatshirt
+                              ? KINDER_SWEATSHIRT_COLORS
+                              : isFrauenShirt
+                                ? FRAUEN_SHIRT_COLORS
+                                : isMaennerShirt
+                                  ? MAENNER_SHIRT_COLORS
+                                  : isKinderCap
+                                    ? KINDER_CAP_COLORS
+                                    : isFrauenCap
+                                      ? FRAUEN_CAP_COLORS
+                                      : COLUMBIA_SWEATSHIRT_COLORS
+  const selectedConfiguredColor = isShopper
+    ? selectedShopperColor
+    : isFrauenHoodie
+      ? selectedHoodieColor
+      : isMaennerHoodie
+        ? selectedMenHoodieColor
+        : isUnisexHoodie
+          ? selectedUnisexHoodieColor
+          : isKinderHoodie
+            ? selectedKidsHoodieColor
+            : isFrauenTshirt
+              ? selectedTshirtColor
+              : isMaennerTshirt
+                ? selectedMenTshirtColor
+                : isUnisexTshirt
+                  ? selectedUnisexTshirtColor
+                  : isKinderTshirt
+                    ? selectedKidsTshirtColor
+                    : isFrauenPolo
+                      ? selectedPoloColor
+                      : isMaennerPolo
+                        ? selectedMenPoloColor
+                        : isUnisexPolo
+                          ? selectedUnisexPoloColor
+                          : isKinderPolo
+                            ? selectedKidsPoloColor
+                            : isKinderSweatshirt
+                              ? selectedKidsSweatshirtColor
+                              : isFrauenShirt
+                                ? selectedShirtColor
+                                : isMaennerShirt
+                                  ? selectedMenShirtColor
+                                  : isKinderCap
+                                    ? selectedKidsCapColor
+                                    : isFrauenCap
+                                      ? selectedCapColor
+                                      : selectedSweatshirtColor
+  const productName = isFrauenHoodie
+    ? "Frauen Hoodie"
+    : isMaennerHoodie
+      ? "Männer Hoodie"
+      : isUnisexHoodie
+        ? "Unisex Hoodie"
+        : isKinderHoodie
+          ? "Kinder Hoodie"
+          : isFrauenTshirt
+            ? "Frauen T-Shirt"
+            : isMaennerTshirt
+              ? "Männer T-Shirt"
+              : isUnisexTshirt
+                ? "Unisex T-Shirt"
+                : isKinderTshirt
+                  ? "Kinder T-Shirt"
+                  : isFrauenPolo
+                    ? "Frauen Polo"
+                    : isMaennerPolo
+                      ? "Männer Polo"
+                      : isUnisexPolo
+                        ? "Unisex Polo"
+                        : isKinderPolo
+                          ? "Kinder Polo"
+                          : isKinderSweatshirt
+                            ? "Kinder Sweatshirt"
+                            : isFrauenShirt
+                              ? "Frauen Hemd"
+                              : isMaennerShirt
+                                ? "Männer Hemd"
+                                : isKinderCap
+                                  ? "Kinder Cap"
+                                  : isFrauenCap
+                                    ? `${
+                                        gender === "FRAUEN"
+                                          ? "Frauen"
+                                          : gender === "MÄNNER"
+                                            ? "Männer"
+                                            : "Unisex"
+                                      } Cap`
+                                    : isColumbiaSweatshirt
+                                      ? `${gender[0]}${gender.slice(1).toLowerCase()} Sweatshirt`
+                                      : product.name
+  const productImage = isShopper
+    ? selectedShopperColor.image
+    : isFrauenHoodie
+      ? printSide === "back"
+        ? selectedHoodieColor.backImage
+        : selectedHoodieColor.image
+      : isMaennerHoodie
+        ? printSide === "back"
+          ? selectedMenHoodieColor.backImage
+          : selectedMenHoodieColor.image
+        : isUnisexHoodie
+          ? printSide === "back"
+            ? selectedUnisexHoodieColor.backImage
+            : selectedUnisexHoodieColor.image
+          : isKinderHoodie
+            ? printSide === "back"
+              ? selectedKidsHoodieColor.backImage
+              : selectedKidsHoodieColor.image
+            : isFrauenTshirt
+              ? printSide === "back"
+                ? selectedTshirtColor.backImage
+                : selectedTshirtColor.image
+              : isMaennerTshirt
+                ? printSide === "back"
+                  ? selectedMenTshirtColor.backImage
+                  : selectedMenTshirtColor.image
+                : isUnisexTshirt
+                  ? printSide === "back"
+                    ? selectedUnisexTshirtColor.backImage
+                    : selectedUnisexTshirtColor.image
+                  : isKinderTshirt
+                    ? printSide === "back"
+                      ? selectedKidsTshirtColor.backImage
+                      : selectedKidsTshirtColor.image
+                    : isFrauenPolo
+                      ? printSide === "back"
+                        ? selectedPoloColor.backImage
+                        : selectedPoloColor.image
+                      : isMaennerPolo
+                        ? printSide === "back"
+                          ? selectedMenPoloColor.backImage
+                          : selectedMenPoloColor.image
+                        : isUnisexPolo
+                          ? printSide === "back"
+                            ? selectedUnisexPoloColor.backImage
+                            : selectedUnisexPoloColor.image
+                          : isKinderPolo
+                            ? printSide === "back"
+                              ? selectedKidsPoloColor.backImage
+                              : selectedKidsPoloColor.image
+                            : isKinderSweatshirt
+                              ? printSide === "back"
+                                ? selectedKidsSweatshirtColor.backImage
+                                : selectedKidsSweatshirtColor.image
+                              : isFrauenShirt
+                                ? printSide === "back"
+                                  ? selectedShirtColor.backImage
+                                  : selectedShirtColor.image
+                                : isMaennerShirt
+                                  ? printSide === "back"
+                                    ? selectedMenShirtColor.backImage
+                                    : selectedMenShirtColor.image
+                                  : isKinderCap
+                                    ? printSide === "back"
+                                      ? selectedKidsCapColor.backImage
+                                      : selectedKidsCapColor.image
+                                    : isFrauenCap
+                                      ? printSide === "back"
+                                        ? selectedCapColor.backImage
+                                        : selectedCapColor.image
+                                      : isColumbiaSweatshirt
+                                        ? printSide === "back"
+                                          ? selectedSweatshirtColor.backImage
+                                          : selectedSweatshirtColor.image
+                                        : product.image
+  const hasObject =
+    object === "image"
+      ? Boolean(uploadedImage)
+      : Boolean(activeSlot === "text2" ? text2.trim() : text.trim())
+  const hasBackDesign =
+    printSide === "back"
+      ? Boolean(uploadedImage || text.trim() || text2.trim())
+      : Boolean(
+          sideDesigns.current.back.uploadedImage ||
+            sideDesigns.current.back.text.trim() ||
+            sideDesigns.current.back.text2.trim(),
+        )
+  const hasAnyDesign = Boolean(
+    uploadedImage ||
+      text.trim() ||
+      text2.trim() ||
+      sideDesigns.current.front.uploadedImage ||
+      sideDesigns.current.front.text.trim() ||
+      sideDesigns.current.front.text2.trim() ||
+      sideDesigns.current.back.uploadedImage ||
+      sideDesigns.current.back.text.trim() ||
+      sideDesigns.current.back.text2.trim(),
+  )
+  const designPrice =
+    (isConfiguredTextile || isShopper) && hasBackDesign ? 59.99 : 50
+  const designPriceLabel = new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR",
+  }).format(designPrice)
+  const reset = () => {
+    sideDesigns.current = { front: emptySideDesign(), back: emptySideDesign() }
+    setUploadedImage("")
+    setText("")
+    setText2("")
+    setText2Color("#ffffff")
+    setText2Font("Oswald")
+    setObjectScale(1)
+    setObjectRotation(0)
+    setObjectX(0)
+    setObjectY(0)
+    setTextScale(1)
+    setTextRotation(0)
+    setTextX(0)
+    setTextY(0)
+    setText2Scale(1)
+    setText2Rotation(0)
+    setText2X(0)
+    setText2Y(0)
+    setActiveSlot("text1")
+    setCanvasScale(1.4)
+    setCanvasX(0)
+    setCanvasY(0)
+    setBrightness(100)
+    setContrast(100)
+    setPrintSide("front")
+  }
+  const upload = async (file?: File) => {
+    if (!file) return
+    if (!["image/png", "image/jpeg"].includes(file.type)) {
+      setUploadError("NUR PNG ODER JPEG SIND ERLAUBT.")
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError("DIE DATEI DARF MAXIMAL 5 MB GROSS SEIN.")
+      return
+    }
+    if (imageLibrary.length >= 3) {
+      setUploadError("MAXIMAL 3 BILDER KÖNNEN GESPEICHERT WERDEN. LÖSCHE EIN BILD, UM EINEN PLATZ FREIZUGEBEN.")
+      return
+    }
+    try {
+      const imageId = await saveDesignerImage(file)
+      const image = URL.createObjectURL(file)
+      setImageLibrary((items) => [...items, image])
+      setImageLibraryIds((items) => [...items, imageId])
+      setActiveImageIndex(imageLibrary.length)
+      setUploadedImage(image)
+      setObjectScale(1)
+      setObjectRotation(0)
+      setObjectX(0)
+      setObjectY(0)
+      setBrightness(100)
+      setContrast(100)
+      setObject("image")
+      setPanel("design")
+      setUploadError("")
+    } catch {
+      setUploadError("DAS BILD KONNTE NICHT GESPEICHERT WERDEN. BITTE VERSUCHE ES ERNEUT.")
+    }
+  }
+  const uploadSecond = (file?: File) => {
+    if (!file || !["image/png", "image/jpeg"].includes(file.type) || file.size > 5 * 1024 * 1024) return
+    const reader = new FileReader()
+    reader.onload = () => { setUploadedImage2(String(reader.result)); setActiveSlot("text1") }
+    reader.readAsDataURL(file)
+  }
+  const stopDragging = () => {
+    drag.current = null
+    setIsObjectHandleDragging(false)
+  }
+  const onPointerDown = (
+    event: React.PointerEvent,
+    kind: "canvas" | "image" | "text" | "move" | "resize" | "rotate",
+    textSlot: "text1" | "text2" = activeSlot === "text2" ? "text2" : "text1",
+  ) => {
+    if (event.button !== 0) return
+    event.preventDefault()
+    const layer = (event.currentTarget as HTMLElement).closest(
+      ".designer-object-layer, .designer-object-handle-layer",
+    )
+    const rect = layer?.getBoundingClientRect()
+    const target = kind === "image" ? "image" : kind === "text" ? "text" : object
+    drag.current = {
+      kind,
+      textSlot,
+      target,
+      x: event.clientX,
+      y: event.clientY,
+      scale: target === "image" ? objectScale : textSlot === "text2" ? text2Scale : textScale,
+      rotation: target === "image" ? objectRotation : textSlot === "text2" ? text2Rotation : textRotation,
+      angle: rect
+        ? Math.atan2(
+            event.clientY - rect.top - rect.height / 2,
+            event.clientX - rect.left - rect.width / 2,
+          )
+        : 0,
+      centerX: rect ? rect.left + rect.width / 2 : event.clientX,
+      centerY: rect ? rect.top + rect.height / 2 : event.clientY,
+    }
+    if (kind !== "canvas")
+      setIsObjectHandleDragging(true)
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+  const onPointerMove = (event: React.PointerEvent) => {
+    if (!drag.current || event.buttons === 0) {
+      stopDragging()
+      return
+    }
+    const dx = event.clientX - drag.current.x
+    const dy = event.clientY - drag.current.y
+    const objectDx = dx * 0.72
+    const objectDy = dy * 0.72
+    if (drag.current.kind === "canvas") {
+      setCanvasX((value) => value + dx)
+      setCanvasY((value) => value + dy)
+    } else if (
+      drag.current.target === "image" &&
+      (drag.current.kind === "image" || drag.current.kind === "move")
+    ) {
+      setObjectX((value) => value + objectDx)
+      setObjectY((value) => value + objectDy)
+    } else if (
+      drag.current.target === "text" &&
+      (drag.current.kind === "text" || drag.current.kind === "move")
+    ) {
+      if (drag.current.textSlot === "text2") {
+        setText2X((value) => value + objectDx)
+        setText2Y((value) => value + objectDy)
+      } else {
+        setTextX((value) => value + objectDx)
+        setTextY((value) => value + objectDy)
+      }
+    } else if (drag.current.kind === "resize") {
+      const scale = Math.min(
+        2,
+        Math.max(0.3, (drag.current.scale || 1) + (dx + dy) / 170),
+      )
+      if (drag.current.target === "image") setObjectScale(scale)
+      else if (drag.current.textSlot === "text2") setText2Scale(scale)
+      else setTextScale(scale)
+    } else {
+      const angle = Math.atan2(
+        event.clientY - (drag.current.centerY || event.clientY),
+        event.clientX - (drag.current.centerX || event.clientX),
+      )
+      const rotation =
+        (drag.current.rotation || 0) +
+        ((angle - (drag.current.angle || 0)) * 180) / Math.PI
+      if (drag.current.target === "image") setObjectRotation(rotation)
+      else if (drag.current.textSlot === "text2") setText2Rotation(rotation)
+      else setTextRotation(rotation)
+    }
+    if (
+      drag.current.kind === "canvas" ||
+      drag.current.kind === "image" ||
+      drag.current.kind === "text" ||
+      drag.current.kind === "move"
+    )
+      drag.current = { ...drag.current, x: event.clientX, y: event.clientY }
+  }
+  const onWheel = (event: React.WheelEvent) => {
+    event.preventDefault()
+    setCanvasScale((value) =>
+      Math.min(2.52, Math.max(0.65, value + (event.deltaY < 0 ? 0.08 : -0.08))),
+    )
+  }
+  useEffect(() => {
+    const closePickers = (event: PointerEvent) => {
+      const target = event.target
+      if (!(target instanceof Node)) return
+      if (!productPickerRef.current?.contains(target))
+        setProductPickerOpen(false)
+      if (!modelPickerRef.current?.contains(target)) setModelPickerOpen(false)
+      if (!fontPickerRef.current?.contains(target)) setFontPickerOpen(false)
+      if (!colorPaletteRef.current?.contains(target)) setColorPaletteOpen(false)
+    }
+    document.addEventListener("pointerdown", closePickers)
+    return () => document.removeEventListener("pointerdown", closePickers)
+  }, [])
+  const chooseProduct = (next: typeof DESIGNER_PRODUCTS[number]) => {
+    setProductId(next.id)
+    if (["mug", "shopper"].includes(next.id)) setGender("")
+    if (next.id === "shopper") setShopperColor("268")
+    setProductPickerOpen(false)
+    setModelPickerOpen(false)
+    setSize(
+      ["headwear", "mug", "shopper"].includes(next.id)
+        ? "ONE SIZE"
+        : next.type === "textile"
+          ? "M"
+          : "STANDARD",
+    )
+    reset()
+  }
+  const chooseGender = (next: string) => {
+    const isOtherProduct = ["mug", "shopper"].includes(product.id)
+    setGender(next)
+    if (
+      isOtherProduct ||
+      (["UNISEX", "KINDER"].includes(next) && product.id === "shirt")
+    ) {
+      setProductId("hoodie")
+    }
+    setSize(
+      isOtherProduct
+        ? "M"
+        : product.id === "headwear"
+          ? "ONE SIZE"
+          : product.type === "textile"
+            ? "M"
+            : "STANDARD",
+    )
+    setProductPickerOpen(false)
+    setModelPickerOpen(false)
+    reset()
+  }
+  const choosePrintSide = (next: "front" | "back") => {
+    if (
+      next === printSide ||
+      (next === "back" && !isConfiguredTextile && !isAnyCap && !isShopper)
+    )
+      return
+    if (isAnyCap) {
+      setPrintSide(next)
+      return
+    }
+    sideDesigns.current[printSide] = {
+      uploadedImage,
+      text,
+      textColor,
+      font,
+      text2,
+      text2Color,
+      text2Font,
+      objectScale,
+      objectRotation,
+      objectX,
+      objectY,
+      textScale,
+      textRotation,
+      textX,
+      textY,
+      text2Scale,
+      text2Rotation,
+      text2X,
+      text2Y,
+      brightness,
+      contrast,
+    }
+    const saved = sideDesigns.current[next]
+    setUploadedImage(saved.uploadedImage)
+    setText(saved.text)
+    setTextColor(saved.textColor || "#ffffff")
+    setFont(saved.font || "Oswald")
+    setText2(saved.text2 || "")
+    setText2Color(saved.text2Color || "#ffffff")
+    setText2Font(saved.text2Font || "Oswald")
+    setObjectScale(saved.objectScale)
+    setObjectRotation(saved.objectRotation)
+    setObjectX(saved.objectX)
+    setObjectY(saved.objectY)
+    setTextScale(saved.textScale || 1)
+    setTextRotation(saved.textRotation || 0)
+    setTextX(saved.textX || 0)
+    setTextY(saved.textY || 0)
+    setText2Scale(saved.text2Scale || 1)
+    setText2Rotation(saved.text2Rotation || 0)
+    setText2X(saved.text2X ?? 0)
+    setText2Y(saved.text2Y ?? 0)
+    setBrightness(saved.brightness)
+    setContrast(saved.contrast)
+    setObject(saved.uploadedImage ? "image" : saved.text || saved.text2 ? "text" : "image")
+    setActiveSlot(saved.text2 ? "text2" : "text1")
+    setPrintSide(next)
+  }
+  const configuredSizes = isOneSizeProduct
+    ? ["ONE SIZE"]
+    : isFrauenHoodie
+      ? FRAUEN_HOODIE_SIZES[hoodieColor]
+      : isMaennerHoodie
+        ? MAENNER_HOODIE_SIZES[menHoodieColor]
+        : isUnisexHoodie
+          ? UNISEX_HOODIE_SIZES[unisexHoodieColor]
+          : isKinderHoodie
+            ? KINDER_HOODIE_SIZES[kidsHoodieColor]
+            : isFrauenTshirt
+              ? FRAUEN_TSHIRT_SIZES[tshirtColor]
+              : isMaennerTshirt
+                ? MAENNER_TSHIRT_SIZES[menTshirtColor]
+                : isUnisexTshirt
+                  ? UNISEX_TSHIRT_SIZES[unisexTshirtColor]
+                  : isKinderTshirt
+                    ? KINDER_TSHIRT_SIZES[kidsTshirtColor]
+                    : isFrauenPolo
+                      ? FRAUEN_POLO_SIZES[poloColor]
+                      : isMaennerPolo
+                        ? MAENNER_POLO_SIZES[menPoloColor]
+                        : isUnisexPolo
+                          ? UNISEX_POLO_SIZES[unisexPoloColor]
+                          : isKinderPolo
+                            ? KINDER_POLO_SIZES[kidsPoloColor]
+                            : isKinderSweatshirt
+                              ? KINDER_SWEATSHIRT_SIZES[kidsSweatshirtColor]
+                              : isFrauenShirt
+                                ? FRAUEN_SHIRT_SIZES[shirtColor]
+                                : isMaennerShirt
+                                  ? MAENNER_SHIRT_SIZES[menShirtColor]
+                                  : COLUMBIA_SWEATSHIRT_SIZES[sweatshirtColor]
+  const safeConfiguredSizes = Array.isArray(configuredSizes)
+    ? configuredSizes
+    : ["M"]
+  const sizes =
+    isOneSizeProduct || isConfiguredTextile
+      ? safeConfiguredSizes
+      : product.type === "textile"
+        ? ["XS", "S", "M", "L", "XL"]
+        : ["STANDARD"]
+  const chooseConfiguredColor = (nextColor: string) => {
+    const nextSizes = isOneSizeProduct
+      ? ["ONE SIZE"]
+      : isFrauenHoodie
+        ? FRAUEN_HOODIE_SIZES[nextColor]
+        : isMaennerHoodie
+          ? MAENNER_HOODIE_SIZES[nextColor]
+          : isUnisexHoodie
+            ? UNISEX_HOODIE_SIZES[nextColor]
+            : isKinderHoodie
+              ? KINDER_HOODIE_SIZES[nextColor]
+              : isFrauenTshirt
+                ? FRAUEN_TSHIRT_SIZES[nextColor]
+                : isMaennerTshirt
+                  ? MAENNER_TSHIRT_SIZES[nextColor]
+                  : isUnisexTshirt
+                    ? UNISEX_TSHIRT_SIZES[nextColor]
+                    : isKinderTshirt
+                      ? KINDER_TSHIRT_SIZES[nextColor]
+                      : isFrauenPolo
+                        ? FRAUEN_POLO_SIZES[nextColor]
+                        : isMaennerPolo
+                          ? MAENNER_POLO_SIZES[nextColor]
+                          : isUnisexPolo
+                            ? UNISEX_POLO_SIZES[nextColor]
+                            : isKinderPolo
+                              ? KINDER_POLO_SIZES[nextColor]
+                              : isKinderSweatshirt
+                                ? KINDER_SWEATSHIRT_SIZES[nextColor]
+                                : isFrauenShirt
+                                  ? FRAUEN_SHIRT_SIZES[nextColor]
+                                  : isMaennerShirt
+                                    ? MAENNER_SHIRT_SIZES[nextColor]
+                                    : COLUMBIA_SWEATSHIRT_SIZES[nextColor]
+    if (isShopper) setShopperColor(nextColor)
+    else if (isKinderCap) setKidsCapColor(nextColor)
+    else if (isFrauenCap) setCapColor(nextColor)
+    else if (isFrauenHoodie) setHoodieColor(nextColor as typeof hoodieColor)
+    else if (isMaennerHoodie) setMenHoodieColor(nextColor)
+    else if (isUnisexHoodie) setUnisexHoodieColor(nextColor)
+    else if (isKinderHoodie) setKidsHoodieColor(nextColor)
+    else if (isFrauenTshirt) setTshirtColor(nextColor)
+    else if (isMaennerTshirt) setMenTshirtColor(nextColor)
+    else if (isUnisexTshirt) setUnisexTshirtColor(nextColor)
+    else if (isKinderTshirt) setKidsTshirtColor(nextColor)
+    else if (isFrauenPolo) setPoloColor(nextColor)
+    else if (isMaennerPolo) setMenPoloColor(nextColor)
+    else if (isUnisexPolo) setUnisexPoloColor(nextColor)
+    else if (isKinderPolo) setKidsPoloColor(nextColor)
+    else if (isKinderSweatshirt) setKidsSweatshirtColor(nextColor)
+    else if (isFrauenShirt) setShirtColor(nextColor)
+    else if (isMaennerShirt) setMenShirtColor(nextColor)
+    else setSweatshirtColor(nextColor)
+    const validNextSizes = Array.isArray(nextSizes) ? nextSizes : ["M"]
+    setSize((current) =>
+      validNextSizes.includes(current) ? current : validNextSizes[0],
+    )
+  }
+  const sizeMeasurements: Record<string, string> = isKinderSweatshirt
+    ? {
+        "04A": "44 / 36",
+        "06A": "49 / 38",
+        "08A": "54 / 41",
+        "10A": "58 / 44",
+        "12A": "64 / 47",
+        "14A": "65 / 50",
+      }
+    : isKinderPolo
+      ? {
+          "04A": "44 / 34",
+          "06A": "47 / 37",
+          "08A": "50 / 40",
+          "10A": "54 / 43",
+          "12A": "58 / 46",
+        }
+      : isKinderTshirt
+        ? {
+            "02A": "40 / 29",
+            "04A": "43 / 32",
+            "06A": "46 / 35",
+            "08A": "49 / 38",
+            "10A": "52 / 41",
+            "12A": "55 / 44",
+          }
+        : isKinderHoodie
+          ? {
+              "04A": "44 / 36",
+              "06A": "49 / 38",
+              "08A": "54 / 41",
+              "10A": "58 / 44",
+              "12A": "64 / 47",
+              "14A": "65 / 50",
+            }
+          : isUnisexPolo
+            ? {
+                XS: "67 / 45",
+                S: "70 / 48",
+                M: "72 / 50",
+                L: "73 / 53",
+                XL: "75 / 56",
+                XXL: "77 / 59",
+                "3XL": "79 / 62",
+              }
+            : isUnisexTshirt
+              ? {
+                  XXS: "64 / 46",
+                  S: "70 / 50",
+                  M: "72 / 53",
+                  L: "74 / 56",
+                  XL: "76 / 59",
+                  XXL: "78 / 62",
+                  "3XL": "80 / 65",
+                  "4XL": "82 / 68",
+                }
+              : isUnisexHoodie
+                ? {
+                    XS: "68 / 46",
+                    S: "70 / 51",
+                    M: "71 / 56",
+                    L: "73 / 61",
+                    XL: "74 / 66",
+                    XXL: "76 / 71",
+                    "3XL": "77 / 76",
+                    "4XL": "79 / 81",
+                    "5XL": "80 / 86",
+                  }
+                : isMaennerShirt
+                  ? {
+                      S: "76 / 54",
+                      M: "78 / 57",
+                      L: "80 / 60",
+                      XL: "82 / 63",
+                      XXL: "84 / 66",
+                      "3XL": "86 / 69",
+                      "4XL": "88 / 72",
+                      "5XL": "88 / 75",
+                    }
+                  : isMaennerPolo
+                    ? {
+                        S: "70 / 49",
+                        M: "72 / 52",
+                        L: "74 / 55",
+                        XL: "76 / 58",
+                        XXL: "78 / 61",
+                        "3XL": "81 / 64",
+                        "4XL": "83 / 67",
+                        "5XL": "85 / 70",
+                      }
+                    : isMaennerTshirt
+                      ? {
+                          XS: "68 / 45",
+                          S: "70 / 48",
+                          M: "72 / 51",
+                          L: "74 / 54",
+                          XL: "76 / 57",
+                          XXL: "78 / 60",
+                          "3XL": "80 / 63",
+                          "4XL": "82 / 66",
+                        }
+                      : isMaennerHoodie
+                        ? {
+                            XS: "67 / 47",
+                            S: "69 / 50",
+                            M: "71 / 53",
+                            L: "73 / 56",
+                            XL: "75 / 59",
+                            XXL: "77 / 62",
+                            "3XL": "79 / 65",
+                          }
+                        : isColumbiaSweatshirt
+                          ? {
+                              XS: "68 / 46",
+                              S: "70 / 51",
+                              M: "71 / 56",
+                              L: "73 / 61",
+                              XL: "74 / 66",
+                              XXL: "76 / 71",
+                              "3XL": "77 / 76",
+                              "4XL": "79 / 81",
+                              "5XL": "80 / 86",
+                            }
+                          : isFrauenTshirt
+                            ? {
+                                S: "61 / 41",
+                                M: "63 / 44",
+                                L: "65 / 47",
+                                XL: "67 / 50",
+                                XXL: "69 / 53",
+                                "3XL": "71 / 56",
+                              }
+                            : isFrauenPolo
+                              ? {
+                                  XS: "60 / 42",
+                                  S: "62 / 45",
+                                  M: "64 / 48",
+                                  L: "66 / 51",
+                                  XL: "68 / 54",
+                                  XXL: "70 / 57",
+                                  "3XL": "72 / 60",
+                                }
+                              : isFrauenShirt
+                                ? {
+                                    XS: "62 / 45",
+                                    S: "64 / 48",
+                                    M: "66 / 51",
+                                    L: "68 / 54",
+                                    XL: "70 / 57",
+                                    XXL: "72 / 60",
+                                    "3XL": "73 / 63",
+                                  }
+                                : {
+                                    XS: "60 / 42",
+                                    S: "62 / 45",
+                                    M: "64 / 48",
+                                    L: "66 / 51",
+                                    XL: "68 / 54",
+                                    XXL: "70 / 57",
+                                    "3XL": "72 / 60",
+                                  }
+  const help = [
+    "WÄHLE LINKS DESIGN ODER TEXT.",
+    "PLATZIERE DEIN MOTIV MITTEN AUF DEINEM PRODUKT.",
+    "MIT MAUSRAD UND MAUSZUG KANNST DU DAS PRODUKT BEWEGEN.",
+    "PRÜFE VOR DEM WARENKORB DEINE VORSCHAU.",
+  ]
+  const activeDesign = {
+    uploadedImage,
+    text,
+    textColor,
+    font,
+    text2,
+    text2Color,
+    text2Font,
+    objectScale,
+    objectRotation,
+    objectX,
+    objectY,
+    textScale,
+    textRotation,
+    textX,
+    textY,
+    text2Scale,
+    text2Rotation,
+    text2X,
+    text2Y,
+    brightness,
+    contrast,
+  }
+  const frontReviewDesign =
+    printSide === "front" ? activeDesign : sideDesigns.current.front
+  const backReviewDesign =
+    printSide === "back" ? activeDesign : sideDesigns.current.back
+  const frontPreviewImage = isShopper
+    ? selectedShopperColor.image
+    : isFrauenHoodie
+      ? selectedHoodieColor.image
+      : isMaennerHoodie
+        ? selectedMenHoodieColor.image
+        : isUnisexHoodie
+          ? selectedUnisexHoodieColor.image
+          : isKinderHoodie
+            ? selectedKidsHoodieColor.image
+            : isFrauenTshirt
+              ? selectedTshirtColor.image
+              : isMaennerTshirt
+                ? selectedMenTshirtColor.image
+                : isUnisexTshirt
+                  ? selectedUnisexTshirtColor.image
+                  : isKinderTshirt
+                    ? selectedKidsTshirtColor.image
+                    : isFrauenPolo
+                      ? selectedPoloColor.image
+                      : isMaennerPolo
+                        ? selectedMenPoloColor.image
+                        : isUnisexPolo
+                          ? selectedUnisexPoloColor.image
+                          : isKinderPolo
+                            ? selectedKidsPoloColor.image
+                            : isKinderSweatshirt
+                              ? selectedKidsSweatshirtColor.image
+                              : isFrauenShirt
+                                ? selectedShirtColor.image
+                                : isMaennerShirt
+                                  ? selectedMenShirtColor.image
+                                  : isKinderCap
+                                    ? selectedKidsCapColor.image
+                                    : isFrauenCap
+                                      ? selectedCapColor.image
+                                      : isColumbiaSweatshirt
+                                        ? selectedSweatshirtColor.image
+                                        : product.image
+  const backPreviewImage = isShopper
+    ? selectedShopperColor.backImage
+    : isFrauenHoodie
+      ? selectedHoodieColor.backImage
+      : isMaennerHoodie
+        ? selectedMenHoodieColor.backImage
+        : isUnisexHoodie
+          ? selectedUnisexHoodieColor.backImage
+          : isKinderHoodie
+            ? selectedKidsHoodieColor.backImage
+            : isFrauenTshirt
+              ? selectedTshirtColor.backImage
+              : isMaennerTshirt
+                ? selectedMenTshirtColor.backImage
+                : isUnisexTshirt
+                  ? selectedUnisexTshirtColor.backImage
+                  : isKinderTshirt
+                    ? selectedKidsTshirtColor.backImage
+                    : isFrauenPolo
+                      ? selectedPoloColor.backImage
+                      : isMaennerPolo
+                        ? selectedMenPoloColor.backImage
+                        : isUnisexPolo
+                          ? selectedUnisexPoloColor.backImage
+                          : isKinderPolo
+                            ? selectedKidsPoloColor.backImage
+                            : isKinderSweatshirt
+                              ? selectedKidsSweatshirtColor.backImage
+                              : isFrauenShirt
+                                ? selectedShirtColor.backImage
+                                : isMaennerShirt
+                                  ? selectedMenShirtColor.backImage
+                                  : isKinderCap
+                                    ? selectedKidsCapColor.backImage
+                                    : isFrauenCap
+                                      ? selectedCapColor.backImage
+                                      : isColumbiaSweatshirt
+                                        ? selectedSweatshirtColor.backImage
+                                        : product.image
+  const productManufacturer =
+    isFrauenHoodie || isMaennerHoodie ? "X.O by Promodoro" : "SOL'S"
+  const productCategory = isAnyCap
+    ? "Kopfbedeckung"
+    : isColumbiaSweatshirt || isKinderSweatshirt
+      ? "Sweatshirt"
+      : isFrauenPolo || isMaennerPolo || isKinderPolo
+        ? "Polo"
+        : isUnisexPolo
+          ? "Polo"
+          : isFrauenTshirt ||
+              isMaennerTshirt ||
+              isUnisexTshirt ||
+              isKinderTshirt
+            ? "T-Shirt"
+            : isFrauenShirt || isMaennerShirt
+              ? "Hemd"
+              : "Hoodie"
+  const productGender = isKinderCap
+    ? "Kinder, Unisex"
+    : isFrauenCap
+      ? gender === "FRAUEN"
+        ? "Frauen, Unisex"
+        : gender === "MÄNNER"
+          ? "Männer, Unisex"
+          : "Unisex"
+      : isMaennerHoodie
+        ? "Männer"
+        : isUnisexHoodie
+          ? "Herren, Unisex"
+          : isKinderHoodie
+            ? "Kinder, Unisex"
+            : isMaennerTshirt
+              ? "Männer"
+              : isUnisexTshirt
+                ? "Herren, Unisex"
+                : isKinderTshirt
+                  ? "Kinder, Unisex"
+                  : isMaennerPolo
+                    ? "Männer"
+                    : isUnisexPolo
+                      ? "Herren, Unisex"
+                      : isKinderPolo
+                        ? "Kinder, Unisex"
+                        : isKinderSweatshirt
+                          ? "Kinder, Unisex"
+                          : isMaennerShirt
+                            ? "Männer"
+                            : isColumbiaSweatshirt
+                              ? gender === "UNISEX"
+                                ? "Unisex"
+                                : `${gender[0]}${gender.slice(1).toLowerCase()}, Unisex`
+                              : "Frauen"
+  const productWeight = isKinderCap
+    ? "350 g/m²"
+    : isFrauenCap
+      ? "180 g/m²"
+      : isColumbiaSweatshirt || isKinderSweatshirt
+        ? "280 g/m²"
+        : isUnisexHoodie
+          ? "280 g/m²"
+          : isKinderHoodie
+            ? "280 g/m²"
+            : isFrauenPolo || isMaennerPolo
+              ? "170 g/m²"
+              : isUnisexPolo
+                ? "130 g/m²"
+                : isKinderPolo
+                  ? "170 g/m²"
+                  : isFrauenTshirt || isMaennerTshirt || isUnisexTshirt
+                    ? "175 g/m²"
+                    : isKinderTshirt
+                      ? "190 g/m²"
+                      : isFrauenShirt || isMaennerShirt
+                        ? "140 g/m²"
+                        : "280 g/m²"
+  const productFit = isAnyCap
+    ? "Klettverschluss"
+    : isFrauenTshirt || isMaennerTshirt
+      ? "Slim"
+      : isUnisexTshirt
+        ? "Medium Fit"
+        : isKinderTshirt
+          ? "Regular"
+          : isFrauenPolo ||
+              isMaennerPolo ||
+              isUnisexPolo ||
+              isKinderPolo ||
+              isKinderSweatshirt ||
+              isColumbiaSweatshirt
+            ? "Regular"
+            : isUnisexHoodie
+              ? "Regular"
+              : isKinderHoodie
+                ? "Regular"
+                : isFrauenShirt
+                  ? "Slim"
+                  : isMaennerShirt
+                    ? "Slim"
+                    : "Slim"
+  const renderReviewPrint = (design: ReturnType<typeof emptySideDesign>, side: "front" | "back") => {
+    const previewPosition = (value: number | undefined) => (value || 0) * reviewPositionScale[side]
+    return (
+    <div className={`designer-review-print is-${product.zone}`}>
+      {design.uploadedImage && (
+        <img
+          src={design.uploadedImage}
+          alt="Dein Design"
+          style={{
+            transform: `translate(calc(-50% + ${previewPosition(design.objectX)}px), calc(-50% + ${previewPosition(design.objectY)}px)) scale(${design.objectScale}) rotate(${design.objectRotation}deg)`,
+            filter: `brightness(${design.brightness}%) contrast(${design.contrast}%)`,
+          }}
+        />
+      )}
+      {design.text.trim() && (
+        <span
+          style={{
+            transform: `translate(calc(-50% + ${previewPosition(design.textX)}px), calc(-50% + ${previewPosition(design.textY)}px)) scale(${design.textScale || 1}) rotate(${design.textRotation || 0}deg)`,
+            color: design.textColor || "#ffffff",
+            fontFamily: design.font || "Oswald",
+          }}
+        >
+          {design.text}
+        </span>
+      )}
+      {design.text2.trim() && (
+        <span
+          style={{
+            transform: `translate(calc(-50% + ${previewPosition(design.text2X)}px), calc(-50% + ${previewPosition(design.text2Y)}px)) scale(${design.text2Scale || 1}) rotate(${design.text2Rotation || 0}deg)`,
+            color: design.text2Color || "#ffffff",
+            fontFamily: design.text2Font || "Oswald",
+          }}
+        >
+          {design.text2}
+        </span>
+      )}
+    </div>
+    )
+  }
+  const removeImageFromLibrary = (imageIndex: number) => {
+    const imageId = imageLibraryIds[imageIndex]
+    const imageUrl = imageLibrary[imageIndex]
+    setImageLibrary((items) => {
+      const next = items.filter((_, index) => index !== imageIndex)
+      const nextIndex = Math.max(0, next.length - 1)
+      const nextImage = next[nextIndex] || ""
+      setActiveImageIndex(nextIndex)
+      setUploadedImage(nextImage)
+      if (!nextImage && (text.trim() || text2.trim())) {
+        setObject("text")
+        setPanel("text")
+      }
+      return next
+    })
+    setImageLibraryIds((items) => items.filter((_, index) => index !== imageIndex))
+    for (const side of ["front", "back"] as const) {
+      if (sideDesigns.current[side].uploadedImage === imageUrl) {
+        sideDesigns.current[side] = { ...sideDesigns.current[side], uploadedImage: "" }
+      }
+    }
+    if (imageUrl) URL.revokeObjectURL(imageUrl)
+    if (imageId) void deleteDesignerImage(imageId)
+    setUploadError("")
+  }
+  const removeSelectedObject = () => {
+    if (object === "image") {
+      const imageIndex =
+        imageLibrary[activeImageIndex] === uploadedImage
+          ? activeImageIndex
+          : imageLibrary.indexOf(uploadedImage)
+      removeImageFromLibrary(imageIndex)
+      return
+    }
+    if (activeSlot === "text2") setText2("")
+    else setText("")
+    if (uploadedImage) {
+      setObject("image")
+      setPanel("design")
+    } else if (activeSlot === "text2" ? text.trim() : text2.trim()) {
+      setActiveSlot(activeSlot === "text2" ? "text1" : "text2")
+    }
+  }
+  const imageHandleScale = Math.min(objectScale, 1.12)
+  const activeText = activeSlot === "text2" ? text2 : text
+  const activeTextColor = activeSlot === "text2" ? text2Color : textColor
+  const activeTextFont = activeSlot === "text2" ? text2Font : font
+  const activeTextScale = activeSlot === "text2" ? text2Scale : textScale
+  const activeTextRotation = activeSlot === "text2" ? text2Rotation : textRotation
+  const activeTextX = activeSlot === "text2" ? text2X : textX
+  const activeTextY = activeSlot === "text2" ? text2Y : textY
+  const textHandleScale = Math.min(activeTextScale, 1.12)
+  const activeObjectX = object === "image" ? objectX : activeTextX
+  const activeObjectY = object === "image" ? objectY : activeTextY
+  const [hoveredFont, setHoveredFont] = useState<string | null>(null)
+  const previewFont = hoveredFont || activeTextFont
+  useEffect(() => {
+    if (!reviewOpen) return
+    const measure = () => {
+      const front = document.querySelector<HTMLElement>('[data-review-side="front"]')
+      const back = document.querySelector<HTMLElement>('[data-review-side="back"]')
+      setReviewPositionScale({
+        front: front ? front.clientWidth / 540 : 390 / 540,
+        back: back ? back.clientWidth / 540 : 390 / 540,
+      })
+    }
+    measure()
+    const observer = new ResizeObserver(measure)
+    document.querySelectorAll<HTMLElement>("[data-review-side]").forEach((node) => observer.observe(node))
+    window.addEventListener("resize", measure)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener("resize", measure)
+    }
+  }, [reviewOpen])
+  const applyTextColor = (value: string) => {
+    if (!/^#[0-9A-Fa-f]{6}$/.test(value)) return
+    if (activeSlot === "text2") setText2Color(value)
+    else setTextColor(value)
+  }
+  const pickTextColor = async () => {
+    const EyeDropper = (window as any).EyeDropper
+    if (!EyeDropper) return
+    try {
+      const result = await new EyeDropper().open()
+      applyTextColor(result.sRGBHex)
+    } catch {
+      // The native picker can be cancelled without changing the selected color.
+    }
+  }
+  const resetObjectSetting = (setting: "scale" | "rotation" | "brightness" | "contrast" | "font") => {
+    if (setting === "brightness") return setBrightness(100)
+    if (setting === "contrast") return setContrast(100)
+    if (setting === "font") return activeSlot === "text2" ? setText2Font("Oswald") : setFont("Oswald")
+    if (object === "image") {
+      if (setting === "scale") setObjectScale(1)
+      else setObjectRotation(0)
+      return
+    }
+    if (activeSlot === "text2") {
+      if (setting === "scale") setText2Scale(1)
+      else setText2Rotation(0)
+    } else if (setting === "scale") setTextScale(1)
+    else setTextRotation(0)
+  }
+  const centerActiveObject = (axis: "horizontal" | "vertical") => {
+    if (object === "image") {
+      if (axis === "horizontal") setObjectX(0)
+      else setObjectY(0)
+      return
+    }
+    if (activeSlot === "text2") {
+      if (axis === "horizontal") setText2X(0)
+      else setText2Y(0)
+    } else if (axis === "horizontal") setTextX(0)
+    else setTextY(0)
+  }
+  const renderObjectSettings = () => {
+    if (!hasObject) return null
+    const isTextMode = panel === "text"
+    return (
+      <section className="designer-object-settings">
+        <p>OBJEKT</p>
+        <div className="designer-segmented designer-object-mode">
+          <button type="button" className="is-active" disabled>
+            {isTextMode ? "TEXT" : "BILD"}
+          </button>
+        </div>
+        <div className="designer-object-controls">
+          {isTextMode && (
+            <div className="designer-object-font" ref={fontPickerRef}>
+              <span>SCHRIFT</span>
+              <button type="button" className={`designer-product-button ${fontPickerOpen ? "is-open" : ""}`} onClick={() => setFontPickerOpen((open) => !open)}>
+                <span style={{ fontFamily: previewFont }}>{previewFont}</span><b>⌄</b>
+              </button>
+              <button type="button" className="designer-control-reset" onClick={() => resetObjectSetting("font")} aria-label="Schrift zurücksetzen">↺</button>
+              {fontPickerOpen && <div className="designer-product-picker designer-font-list" onMouseLeave={() => setHoveredFont(null)}>{TEXT_FONTS.map((item) => <button type="button" onMouseEnter={() => setHoveredFont(item)} onFocus={() => setHoveredFont(item)} onClick={() => { if (activeSlot === "text2") setText2Font(item); else setFont(item); setHoveredFont(null); setFontPickerOpen(false) }} className={activeTextFont === item || hoveredFont === item ? "is-active" : ""} style={{ fontFamily: item }} key={item}>{item}</button>)}</div>}
+            </div>
+          )}
+          <div className="designer-object-control-row">
+            <label>SKALIERUNG<input type="range" min=".3" max="2" step=".05" value={object === "text" ? activeTextScale : objectScale} onChange={(event) => { const value = Number(event.target.value); if (object === "text" && activeSlot === "text2") setText2Scale(value); else if (object === "text") setTextScale(value); else setObjectScale(value) }} /></label>
+            <button type="button" className="designer-control-reset" onClick={() => resetObjectSetting("scale")} aria-label="Skalierung zurücksetzen">↺</button>
+          </div>
+          <div className="designer-object-control-row">
+            <label>DREHUNG<input type="range" min="-180" max="180" value={object === "text" ? activeTextRotation : objectRotation} onChange={(event) => { const value = Number(event.target.value); if (object === "text" && activeSlot === "text2") setText2Rotation(value); else if (object === "text") setTextRotation(value); else setObjectRotation(value) }} /></label>
+            <button type="button" className="designer-control-reset" onClick={() => resetObjectSetting("rotation")} aria-label="Drehung zurücksetzen">↺</button>
+          </div>
+          {!isTextMode && (
+            <>
+              <div className="designer-object-control-row"><label>HELLIGKEIT<input type="range" min="40" max="170" value={brightness} onChange={(event) => setBrightness(Number(event.target.value))} /></label><button type="button" className="designer-control-reset" onClick={() => resetObjectSetting("brightness")} aria-label="Helligkeit zurücksetzen">↺</button></div>
+              <div className="designer-object-control-row"><label>KONTRAST<input type="range" min="40" max="170" value={contrast} onChange={(event) => setContrast(Number(event.target.value))} /></label><button type="button" className="designer-control-reset" onClick={() => resetObjectSetting("contrast")} aria-label="Kontrast zurücksetzen">↺</button></div>
+            </>
+          )}
+          <div className="designer-center-controls">
+            <span>ZENTRIEREN</span>
+            <button type="button" onClick={() => centerActiveObject("horizontal")} aria-label="Horizontal zentrieren">↔</button>
+            <button type="button" onClick={() => centerActiveObject("vertical")} aria-label="Vertikal zentrieren">↕</button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+  return (
+    <div className="designer-studio">
+      <aside className="designer-tools">
+        <a href="/designer" className="designer-brand">
+          <img src={imgTowerLogo} alt="Pottlerkinder" />
+          <img src={imgWordmarkLogo} alt="Pottlerkinder" />
+        </a>
+        <div className="designer-tool-tabs">
+          <button
+            type="button"
+            className={panel === "design" ? "is-active" : ""}
+            onClick={() => {
+              setPanel("design")
+              setObject("image")
+            }}
+          >
+            ▣ <span>DESIGN</span>
+          </button>
+          <button
+            type="button"
+            className={panel === "text" ? "is-active" : ""}
+            onClick={() => {
+              setPanel("text")
+              setObject("text")
+            }}
+          >
+            T <span>TEXT</span>
+          </button>
+        </div>
+        <div className="designer-tool-content">
+          {panel === "design" ? (
+            <>
+              <label className="designer-upload">
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg"
+                  onChange={(event) => upload(event.target.files?.[0])}
+                />
+                <b>BILD HOCHLADEN</b>
+                <span>PNG ODER JPEG · MAX. 5 MB</span>
+                <span>1 BILD PRO DRUCKSEITE · BIS ZU 3 BILDER IN DER BIBLIOTHEK</span>
+              </label>
+              {uploadError && <p className="designer-error">{uploadError}</p>}
+              {imageLibrary.map((image, index) => (
+                <div className="designer-image-library-item" key={image}>
+                  <button type="button" className={`designer-object-select ${activeImageIndex === index ? "is-active" : ""}`} onClick={() => { setActiveImageIndex(index); setUploadedImage(image); setObject("image") }}>
+                    <img className="designer-library-thumbnail" src={image} alt="" />
+                    <span>BILD {index + 1}</span>
+                    <b>✓</b>
+                  </button>
+                  {activeImageIndex === index && (
+                    <button type="button" className="designer-library-delete" onClick={() => removeImageFromLibrary(index)} aria-label={`Bild ${index + 1} löschen`}>
+                      <FaTrash aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
+              ))}
+              {renderObjectSettings()}
+            </>
+          ) : (
+            <div className="designer-text-settings">
+              <section>
+                <p>DEIN TEXT</p>
+                <textarea
+                  maxLength={70}
+                  placeholder={!isTextInputFocused && !activeText.trim() ? "BIS ZU 2 TEXTFELDER HINZUFÜGEN …" : ""}
+                  onFocus={() => setIsTextInputFocused(true)}
+                  onBlur={() => setIsTextInputFocused(false)}
+                  value={activeSlot === "text2" ? text2 : text}
+                  onChange={(event) => {
+                    if (activeSlot === "text2") {
+                      if (!text2.trim() && event.target.value.trim()) {
+                        setText2Scale(1)
+                        setText2Rotation(0)
+                        setText2X(0)
+                        setText2Y(0)
+                      }
+                      setText2(event.target.value)
+                    } else {
+                      if (!text.trim() && event.target.value.trim()) {
+                        setTextScale(1)
+                        setTextRotation(0)
+                        setTextX(0)
+                        setTextY(0)
+                      }
+                      setText(event.target.value)
+                    }
+                    setObject("text")
+                  }}
+                />
+                <div className="designer-object-slots">
+                  <button type="button" className={activeSlot === "text1" ? "is-active" : ""} onClick={() => { setActiveSlot("text1"); setObject("text") }}>TEXT 1</button>
+                  <button type="button" className={activeSlot === "text2" ? "is-active" : ""} onClick={() => { setActiveSlot("text2"); setObject("text") }}>TEXT 2</button>
+                </div>
+              </section>
+              {renderObjectSettings()}
+              <section className="designer-text-colors" ref={colorPaletteRef}>
+                <div className="designer-color-label-row">
+                  <p>FARBE</p>
+                  <button
+                    type="button"
+                    className="designer-active-color-swatch"
+                    style={{ backgroundColor: activeTextColor }}
+                    aria-label="Farbpalette öffnen"
+                    aria-expanded={colorPaletteOpen}
+                    onClick={() => setColorPaletteOpen((open) => !open)}
+                  />
+                </div>
+                {colorPaletteOpen && (
+                  <div className="designer-text-palette" aria-label="Textfarbe auswählen">
+                  {TEXT_COLOR_SWATCHES.map((color) => (
+                    <button
+                      type="button"
+                      key={color}
+                      title={color}
+                      aria-label={`Textfarbe ${color}`}
+                      className={activeTextColor.toLowerCase() === color.toLowerCase() ? "is-active" : ""}
+                      style={{ backgroundColor: color }}
+                      onClick={() => {
+                        applyTextColor(color)
+                        setColorPaletteOpen(false)
+                      }}
+                    />
+                  ))}
+                  </div>
+                )}
+              </section>
+              <section>
+                <p>TEXTFARBE</p>
+                <div className="designer-color-picker">
+                  <div className="designer-color-codebar">
+                    <button type="button" className="designer-eyedropper" style={{ color: activeTextColor }} onClick={pickTextColor} aria-label="Farbe mit Pipette auswählen"><FaEyeDropper aria-hidden="true" /></button>
+                    <output
+                      aria-label="Ausgewählter Farbcode"
+                      style={{ color: activeTextColor }}
+                    >
+                      {activeTextColor.toUpperCase()}
+                    </output>
+                  </div>
+                  <HexColorPicker color={activeTextColor} onChange={applyTextColor} />
+                </div>
+              </section>
+            </div>
+          )}
+        </div>
+        <div className="designer-tool-bottom">
+          <div
+            className="designer-history-controls"
+            aria-label="Bearbeitungshistorie"
+          >
+            <button
+              type="button"
+              onClick={undo}
+              disabled={historyIndexRef.current <= 0}
+            >
+              ↶ RÜCKGÄNGIG
+            </button>
+            <button
+              type="button"
+              onClick={redo}
+              disabled={
+                historyIndexRef.current >= historyRef.current.length - 1
+              }
+            >
+              ↷ WIEDERHOLEN
+            </button>
+          </div>
+          <button
+            type="button"
+            className="btn-red designer-reset-button"
+            onClick={reset}
+          >
+            <FaTrash aria-hidden="true" />
+            <span>ZURÜCKSETZEN</span>
+          </button>
+        </div>
+      </aside>
+      <main className="designer-workspace">
+        <div className="designer-workspace-head">
+          <span>DESIGN-STUDIO</span>
+          <p>{productName.toUpperCase()} · PERSONALISIEREN</p>
+        </div>
+        <div
+          className="designer-stage"
+          onWheel={onWheel}
+          onPointerDown={(event) => onPointerDown(event, "canvas")}
+          onPointerMove={onPointerMove}
+          onPointerUp={stopDragging}
+          onPointerCancel={stopDragging}
+          onLostPointerCapture={stopDragging}
+        >
+          <div className="designer-stage-grid" />
+          <div
+            className="designer-product-canvas"
+            style={{
+              transform: `translate(-50%, -50%) translate(${canvasX}px, ${canvasY}px) scale(${canvasScale})`,
+            }}
+          >
+            <img
+              className={`designer-mockup ${
+                isShopper && printSide === "back" ? "is-shopper-back" : ""
+              }`}
+              src={productImage}
+              alt={`Vorschau ${productName}`}
+              draggable="false"
+            />
+            <div
+              className={`designer-print-zone is-${product.zone} ${
+                isAnyCap && printSide === "back" ? "is-preview-only" : ""
+              }`}
+            >
+              <div className="designer-print-artwork">
+                {uploadedImage && (
+                  <div
+                    className={`designer-object-layer designer-image-layer ${
+                      object === "image" ? "is-selected" : ""
+                    }`}
+                    onPointerDown={(event) => {
+                      event.stopPropagation()
+                      setObject("image")
+                      setPanel("design")
+                      onPointerDown(event, "image")
+                    }}
+                    style={{
+                      transform: `translate(calc(-50% + ${objectX}px), calc(-50% + ${objectY}px)) scale(${objectScale}) rotate(${objectRotation}deg)`,
+                    }}
+                  >
+                    <img
+                      className="designer-object-image"
+                      src={uploadedImage}
+                      alt="Dein hochgeladenes Design"
+                      draggable="false"
+                      onDragStart={(event) => event.preventDefault()}
+                      style={{
+                        filter: `brightness(${brightness}%) contrast(${contrast}%)`,
+                      }}
+                    />
+                  </div>
+                )}
+                {(!isAnyCap || printSide === "front") && text.trim() && (
+                  <div
+                    className={`designer-object-layer designer-text-layer ${
+                      object === "text" && activeSlot === "text1" ? "is-selected" : ""
+                    }`}
+                    onPointerDown={(event) => {
+                      event.stopPropagation()
+                      setObject("text")
+                      setActiveSlot("text1")
+                      setPanel("text")
+                      onPointerDown(event, "text", "text1")
+                    }}
+                    style={{
+                      transform: `translate(calc(-50% + ${textX}px), calc(-50% + ${textY}px)) scale(${textScale}) rotate(${textRotation}deg)`,
+                    }}
+                  >
+                    <div
+                      className="designer-object-text"
+                      style={{ color: textColor, fontFamily: font }}
+                  >
+                    {text}
+                  </div>
+                </div>
+              )}
+                {(!isAnyCap || printSide === "front") && text2.trim() && (
+                  <div
+                    className={`designer-object-layer designer-text-layer ${
+                      object === "text" && activeSlot === "text2" ? "is-selected" : ""
+                    }`}
+                    onPointerDown={(event) => {
+                      event.stopPropagation()
+                      setObject("text")
+                      setActiveSlot("text2")
+                      setPanel("text")
+                      onPointerDown(event, "text", "text2")
+                    }}
+                    style={{
+                      transform: `translate(calc(-50% + ${text2X}px), calc(-50% + ${text2Y}px)) scale(${text2Scale}) rotate(${text2Rotation}deg)`,
+                    }}
+                  >
+                    <div
+                      className="designer-object-text"
+                      style={{ color: text2Color, fontFamily: text2Font }}
+                    >
+                      {text2}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {isObjectHandleDragging && (
+                <div className={`designer-alignment-guides ${Math.abs(activeObjectX) < 18 ? "is-near-vertical" : ""} ${Math.abs(activeObjectY) < 18 ? "is-near-horizontal" : ""}`} aria-hidden="true">
+                  <i className="is-horizontal" />
+                  <i className="is-vertical" />
+                </div>
+              )}
+              {object === "image" &&
+                uploadedImage &&
+                !isObjectHandleDragging && (
+                  <div
+                    className="designer-object-handle-layer designer-image-handle-layer"
+                    style={{
+                      transform: `translate(calc(-50% + ${objectX}px), calc(-50% + ${objectY}px)) scale(${imageHandleScale}) rotate(${objectRotation}deg)`,
+                    }}
+                  >
+                    <div className="designer-object-handles">
+                      <button
+                        type="button"
+                        className="designer-move-handle"
+                        aria-label="Bild verschieben"
+                        style={{ transform: `scale(${1 / imageHandleScale})` }}
+                        onPointerDown={(event) => {
+                          event.stopPropagation()
+                          onPointerDown(event, "move")
+                        }}
+                      >
+                        <FaArrowsAlt aria-hidden="true" />
+                      </button>
+                      <button
+                        type="button"
+                        className="designer-rotate-handle"
+                        aria-label="Bild drehen"
+                        style={{ transform: `scale(${1 / imageHandleScale})` }}
+                        onPointerDown={(event) => {
+                          event.stopPropagation()
+                          onPointerDown(event, "rotate")
+                        }}
+                      >
+                        ↻
+                      </button>
+                      <button
+                        type="button"
+                        className="designer-delete-handle"
+                        aria-label="Bild löschen"
+                        style={{ transform: `scale(${1 / imageHandleScale})` }}
+                        onPointerDown={(event) => event.stopPropagation()}
+                        onClick={removeSelectedObject}
+                      >
+                        <FaTrash aria-hidden="true" />
+                      </button>
+                      <button
+                        type="button"
+                        className="designer-resize-handle"
+                        aria-label="Bild skalieren"
+                        style={{ transform: `scale(${1 / imageHandleScale})` }}
+                        onPointerDown={(event) => {
+                          event.stopPropagation()
+                          onPointerDown(event, "resize")
+                        }}
+                      >
+                        <FaExpandArrowsAlt aria-hidden="true" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              {object === "text" && activeText.trim() && !isObjectHandleDragging && (
+                <div
+                  className="designer-object-handle-layer designer-text-handle-layer"
+                  style={{
+                    transform: `translate(calc(-50% + ${activeTextX}px), calc(-50% + ${activeTextY}px)) scale(${textHandleScale}) rotate(${activeTextRotation}deg)`,
+                  }}
+                >
+                  <span
+                    className="designer-handle-text-measure"
+                    style={{ fontFamily: activeTextFont }}
+                  >
+                    {activeText}
+                  </span>
+                  <div className="designer-object-handles">
+                    <button
+                      type="button"
+                      className="designer-move-handle"
+                      aria-label="Text verschieben"
+                      style={{ transform: `scale(${1 / textHandleScale})` }}
+                      onPointerDown={(event) => {
+                        event.stopPropagation()
+                          onPointerDown(event, "move", activeSlot === "text2" ? "text2" : "text1")
+                      }}
+                    >
+                      <FaArrowsAlt aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      className="designer-rotate-handle"
+                      aria-label="Text drehen"
+                      style={{ transform: `scale(${1 / textHandleScale})` }}
+                      onPointerDown={(event) => {
+                        event.stopPropagation()
+                          onPointerDown(event, "rotate", activeSlot === "text2" ? "text2" : "text1")
+                      }}
+                    >
+                      ↻
+                    </button>
+                    <button
+                      type="button"
+                      className="designer-delete-handle"
+                      aria-label="Text löschen"
+                      style={{ transform: `scale(${1 / textHandleScale})` }}
+                      onPointerDown={(event) => event.stopPropagation()}
+                      onClick={removeSelectedObject}
+                    >
+                      <FaTrash aria-hidden="true" />
+                    </button>
+                    <button
+                      type="button"
+                      className="designer-resize-handle"
+                      aria-label="Text skalieren"
+                      style={{ transform: `scale(${1 / textHandleScale})` }}
+                      onPointerDown={(event) => {
+                        event.stopPropagation()
+                          onPointerDown(event, "resize", activeSlot === "text2" ? "text2" : "text1")
+                      }}
+                    >
+                      <FaExpandArrowsAlt aria-hidden="true" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div
+            className="designer-zoom"
+            onPointerDown={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() =>
+                setCanvasScale((value) => Math.max(0.65, value - 0.1))
+              }
+            >
+              −
+            </button>
+            <span>{Math.round((canvasScale / 1.4) * 100)}%</span>
+            <button
+              type="button"
+              onClick={() =>
+                setCanvasScale((value) => Math.min(2.52, value + 0.1))
+              }
+            >
+              +
+            </button>
+          </div>
+          <div className="designer-stage-actions">
+            <div className="designer-stage-links">
+              <button
+                type="button"
+                className="designer-help-button"
+                onClick={() => setHelpStep(0)}
+              >
+                <b>?</b> HILFE ZUM KONSTRUKTEUR
+              </button>
+              <button type="button" className="designer-forbidden-button">
+                <b>!</b> VERBOTENE THEMEN
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+      <aside className="designer-options">
+        <div className="designer-options-scroll">
+          <section>
+            <p>GENDER</p>
+            <div className="designer-gender-choice">
+              {["FRAUEN", "MÄNNER", "KINDER", "UNISEX"].map((item) => (
+                <button
+                  type="button"
+                  className={gender === item ? "is-active" : ""}
+                  onClick={() => chooseGender(item)}
+                  key={item}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </section>
+          <section>
+            <p>ANDERES</p>
+            <div className="designer-gender-choice designer-other-choice">
+              {OTHER_DESIGNER_PRODUCTS.map((item) => (
+                <button
+                  type="button"
+                  className={item.id === product.id ? "is-active" : ""}
+                  onClick={() => chooseProduct(item)}
+                  key={item.id}
+                >
+                  {item.title}
+                </button>
+              ))}
+            </div>
+          </section>
+          <section ref={productPickerRef}>
+            <p>PRODUKT</p>
+            <button
+              type="button"
+              className={`designer-product-button ${
+                productPickerOpen ? "is-open" : ""
+              }`}
+              onClick={() => {
+                setProductPickerOpen((open) => !open)
+                setModelPickerOpen(false)
+              }}
+            >
+              <span>{productName}</span>
+              <b>⌄</b>
+            </button>
+            {productPickerOpen && (
+              <div className="designer-product-picker">
+                {productPickerProducts.map((item) => (
+                  <button
+                    type="button"
+                    onClick={() => chooseProduct(item)}
+                    className={item.id === product.id ? "is-active" : ""}
+                    key={item.id}
+                  >
+                    {item.id === "mug" ? "BIERKRUG" : item.title}
+                  </button>
+                ))}
+              </div>
+            )}
+          </section>
+          <section ref={modelPickerRef}>
+            <p>MODELL</p>
+            <button
+              type="button"
+              className={`designer-product-button ${
+                modelPickerOpen ? "is-open" : ""
+              }`}
+              onClick={() => {
+                setModelPickerOpen((open) => !open)
+                setProductPickerOpen(false)
+              }}
+            >
+              <span>{model}</span>
+              <b>⌄</b>
+            </button>
+            {modelPickerOpen && (
+              <div className="designer-product-picker designer-model-picker">
+                <button
+                  type="button"
+                  className="is-active"
+                  onClick={() => {
+                    setModel("STANDARD")
+                    setModelPickerOpen(false)
+                    reset()
+                  }}
+                >
+                  STANDARD
+                </button>
+              </div>
+            )}
+          </section>
+          {(isConfiguredTextile || isAnyCap || isShopper) && (
+            <section>
+              <p>FARBE</p>
+              <div className="designer-model-colors">
+                {(Array.isArray(configuredColors) ? configuredColors : []).map(
+                  (item) => (
+                    <button
+                      type="button"
+                      title={item.label}
+                      aria-label={item.label}
+                      className={
+                        selectedConfiguredColor.id === item.id
+                          ? "is-active"
+                          : ""
+                      }
+                      style={{ background: item.swatch }}
+                      onClick={() => chooseConfiguredColor(item.id)}
+                      key={item.id}
+                    />
+                  ),
+                )}
+              </div>
+              <small className="designer-color-name">
+                {selectedConfiguredColor.label}
+              </small>
+            </section>
+          )}
+          <section>
+            <p>ÜBER DAS PRODUKT</p>
+            <button
+              type="button"
+              className="designer-info-button"
+              onClick={() => {
+                setProductInfoTab("details")
+                setProductInfoOpen(true)
+              }}
+            >
+              PRODUKTDETAILS <b>→</b>
+            </button>
+          </section>
+          {(product.type === "textile" || isAnyCap || isShopper) && (
+            <section>
+              <p>DRUCKSEITE</p>
+              <div className="designer-side-choice">
+                <button
+                  type="button"
+                  className={printSide === "front" ? "is-active" : ""}
+                  onClick={() => choosePrintSide("front")}
+                >
+                  VORDERSEITE
+                </button>
+                <button
+                  type="button"
+                  className={printSide === "back" ? "is-active" : ""}
+                  onClick={() => choosePrintSide("back")}
+                  disabled={!isConfiguredTextile && !isAnyCap && !isShopper}
+                >
+                  {isAnyCap ? "RÜCKSEITE" : "RÜCKSEITE +9,99 €"}
+                </button>
+              </div>
+              {isAnyCap ? (
+                <small>NUR VORDERSEITE IST BEDRUCKBAR.</small>
+              ) : isConfiguredTextile || isShopper ? (
+                <small>AUFPREIS NUR BEI GESTALTETER RÜCKSEITE.</small>
+              ) : null}
+            </section>
+          )}
+          <section>
+            <p>GRÖSSE</p>
+            <div className="designer-sizes">
+              {(Array.isArray(sizes) ? sizes : []).map((item) => (
+                <button
+                  type="button"
+                  className={size === item ? "is-active" : ""}
+                  onClick={() => setSize(item)}
+                  key={item}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </section>
+        </div>
+        <footer>
+          <div>
+            <span>DEIN PREIS</span>
+            <strong>{designPriceLabel}</strong>
+          </div>
+          <button
+            type="button"
+            className="btn-red"
+            onClick={() => setReviewOpen(true)}
+            disabled={!hasAnyDesign}
+          >
+            VORSCHAU PRÜFEN <b>→</b>
+          </button>
+        </footer>
+      </aside>
+      {productInfoOpen && (
+        <div
+          className="designer-info-layer"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Produktinformationen"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setProductInfoOpen(false)
+          }}
+        >
+          <div className="designer-info-modal">
+            <button
+              type="button"
+              className="designer-info-close"
+              onClick={() => setProductInfoOpen(false)}
+              aria-label="Fenster schließen"
+            >
+              ×
+            </button>
+            <div className="designer-info-tabs">
+              <button
+                type="button"
+                className={productInfoTab === "details" ? "is-active" : ""}
+                onClick={() => setProductInfoTab("details")}
+              >
+                ÜBER DAS PRODUKT
+              </button>
+              <button
+                type="button"
+                className={productInfoTab === "size" ? "is-active" : ""}
+                onClick={() => setProductInfoTab("size")}
+              >
+                GRÖSSENTABELLE
+              </button>
+            </div>
+            {productInfoTab === "details" ? (
+              <div className="designer-info-content">
+                <div>
+                  {isMug ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        STAMINA · BIERKRUG WEISS · 20 OZ
+                      </p>
+                      <h2>STAMINA BIERKRUG WEISS, 20 OZ</h2>
+                      <p>
+                        Ob für den zünftigen Bierabend, als individuelles
+                        Geschenk oder als Highlight in der eigenen
+                        Trophäensammlung – unser hochwertiger Keramik-Bierkrug
+                        mit einem Fassungsvermögen von 20 oz (ca. 700 ml) ist
+                        der perfekte Begleiter für echte Bierliebhaber. Dank der
+                        speziellen Beschichtung ist dieser Krug optimal für die
+                        Sublimation geeignet. Gestalte ihn mit deinem eigenen
+                        Design, Logo oder Spruch – für ein garantiert
+                        einzigartiges Ergebnis! Die glänzend weiße Oberfläche
+                        sorgt für brillante, farbintensive Druckergebnisse, die
+                        beeindrucken.
+                      </p>
+                      <h3>PRODUKTDETAILS</h3>
+                      <ul>
+                        <li>Fassungsvermögen: 20 oz (ca. 700 ml)</li>
+                        <li>Material: robuste, langlebige Keramik</li>
+                        <li>Farbe: Weiß mit Sublimationsbeschichtung</li>
+                        <li>
+                          Spülmaschinengeeignet (Handwäsche empfohlen für
+                          langlebigere Farben)
+                        </li>
+                        <li>
+                          Ideal für personalisierte Geschenke, Vereine, Events
+                          oder Fans
+                        </li>
+                        <li>1 Karton = 20 Stück</li>
+                      </ul>
+                      <p>
+                        Verwandle jeden Schluck in ein Statement – mit deinem
+                        personalisierten Keramik-Bierkrug!
+                      </p>
+                    </>
+                  ) : isShopper ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S STOCKHOLM · 04091
+                      </p>
+                      <h2>SOL'S STOCKHOLM – 04091</h2>
+                      <p>
+                        Die SOL'S Stockholm ist eine klassische Tragetasche aus
+                        100 % Bio-Baumwolle mit einem Gewicht von 140 g/m².
+                        Leicht, aber stabil genug für den täglichen Gebrauch.
+                        Mit langen Henkeln (70 cm) lässt sie sich bequem über
+                        der Schulter tragen, ob beim Einkaufen, als
+                        Merchandise-Artikel oder bei Events. Das herausnehmbare
+                        Etikett macht sie ideal für neutrale Weiterverarbeitung.
+                        Die glatte Baumwollfläche bietet eine perfekte Grundlage
+                        für Druck oder kreative Veredelung, und das mit gutem
+                        Gewissen.
+                      </p>
+                      <p>
+                        Pflegehinweis: Nicht waschen – mit einem Schwamm feucht
+                        abwischen.
+                      </p>
+                    </>
+                  ) : isKinderCap ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        DAIBER 5 PANEL KINDER CAP · MB7010
+                      </p>
+                      <h2>KINDER CAP</h2>
+                      <p>
+                        Die Daiber 5 Panel Kinder Cap ist für Kinder ab vier
+                        Jahren mit einem Kopfumfang von 54 cm ausgelegt. Der
+                        Klettverschluss ermöglicht eine einfache Anpassung.
+                      </p>
+                      <p>
+                        Schwere, gebürstete Baumwolle sowie ein gefüttertes
+                        Satinschweißband bieten Stabilität und angenehmen
+                        Tragekomfort für Alltag, Schule und Verein.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % schwere, gebürstete Baumwolle</li>
+                        <li>350 g/m² · 5-Panel-Form · niedriges Profil</li>
+                        <li>4 gestickte Luftlöcher</li>
+                        <li>8 Ziernähte am Schild</li>
+                        <li>Verstellbarer Klettverschluss</li>
+                      </ul>
+                    </>
+                  ) : isFrauenCap ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S SUNNY · 88110
+                      </p>
+                      <h2>{productName.toUpperCase()}</h2>
+                      <p>
+                        Die SOL'S Sunny ist eine klassische 5-Panel-Cap für
+                        Alltag, Events und individuelle Veredelung.
+                      </p>
+                      <p>
+                        Der vorgeformte Schirm schützt vor Sonne, vier umstickte
+                        Luftösen unterstützen die Atmungsaktivität. Der
+                        Klettverschluss lässt sich schnell und komfortabel
+                        anpassen.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % leichte, gebürstete Baumwolle</li>
+                        <li>180 g/m²</li>
+                        <li>Vorgeformter Schirm</li>
+                        <li>4 umstickte Lüftungsösen</li>
+                        <li>Verstellbarer Klettverschluss</li>
+                      </ul>
+                    </>
+                  ) : isKinderHoodie ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S CONDOR KIDS · 04238
+                      </p>
+                      <h2>KINDER HOODIE</h2>
+                      <p>
+                        Der SOL'S Condor Kids ist ein neutraler Kapuzen-Sweater
+                        für Schule, Freizeit, Sportverein und kreative
+                        Gruppenprojekte. Der Nackenbereich ohne Markenlabel ist
+                        direkt für individuelle Gestaltung vorbereitet.
+                      </p>
+                      <p>
+                        Das innen angeraute Material sorgt für angenehmen
+                        Tragekomfort. Die gefütterte Kapuze kommt bewusst ohne
+                        Kordeln und ist damit altersgerecht gestaltet.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>
+                          80 % ringgesponnene Baumwolle, 20 % recycelter
+                          Polyester
+                        </li>
+                        <li>280 g/m² · innen angeraut</li>
+                        <li>Regular Fit · Set-In-Ärmel</li>
+                        <li>Gefütterte Kapuze ohne Kordeln</li>
+                        <li>
+                          No-Label-Nackenbereich mit neutralem Größenetikett
+                        </li>
+                      </ul>
+                    </>
+                  ) : isUnisexHoodie ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S CONDOR · 03815
+                      </p>
+                      <h2>UNISEX HOODIE</h2>
+                      <p>
+                        Der SOL'S Condor ist ein vielseitiger Unisex
+                        Kapuzen-Sweater für Teamwear, Freizeit und eigene
+                        Kollektionen. Der labelfreie Nackenbereich ist direkt
+                        für deine individuelle Gestaltung vorbereitet.
+                      </p>
+                      <p>
+                        Das angeraute Material, die gefütterte Kapuze mit
+                        Ton-in-Ton-Kordeln und elastische Rippstrickbündchen
+                        sorgen für Komfort und Formstabilität.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>
+                          80 % ringgesponnene Baumwolle, 20 % recycelter
+                          Polyester
+                        </li>
+                        <li>280 g/m² · innen angeraut</li>
+                        <li>Regular Fit · Set-In-Ärmel</li>
+                        <li>Gefütterte Kapuze mit Ton-in-Ton-Kordeln</li>
+                        <li>
+                          No-Label-Nackenbereich mit neutralem Größenetikett
+                        </li>
+                      </ul>
+                    </>
+                  ) : isMaennerHoodie ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        X.O BY PROMODORO MEN HOODY SWEATER · 1680
+                      </p>
+                      <h2>MÄNNER HOODIE</h2>
+                      <p>
+                        Der X.O by Promodoro Men Hoody Sweater ist ein schmal
+                        geschnittener Herren-Kapuzen-Sweater für einen klaren,
+                        modernen Look.
+                      </p>
+                      <p>
+                        Die angeraute Innenseite und die zweilagige Kapuze
+                        sorgen für angenehmen Tragekomfort und machen ihn zu
+                        einer zuverlässigen Grundlage für individuelle
+                        Veredelung.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>280 g/m² · innen angeraut</li>
+                        <li>Zweilagige Kapuze</li>
+                        <li>Schmal geschnittener Herren-Fit</li>
+                        <li>Ideal für Druck, Teamwear und Merchandise</li>
+                      </ul>
+                    </>
+                  ) : isKinderTshirt ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S IMPERIAL KIDS · 11770
+                      </p>
+                      <h2>KINDER T-SHIRT</h2>
+                      <p>
+                        Das SOL'S Imperial Kids ist ein strapazierfähiges
+                        Kinder-Basic aus halbgekämmter, ringgesponnener
+                        Baumwolle. Die robuste Jersey-Qualität eignet sich ideal
+                        für Druck, Stick und Transfertechniken.
+                      </p>
+                      <p>
+                        Der Rippstrickkragen mit Elasthan und das Nackenband
+                        sorgen für einen angenehmen, formstabilen Sitz. Bis
+                        Größe 06A ist das Shirt mit Seitennähten gefertigt, ab
+                        08A als Rundstrick ohne Seitennähte.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % halbgekämmte, ringgesponnene Baumwolle</li>
+                        <li>Robuster Jersey · 190 g/m²</li>
+                        <li>Regular Fit · Kurzarm · Set-In-Ärmel</li>
+                        <li>Rippstrickkragen mit Elasthan und Nackenband</li>
+                        <li>
+                          Ideal für Schulkleidung, Vereine und
+                          Kinder-Merchandise
+                        </li>
+                      </ul>
+                    </>
+                  ) : isUnisexTshirt ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S LEGEND · 03981
+                      </p>
+                      <h2>UNISEX T-SHIRT</h2>
+                      <p>
+                        Das SOL'S Legend ist ein hochwertiges Unisex T-Shirt aus
+                        gekämmter Bio-Baumwolle in Conversion. Die neutrale
+                        Verarbeitung macht es zur starken Grundlage für Druck,
+                        Stick und eigene Labels.
+                      </p>
+                      <p>
+                        Seitennähte, ein Rippstrick-Rundhalsausschnitt und ein
+                        durchgehendes Nackenband sorgen für einen klassischen,
+                        formstabilen Sitz im Alltag.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % gekämmte Bio-Baumwolle in Conversion</li>
+                        <li>Single Jersey · 175 g/m²</li>
+                        <li>Medium Fit · Kurzarm · Set-In-Ärmel</li>
+                        <li>Seitennähte für dauerhafte Formstabilität</li>
+                        <li>
+                          No-Label-Nackenbereich mit neutralem Größenetikett
+                        </li>
+                      </ul>
+                    </>
+                  ) : isMaennerTshirt ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S PIONEER MEN · 03565
+                      </p>
+                      <h2>MÄNNER T-SHIRT</h2>
+                      <p>
+                        Das SOL'S Pioneer Men ist ein schlichtes T-Shirt mit
+                        schlanker Passform und Rundhalsausschnitt.
+                      </p>
+                      <p>
+                        Es besteht aus 100 % Bio-Baumwolle. Die enzymgewaschene
+                        Oberfläche sorgt für eine glatte, angenehme Haptik und
+                        eine hochwertige Basis für deine Gestaltung.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % Bio-Baumwolle · 175 g/m²</li>
+                        <li>Slim Fit mit Rundhalsausschnitt</li>
+                        <li>Kurzarm · Set-In-Ärmel</li>
+                        <li>Enzymgewaschene Oberfläche</li>
+                      </ul>
+                    </>
+                  ) : isKinderPolo ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S SUMMER II KIDS · 11344
+                      </p>
+                      <h2>KINDER POLO</h2>
+                      <p>
+                        Das SOL'S Summer II Kids ist ein leichtes Kinder-Piqué-
+                        Polo aus 100 % gekämmter, ringgesponnener Baumwolle. Es
+                        eignet sich für Schule, Vereine und eigene Designs.
+                      </p>
+                      <p>
+                        Ein 1×1-Rippstrickkragen, die Ton-in-Ton-Knopfleiste mit
+                        drei Knöpfen und Seitenschlitze sorgen für Komfort und
+                        Bewegungsfreiheit.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % gekämmte, ringgesponnene Baumwolle</li>
+                        <li>Piqué · 170 g/m²</li>
+                        <li>Regular Fit · Kurzarm</li>
+                        <li>1×1-Rippstrickkragen · 3 Ton-in-Ton-Knöpfe</li>
+                        <li>Seitenschlitze für Bewegungsfreiheit</li>
+                      </ul>
+                    </>
+                  ) : isUnisexPolo ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S PITCHER · 04442
+                      </p>
+                      <h2>UNISEX POLO</h2>
+                      <p>
+                        Das SOL'S Pitcher ist ein leichtes Unisex Sport-Polo aus
+                        vollständig recyceltem Polyester. Die feine
+                        Piqué-Struktur ist atmungsaktiv und schnell trocknend.
+                      </p>
+                      <p>
+                        Der 1×1-Rippstrickkragen und die Knopfleiste mit drei
+                        Ton-in-Ton-Knöpfen schaffen einen klaren, sportlichen
+                        Look für Teams, Events und Promotion.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % recycelter Polyester</li>
+                        <li>Leichtes Piqué · 130 g/m²</li>
+                        <li>Regular Fit · Kurzarm</li>
+                        <li>1×1-Rippstrickkragen · 3 Ton-in-Ton-Knöpfe</li>
+                        <li>Für Sublimationsdruck geeignet</li>
+                      </ul>
+                    </>
+                  ) : isMaennerPolo ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S PULSE · 04502
+                      </p>
+                      <h2>MÄNNER POLO</h2>
+                      <p>
+                        Das SOL'S Pulse ist ein Herren-Piqué-Polo aus 100 %
+                        gekämmter, ringgesponnener Baumwolle. Es verbindet einen
+                        klaren, klassischen Look mit angenehmem Komfort.
+                      </p>
+                      <p>
+                        Der 1×1-Rippstrickkragen, die zwei Ton-in-Ton-Knöpfe und
+                        das neutrale Größenetikett machen es zur sauberen Basis
+                        für Teamwear, Rebranding und Veredelung.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % gekämmte, ringgesponnene Baumwolle</li>
+                        <li>Piqué · 170 g/m²</li>
+                        <li>Regular Fit · Kurzarm</li>
+                        <li>1×1-Rippstrickkragen · 2 Ton-in-Ton-Knöpfe</li>
+                        <li>Neutrales Größenetikett im Nacken</li>
+                      </ul>
+                    </>
+                  ) : isKinderSweatshirt ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S COLUMBIA KIDS · 04239
+                      </p>
+                      <h2>KINDER SWEATSHIRT</h2>
+                      <p>
+                        Das SOL'S Columbia Kids ist ein klassischer Kinder-
+                        Sweater aus 80 % Baumwolle und 20 % recyceltem
+                        Polyester. Die innen angeraute Qualität bietet Wärme und
+                        ein angenehmes Tragegefühl.
+                      </p>
+                      <p>
+                        Rippstrickbündchen mit Elasthan an Hals, Ärmeln und Saum
+                        sorgen für einen bequemen, formstabilen Sitz. Die
+                        Jersey-Halbmondpasse und das Nackenband ergänzen den
+                        hochwertigen Look.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>80 % Baumwolle · 20 % recycelter Polyester</li>
+                        <li>Innen angeraut · 280 g/m²</li>
+                        <li>Regular Fit · Langarm</li>
+                        <li>Rippstrickbündchen mit Elasthan</li>
+                        <li>Neutrales Größenetikett im Nacken</li>
+                      </ul>
+                    </>
+                  ) : isColumbiaSweatshirt ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S COLUMBIA · 03814
+                      </p>
+                      <h2>{productName.toUpperCase()}</h2>
+                      <p>
+                        Der SOL'S Columbia ist ein zeitloser Unisex Sweater mit
+                        klassischem Schnitt. Die Mischung aus 80 % Baumwolle und
+                        20 % recyceltem Polyester bietet Wärme und hohen
+                        Tragekomfort.
+                      </p>
+                      <p>
+                        Die angeraute Innenseite, Rippstrickbündchen mit
+                        Elasthan sowie Nackenband und Jersey-Halbmondpasse
+                        sorgen für Formstabilität und einen sauberen Look.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>80 % Baumwolle, 20 % recycelter Polyester</li>
+                        <li>280 g/m² mit angerauter Innenseite</li>
+                        <li>Klassischer Unisex-Schnitt</li>
+                        <li>Rippstrickbündchen mit Elasthan</li>
+                      </ul>
+                    </>
+                  ) : isFrauenPolo ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S PULSE WOMEN · 04501
+                      </p>
+                      <h2>FRAUEN POLO</h2>
+                      <p>
+                        Das SOL'S Pulse Women verbindet eine feminine Passform
+                        mit zeitlosem Stil. Das leichte Material aus 100 %
+                        gekämmter, ringgesponnener Baumwolle fühlt sich angenehm
+                        an und ist für individuelle Veredelung vorbereitet.
+                      </p>
+                      <p>
+                        Der 1×1-Rippstrickkragen, die Ton-in-Ton-Knopfleiste und
+                        das neutrale Nackenetikett machen es zur idealen
+                        Grundlage für Teamwear und Rebranding.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % gekämmte, ringgesponnene Baumwolle</li>
+                        <li>Leichte Qualität mit 170 g/m²</li>
+                        <li>Feminine Passform</li>
+                        <li>Neutrales Design für Druck und Stick</li>
+                      </ul>
+                    </>
+                  ) : isFrauenTshirt ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL\'S PIONEER WOMEN · 03579
+                      </p>
+                      <h2>FRAUEN T-SHIRT</h2>
+                      <p>
+                        Das SOL\'S Pioneer Women besteht aus 100 % Bio-Baumwolle
+                        und fühlt sich weich und natürlich auf der Haut an. Die
+                        enzymgewaschene Oberfläche sorgt für eine glatte,
+                        angenehme Haptik.
+                      </p>
+                      <p>
+                        Das T-Shirt ist für die Veredelung und individuelle
+                        Gestaltung gemacht. Ash enthält 98 % Baumwolle und 2 %
+                        Viskose, Grey Melange 85 % Baumwolle und 15 % Viskose.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>100 % Bio-Baumwolle</li>
+                        <li>Enzymgewaschene, glatte Oberfläche</li>
+                        <li>Feminine Passform</li>
+                        <li>Ideal für individuelle Veredelung</li>
+                      </ul>
+                    </>
+                  ) : isMaennerShirt ? (
+                    <>
+                      <p className="designer-info-kicker">
+                        SOL'S BRIGHTON · 17000
+                      </p>
+                      <h2>MÄNNER HEMD</h2>
+                      <p>
+                        Das SOL'S Brighton ist ein modernes Langarmhemd aus
+                        Stretch-Popeline. Es verbindet Bewegungsfreiheit mit
+                        einer klaren, professionellen Optik für Business, Teams
+                        und Vereine.
+                      </p>
+                      <p>
+                        Der Kentkragen, die Manschetten mit zwei Ton-in-Ton-
+                        Knöpfen und die Easy-Care-Ausrüstung sorgen für einen
+                        gepflegten Auftritt im Alltag.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>97 % Baumwolle, 3 % Elasthan</li>
+                        <li>Stretch-Popeline · 140 g/m²</li>
+                        <li>Slim Fit · Langarm</li>
+                        <li>Kentkragen · keine Brusttasche</li>
+                        <li>Easy Care · Tear-Away-Label</li>
+                      </ul>
+                    </>
+                  ) : isFrauenShirt ? (
+                    <>
+                      <p className="designer-info-kicker">SOL'S EDEN · 17015</p>
+                      <h2>FRAUEN HEMD</h2>
+                      <p>
+                        Die SOL'S Eden ist eine taillierte Langarmbluse aus
+                        Popeline Stretch. Das leichte Material verbindet einen
+                        gepflegten Auftritt mit angenehmer Bewegungsfreiheit.
+                      </p>
+                      <p>
+                        Ein klassischer Kragen mit Knopf, Manschetten mit zwei
+                        Ton-in-Ton-Knöpfen und die Easy-Care-Ausrüstung machen
+                        sie zur zuverlässigen Basis für Teamwear und
+                        individuelle Veredelung.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>97 % Baumwolle, 3 % Elasthan</li>
+                        <li>Popeline Stretch · 140 g/m²</li>
+                        <li>Taillierter Schnitt</li>
+                        <li>Easy Care</li>
+                      </ul>
+                    </>
+                  ) : (
+                    <>
+                      <p className="designer-info-kicker">
+                        X.O BY PROMODORO WOMEN HOODY SWEATER · 1781
+                      </p>
+                      <h2>FRAUEN HOODIE</h2>
+                      <p>
+                        Der X.O by Promodoro Women Hoody Sweater überzeugt mit
+                        einem femininen, schmalen Schnitt und angenehmem
+                        Innenfutter. Er eignet sich für individuelle Veredelung,
+                        Teamwear und Merchandise.
+                      </p>
+                      <p>
+                        Die zweilagige Kapuze und die elastischen
+                        Rippstrickbündchen sorgen für ein komfortables
+                        Tragegefühl und eine klare, moderne Passform.
+                      </p>
+                      <h3>PRODUKT-HIGHLIGHTS</h3>
+                      <ul>
+                        <li>Schmaler, femininer Schnitt</li>
+                        <li>Zweilagige Kapuze für zusätzlichen Komfort</li>
+                        <li>Rippstrickbündchen an Ärmeln und Bund</li>
+                        <li>Neutrales Größenetikett für deine Veredelung</li>
+                      </ul>
+                    </>
+                  )}
+                </div>
+                {isMug ? (
+                  <dl>
+                    <div>
+                      <dt>HERSTELLER</dt>
+                      <dd>Stamina</dd>
+                    </div>
+                    <div>
+                      <dt>MATERIAL</dt>
+                      <dd>Keramik</dd>
+                    </div>
+                    <div>
+                      <dt>TRANSFERTECHNIK</dt>
+                      <dd>Sublimation</dd>
+                    </div>
+                  </dl>
+                ) : isShopper ? (
+                  <dl>
+                    <div>
+                      <dt>HERSTELLER</dt>
+                      <dd>SOL'S</dd>
+                    </div>
+                    <div>
+                      <dt>GESCHLECHT</dt>
+                      <dd>Unisex</dd>
+                    </div>
+                    <div>
+                      <dt>LABEL</dt>
+                      <dd>Tear Away</dd>
+                    </div>
+                    <div>
+                      <dt>KATEGORIE</dt>
+                      <dd>Einkaufstasche</dd>
+                    </div>
+                    <div>
+                      <dt>GRAMMATUR</dt>
+                      <dd>140 g/m²</dd>
+                    </div>
+                    <div>
+                      <dt>HENKEL</dt>
+                      <dd>Lang</dd>
+                    </div>
+                  </dl>
+                ) : (
+                  <dl>
+                    <div>
+                      <dt>HERSTELLER</dt>
+                      <dd>{productManufacturer}</dd>
+                    </div>
+                    <div>
+                      <dt>GESCHLECHT</dt>
+                      <dd>{productGender}</dd>
+                    </div>
+                    <div>
+                      <dt>KATEGORIE</dt>
+                      <dd>{productCategory}</dd>
+                    </div>
+                    <div>
+                      <dt>PFLEGE</dt>
+                      <dd>40 °C waschbar</dd>
+                    </div>
+                    <div>
+                      <dt>GRAMMATUR</dt>
+                      <dd>{productWeight}</dd>
+                    </div>
+                    <div>
+                      <dt>{isAnyCap ? "VERSCHLUSS" : "PASSFORM"}</dt>
+                      <dd>{productFit}</dd>
+                    </div>
+                  </dl>
+                )}
+              </div>
+            ) : isOneSizeProduct ? (
+              <div className="designer-size-content">
+                <p>
+                  {isAnyCap
+                    ? "Diese Cap ist in einer verstellbaren Einheitsgröße erhältlich."
+                    : "Dieses Produkt ist in einer Einheitsgröße erhältlich."}
+                </p>
+                <div className="designer-size-table">
+                  <div>
+                    <span>GRÖSSE</span>
+                    <span>ONE SIZE</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="designer-size-content">
+                <p>Die Maße sind Richtwerte in Zentimetern.</p>
+                <div className="designer-size-guide">
+                  <img
+                    src={sizeGuideShirt}
+                    alt="Schema zur Messung von Länge und Brustweite"
+                  />
+                  <div className="designer-size-table">
+                    <div>
+                      {["GRÖSSE", ...sizes].map((item) => (
+                        <span key={item}>{item}</span>
+                      ))}
+                    </div>
+                    <div>
+                      {[
+                        "A / B",
+                        ...sizes.map((item) => sizeMeasurements[item] || "—"),
+                      ].map((item, index) => (
+                        <span key={`${item}-${index}`}>{item}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <small>A = Länge · B = Brustweite</small>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      {reviewOpen && (
+        <div className="designer-review-layer">
+          <div className="designer-review">
+            <button
+              type="button"
+              className="designer-review-close"
+              onClick={() => setReviewOpen(false)}
+            >
+              ×
+            </button>
+            <p>LETZTER BLICK</p>
+            <h2>DEIN EIGENER DESIGN</h2>
+            <div
+              className={`designer-review-mockup ${
+                (hasBackDesign && (isConfiguredTextile || isShopper)) ||
+                isAnyCap
+                  ? "is-double"
+                  : ""
+              }`}
+            >
+              <div className="designer-review-side">
+                <span>VORDERSEITE</span>
+                <div className="designer-review-product" data-review-side="front">
+                  <img
+                    className="designer-mockup"
+                    src={frontPreviewImage}
+                    alt={`Vorderseite ${productName}`}
+                    draggable="false"
+                  />
+                  {renderReviewPrint(frontReviewDesign, "front")}
+                </div>
+              </div>
+              {((hasBackDesign && (isConfiguredTextile || isShopper)) ||
+                isAnyCap) && (
+                <div className="designer-review-side">
+                  <span>RÜCKSEITE</span>
+                  <div className="designer-review-product" data-review-side="back">
+                    <img
+                      className={`designer-mockup ${
+                        isShopper ? "is-shopper-back" : ""
+                      }`}
+                      src={backPreviewImage}
+                      alt={`Rückseite ${productName}`}
+                      draggable="false"
+                    />
+                    {!isAnyCap && renderReviewPrint(backReviewDesign, "back")}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="designer-review-details">
+              <span>
+                {product.name} · {size}
+              </span>
+              <strong>{designPriceLabel}</strong>
+            </div>
+            <div className="designer-review-actions">
+              <button
+                type="button"
+                className="designer-back-edit"
+                onClick={() => setReviewOpen(false)}
+              >
+                ZURÜCK ZUR BEARBEITUNG
+              </button>
+              <button
+                type="button"
+                className="btn-red designer-final-cart"
+                onClick={() => {
+                  setReviewOpen(false)
+                  alert(
+                    "Die Shopify-Verknüpfung für personalisierte Produkte wird im nächsten Schritt eingerichtet.",
+                  )
+                }}
+              >
+                IN DEN WARENKORB <b>→</b>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {helpStep !== null && (
+        <div className="designer-help-layer">
+          <div className="designer-help">
+            <span>
+              {helpStep + 1} / {help.length}
+            </span>
+            <p>{help[helpStep]}</p>
+            <div>
+              {helpStep > 0 && (
+                <button type="button" onClick={() => setHelpStep(helpStep - 1)}>
+                  ZURÜCK
+                </button>
+              )}
+              {helpStep < help.length - 1 ? (
+                <button
+                  type="button"
+                  className="btn-red"
+                  onClick={() => setHelpStep(helpStep + 1)}
+                >
+                  WEITER
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="btn-red"
+                  onClick={() => setHelpStep(null)}
+                >
+                  VERSTANDEN
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function App() {
@@ -4008,7 +9661,13 @@ export default function App() {
     "/blog": <BlogPage />,
     "/account": <AccountPage />,
     "/account/callback": <AccountCallbackPage />,
+    "/designer": <DesignerStudio />,
   }
-  const productHandle = window.location.pathname.match(/^\/katalog\/([^/]+)$/)?.[1]
-  return productHandle ? <ShopifyProductPage handle={decodeURIComponent(productHandle)} /> : (pages[window.location.pathname] ?? <HomePage />)
+  const productHandle =
+    window.location.pathname.match(/^\/katalog\/([^/]+)$/)?.[1]
+  return productHandle ? (
+    <ShopifyProductPage handle={decodeURIComponent(productHandle)} />
+  ) : (
+    (pages[window.location.pathname] ?? <HomePage />)
+  )
 }
