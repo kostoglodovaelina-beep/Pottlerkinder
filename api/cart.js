@@ -21,8 +21,8 @@ function validId(value) {
 function validateCartRequest(action, cartId, lines) {
   if (["get", "add", "update", "remove", "detach"].includes(action) && !validId(cartId)) throw new Error("Invalid cart")
   if (!Array.isArray(lines) || lines.length > 20) throw new Error("Invalid cart lines")
-  if (["create", "add"].includes(action) && !lines.every((line) => validId(line?.merchandiseId) && Number.isInteger(line.quantity) && line.quantity > 0 && line.quantity <= 20)) throw new Error("Invalid cart lines")
-  if (action === "update" && !lines.every((line) => validId(line?.id) && Number.isInteger(line.quantity) && line.quantity >= 0 && line.quantity <= 20)) throw new Error("Invalid cart lines")
+  if (["create", "add"].includes(action) && !lines.every((line) => validId(line?.merchandiseId) && Number.isInteger(line.quantity) && line.quantity > 0)) throw new Error("Invalid cart lines")
+  if (action === "update" && !lines.every((line) => validId(line?.id) && Number.isInteger(line.quantity) && line.quantity >= 0)) throw new Error("Invalid cart lines")
   if (action === "remove" && !lines.every(validId)) throw new Error("Invalid cart lines")
 }
 
@@ -38,6 +38,19 @@ async function validateSellableLines(lines) {
     const variant = variants.get(line.merchandiseId)
     if (!variant?.availableForSale || (typeof variant.quantityAvailable === "number" && line.quantity > variant.quantityAvailable)) {
       throw new Error("Dieser Artikel ist nicht mehr verfügbar")
+    }
+  }
+}
+
+async function validateCartUpdates(cartId, updates) {
+  if (!updates.length) return
+  const data = await storefront(`query($cartId:ID!){cart(id:$cartId){${cartFields}}}`, { cartId })
+  const cartLines = new Map((data.cart?.lines?.edges || []).map(({ node }) => [node.id, node]))
+  for (const update of updates) {
+    const cartLine = cartLines.get(update.id)
+    const variant = cartLine?.merchandise
+    if (!cartLine || !variant?.availableForSale || (typeof variant.quantityAvailable === "number" && update.quantity > variant.quantityAvailable)) {
+      throw new Error("Dieser Artikel ist nicht mehr in der gewünschten Menge verfügbar")
     }
   }
 }
@@ -77,6 +90,7 @@ export default async function handler(req, res) {
     const { action, cartId, lines = [] } = req.body || {}
     validateCartRequest(action, cartId, lines)
     if (["create", "add"].includes(action)) await validateSellableLines(lines)
+    if (action === "update") await validateCartUpdates(cartId, lines)
     const token = customerAccessToken(req)
     if (action === "detach") {
       const data = await storefront(`query($cartId:ID!){cart(id:$cartId){${cartFields}}}`, { cartId })

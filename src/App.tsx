@@ -1163,6 +1163,41 @@ function Header() {
   )
 }
 
+function CartQuantityControl({
+  quantity,
+  maxQuantity,
+  onChange,
+  disabled = false,
+}: {
+  quantity: number
+  maxQuantity?: number | null
+  onChange: (quantity: number) => void
+  disabled?: boolean
+}) {
+  const atMaximum = typeof maxQuantity === "number" && quantity >= maxQuantity
+  return (
+    <div className="cart-quantity-control" aria-label="Menge auswählen">
+      <button
+        type="button"
+        onClick={() => onChange(quantity - 1)}
+        disabled={disabled || quantity <= 1}
+        aria-label="Menge verringern"
+      >
+        −
+      </button>
+      <output aria-live="polite">{quantity}</output>
+      <button
+        type="button"
+        onClick={() => onChange(quantity + 1)}
+        disabled={disabled || atMaximum}
+        aria-label={atMaximum ? "Maximale verfügbare Menge erreicht" : "Menge erhöhen"}
+      >
+        +
+      </button>
+    </div>
+  )
+}
+
 function CartDrawer({
   cart,
   onClose,
@@ -1188,6 +1223,17 @@ function CartDrawer({
     setRemoving(lineId)
     try {
       await shopCart.remove(cart.id, [lineId])
+      onChanged()
+      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+    } finally {
+      setRemoving(null)
+    }
+  }
+  const updateLineQuantity = async (lineId: string, quantity: number) => {
+    if (!cart?.id || quantity < 1) return
+    setRemoving(lineId)
+    try {
+      await shopCart.update(cart.id, [{ id: lineId, quantity }])
       onChanged()
       window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
     } finally {
@@ -1250,6 +1296,12 @@ function CartDrawer({
                     {node.quantity} × {price}
                   </strong>
                   <PriceLegalNote />
+                  <CartQuantityControl
+                    quantity={node.quantity}
+                    maxQuantity={typeof variant.quantityAvailable === "number" ? variant.quantityAvailable : null}
+                    onChange={(quantity) => updateLineQuantity(node.id, quantity)}
+                    disabled={removing === node.id}
+                  />
                 </div>
                 <button
                   type="button"
@@ -3934,6 +3986,56 @@ function FilterOptionIcon({ label }: { label: string }) {
   return <Icon aria-hidden="true" className="catalog-filter-option-icon" />
 }
 
+function CatalogAddToCartButton({ product }: { product: any }) {
+  // Catalog items are sourced exclusively from Shopify.
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+
+  const addToCart = async () => {
+    const variant = product.variants?.[0]
+    if (!variant?.id) {
+      setStatus("error")
+      return
+    }
+
+    setStatus("loading")
+    try {
+      const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
+      const response = cartId
+        ? await shopCart.add(cartId, [{ merchandiseId: variant.id, quantity: 1 }])
+        : await shopCart.create([{ merchandiseId: variant.id, quantity: 1 }])
+      const cart = (response as { cart: { id: string } }).cart
+      window.localStorage.setItem("pottlerkinder-cart-id", cart.id)
+      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+      setStatus("success")
+    } catch {
+      setStatus("error")
+    }
+  }
+
+  const label =
+    status === "loading"
+      ? "WIRD HINZUGEFÜGT"
+      : status === "success"
+        ? "HINZUGEFÜGT"
+        : status === "error"
+          ? "ERNEUT VERSUCHEN"
+          : "IN DEN WARENKORB"
+
+  return (
+    <button
+      type="button"
+      className={`catalog-add-to-cart ${status === "success" ? "is-success" : ""} ${status === "error" ? "is-error" : ""}`}
+      onClick={addToCart}
+      disabled={status === "loading"}
+      aria-label={`${product.name} – ${label}`}
+      title={label}
+    >
+      <FaShoppingBag aria-hidden="true" />
+      <span>{label}</span>
+    </button>
+  )
+}
+
 function CatalogPage() {
   const { products: shopifyProducts, error: shopifyError } = useShopifyCatalog()
   const catalogProducts = shopifyProducts ?? []
@@ -4241,7 +4343,13 @@ function CatalogPage() {
                   <div className="catalog-product-copy">
                     <h2>{product.name}</h2>
                     <p className="catalog-product-short">{product.short}</p>
-                    <div className="catalog-price-block"><strong>{product.price}</strong><PriceLegalNote /></div>
+                    <div className="catalog-price-block">
+                      <div className="catalog-price-copy">
+                        <strong>{product.price}</strong>
+                        <PriceLegalNote />
+                      </div>
+                      <CatalogAddToCartButton product={product} />
+                    </div>
                   </div>
                 </article>
               ))}
@@ -4342,10 +4450,13 @@ function SalePage() {
                   <h2>{product.name}</h2>
                   <p className="catalog-product-short">{product.short}</p>
                   <div className="catalog-price-block">
-                    <strong>
-                    <s>{product.price}</s> {product.price}
-                    </strong>
-                    <PriceLegalNote />
+                    <div className="catalog-price-copy">
+                      <strong>
+                        <s>{product.price}</s> {product.price}
+                      </strong>
+                      <PriceLegalNote />
+                    </div>
+                    <CatalogAddToCartButton product={product} />
                   </div>
                 </div>
               </article>
@@ -4406,6 +4517,7 @@ function ShopifyProductPage({ handle }: { handle: string }) {
 
 function ProductPage({ product }: { product: any }) {
   const [size, setSize] = useState(product.sizes[0])
+  const [selectedColor, setSelectedColor] = useState(product.colors[0])
   const [selectedImage, setSelectedImage] = useState(0)
   const productImages = product.images || [
     { url: product.image, altText: product.name },
@@ -4480,55 +4592,65 @@ function ProductPage({ product }: { product: any }) {
                 {product.category} · {product.gender}
               </p>
               <h1>{product.name}</h1>
-              <div className="product-detail-price"><strong>{product.price}</strong><PriceLegalNote /></div>
+              <div className="product-detail-price">
+                <strong>{product.price}</strong>
+                <PriceLegalNote />
+              </div>
               <p className="product-detail-lead">{product.description}</p>
-              <div className="product-option">
-                <span>FARBE</span>
-                <div>
-                  {product.colors.map((color) => (
-                    <button
-                      key={color}
-                      aria-label="Farbe"
-                      className="catalog-swatch is-selected"
-                      style={{ background: color }}
-                    />
-                  ))}
+              <div className="product-purchase-panel">
+                <div className="product-option">
+                  <span>FARBE</span>
+                  <div>
+                    {product.colors.map((color) => (
+                      <button
+                        type="button"
+                        key={color}
+                        aria-label="Farbe auswählen"
+                        aria-pressed={selectedColor === color}
+                        onClick={() => setSelectedColor(color)}
+                        className={`catalog-swatch ${selectedColor === color ? "is-selected" : ""}`}
+                        style={{ background: color }}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <div className="product-option">
-                <span>GRÖSSE</span>
-                <div className="product-size-options">
-                  {product.sizes.map((item) => (
-                    <button
-                      key={item}
-                      onClick={() => setSize(item)}
-                      className={size === item ? "is-active" : ""}
-                    >
-                      {item}
-                    </button>
-                  ))}
+                <div className="product-option">
+                  <span>GRÖSSE</span>
+                  <div className="product-size-options">
+                    {product.sizes.map((item) => (
+                      <button
+                        type="button"
+                        key={item}
+                        aria-pressed={size === item}
+                        onClick={() => setSize(item)}
+                        className={size === item ? "is-active" : ""}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
                 </div>
+                <button
+                  className="btn-red product-cart-button"
+                  onClick={addToCart}
+                  disabled={cartStatus === "loading"}
+                >
+                  {cartStatus === "loading"
+                    ? "WIRD HINZUGEFÜGT"
+                    : "IN DEN WARENKORB"}{" "}
+                  <span>→</span>
+                </button>
+                {cartStatus === "success" && (
+                  <p className="product-cart-feedback">
+                    IM WARENKORB GESPEICHERT.
+                  </p>
+                )}
+                {cartStatus === "error" && (
+                  <p className="product-cart-feedback is-error">
+                    WARENKORB KONNTE NICHT AKTUALISIERT WERDEN.
+                  </p>
+                )}
               </div>
-              <button
-                className="btn-red product-cart-button"
-                onClick={addToCart}
-                disabled={cartStatus === "loading"}
-              >
-                {cartStatus === "loading"
-                  ? "WIRD HINZUGEFÜGT"
-                  : "IN DEN WARENKORB"}{" "}
-                <span>→</span>
-              </button>
-              {cartStatus === "success" && (
-                <p className="product-cart-feedback">
-                  IM WARENKORB GESPEICHERT.
-                </p>
-              )}
-              {cartStatus === "error" && (
-                <p className="product-cart-feedback is-error">
-                  WARENKORB KONNTE NICHT AKTUALISIERT WERDEN.
-                </p>
-              )}
             </div>
           </div>
           <section id="details" className="product-more-details">
@@ -4596,6 +4718,17 @@ function CartPage() {
       setUpdating(null)
     }
   }
+  const updateLineQuantity = async (lineId: string, quantity: number) => {
+    if (!cart?.id || quantity < 1) return
+    setUpdating(lineId)
+    try {
+      await shopCart.update(cart.id, [{ id: lineId, quantity }])
+      await refreshCart()
+      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+    } finally {
+      setUpdating(null)
+    }
+  }
   return (
     <PageShell inner>
       <main className="flex-1">
@@ -4645,11 +4778,18 @@ function CartPage() {
                           </small>
                           <PriceLegalNote />
                         </div>
+                        <CartQuantityControl
+                          quantity={node.quantity}
+                          maxQuantity={typeof variant.quantityAvailable === "number" ? variant.quantityAvailable : null}
+                          onChange={(quantity) => updateLineQuantity(node.id, quantity)}
+                          disabled={updating === node.id}
+                        />
                       </div>
                       <button
                         type="button"
                         onClick={() => removeLine(node.id)}
                         disabled={updating === node.id}
+                        className="cart-line-remove"
                       >
                         ENTFERNEN
                       </button>
@@ -4673,9 +4813,9 @@ function CartPage() {
                   <b>{formatCartMoney(subtotalValue + shippingValue)}</b>
                 </div>
                 <small>* KOSTENLOSER VERSAND AB 85,00 € WARENWERT.</small>
-                <a className="btn-red" href={cart.checkoutUrl}>
-                  SICHER ZUR KASSE →
-                </a>
+                {cart?.checkoutUrl && lines.length > 0 ? (
+                  <a className="btn-red" href={cart.checkoutUrl}>SICHER ZUR KASSE →</a>
+                ) : null}
                 <span>Bezahlung und Versand erfolgen sicher über Shopify.</span>
               </aside>
             </div>
