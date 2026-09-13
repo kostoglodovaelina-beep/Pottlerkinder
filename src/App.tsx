@@ -112,7 +112,7 @@ const SECTION_PAD = "clamp(16px, 12vw, 210px)"
 function PriceLegalNote() {
   return (
     <span className="price-legal-note">
-      inkl. MwSt., zzgl.{' '}
+      <span>inkl. MwSt., zzgl.</span>{' '}
       <button
         type="button"
         onClick={(event) => {
@@ -124,6 +124,12 @@ function PriceLegalNote() {
         Versandkosten <sup>[1]</sup>
       </button>
     </span>
+  )
+}
+
+function publishCart(cart: any | null) {
+  window.dispatchEvent(
+    new CustomEvent("pottlerkinder-cart-updated", { detail: { cart } }),
   )
 }
 
@@ -1156,7 +1162,6 @@ function Header() {
         <CartDrawer
           cart={cart}
           onClose={() => setCartOpen(false)}
-          onChanged={refreshCart}
         />
       )}
     </header>
@@ -1201,11 +1206,9 @@ function CartQuantityControl({
 function CartDrawer({
   cart,
   onClose,
-  onChanged,
 }: {
   cart: any | null
   onClose: () => void
-  onChanged: () => void
 }) {
   const [removing, setRemoving] = useState<string | null>(null)
   const lines = cart?.lines?.edges || []
@@ -1222,9 +1225,8 @@ function CartDrawer({
     if (!cart?.id) return
     setRemoving(lineId)
     try {
-      await shopCart.remove(cart.id, [lineId])
-      onChanged()
-      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+      const response = await shopCart.remove(cart.id, [lineId])
+      publishCart((response as { cart: any }).cart)
     } finally {
       setRemoving(null)
     }
@@ -1233,9 +1235,8 @@ function CartDrawer({
     if (!cart?.id || quantity < 1) return
     setRemoving(lineId)
     try {
-      await shopCart.update(cart.id, [{ id: lineId, quantity }])
-      onChanged()
-      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+      const response = await shopCart.update(cart.id, [{ id: lineId, quantity }])
+      publishCart((response as { cart: any }).cart)
     } finally {
       setRemoving(null)
     }
@@ -1937,9 +1938,7 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
       className="product-card relative rounded-[8px] flex-shrink-0 overflow-hidden"
       role="link"
       tabIndex={0}
-      onClick={() => {
-        window.location.href = `/katalog/${product.slug}`
-      }}
+      data-product-url={`/katalog/${product.slug}`}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ")
           window.location.href = `/katalog/${product.slug}`
@@ -2068,7 +2067,13 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
             <PriceLegalNote />
           </div>
         </div>
-        <button className="btn-ansehen flex items-center gap-1.5 px-4 py-2.5 rounded-[6px]">
+        <a
+          href={`/katalog/${product.slug}`}
+          className="btn-ansehen flex items-center gap-1.5 px-4 py-2.5 rounded-[6px]"
+          onPointerDown={(event) => event.stopPropagation()}
+          onClick={(event) => event.stopPropagation()}
+          aria-label={`${product.name} ansehen`}
+        >
           <span
             style={{
               fontFamily: "Oswald, sans-serif",
@@ -2094,7 +2099,7 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
               strokeWidth="2"
             />
           </svg>
-        </button>
+        </a>
       </div>
     </div>
   )
@@ -2221,7 +2226,19 @@ function BestsellerSection() {
           carouselPosition.current = next
           carouselTrackRef.current.style.transform = `translate3d(${-next}px,0,0)`
         }}
-        onPointerUp={() => setDrag(null)}
+        onPointerUp={(event) => {
+          const wasClick = drag && Math.abs(event.clientX - drag.x) < 7
+          setDrag(null)
+          if (!wasClick) return
+          const target = event.target as HTMLElement
+          if (target.closest(".btn-wishlist")) return
+          const card = target.closest<HTMLElement>(".product-card")
+          const productUrl = card?.dataset.productUrl
+          if (productUrl) {
+            event.preventDefault()
+            window.location.assign(productUrl)
+          }
+        }}
         onPointerCancel={() => setDrag(null)}
       >
         <div style={{ paddingLeft: SECTION_PAD }}>
@@ -3832,10 +3849,19 @@ function useShopifyCart() {
   }
   useEffect(() => {
     refreshCart()
-    window.addEventListener("pottlerkinder-cart-updated", refreshCart)
+    const receiveCart = (event: Event) => {
+      const nextCart = (event as CustomEvent<{ cart?: any | null }>).detail?.cart
+      if (nextCart !== undefined) {
+        setCart(nextCart)
+        setLoading(false)
+        return
+      }
+      refreshCart()
+    }
+    window.addEventListener("pottlerkinder-cart-updated", receiveCart)
     window.addEventListener("pottler-account-logout", refreshCart)
     return () => {
-      window.removeEventListener("pottlerkinder-cart-updated", refreshCart)
+      window.removeEventListener("pottlerkinder-cart-updated", receiveCart)
       window.removeEventListener("pottler-account-logout", refreshCart)
     }
   }, [])
@@ -4005,7 +4031,7 @@ function CatalogAddToCartButton({ product }: { product: any }) {
         : await shopCart.create([{ merchandiseId: variant.id, quantity: 1 }])
       const cart = (response as { cart: { id: string } }).cart
       window.localStorage.setItem("pottlerkinder-cart-id", cart.id)
-      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+      publishCart(cart)
       setStatus("success")
     } catch {
       setStatus("error")
@@ -4547,7 +4573,7 @@ function ProductPage({ product }: { product: any }) {
         : await shopCart.create([{ merchandiseId: variant.id, quantity: 1 }])
       const cart = (response as { cart: { id: string } }).cart
       window.localStorage.setItem("pottlerkinder-cart-id", cart.id)
-      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+      publishCart(cart)
       setCartStatus("success")
     } catch {
       setCartStatus("error")
@@ -4592,11 +4618,11 @@ function ProductPage({ product }: { product: any }) {
                 {product.category} · {product.gender}
               </p>
               <h1>{product.name}</h1>
+              <p className="product-detail-lead">{product.description}</p>
               <div className="product-detail-price">
                 <strong>{product.price}</strong>
                 <PriceLegalNote />
               </div>
-              <p className="product-detail-lead">{product.description}</p>
               <div className="product-purchase-panel">
                 <div className="product-option">
                   <span>FARBE</span>
@@ -4696,7 +4722,7 @@ function HomePage() {
 }
 
 function CartPage() {
-  const { cart, loading, refreshCart } = useShopifyCart()
+  const { cart, loading } = useShopifyCart()
   const [updating, setUpdating] = useState<string | null>(null)
   const lines = cart?.lines?.edges || []
   const subtotal = cart?.cost?.subtotalAmount || cart?.cost?.totalAmount
@@ -4711,9 +4737,8 @@ function CartPage() {
     if (!cart?.id) return
     setUpdating(lineId)
     try {
-      await shopCart.remove(cart.id, [lineId])
-      await refreshCart()
-      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+      const response = await shopCart.remove(cart.id, [lineId])
+      publishCart((response as { cart: any }).cart)
     } finally {
       setUpdating(null)
     }
@@ -4722,9 +4747,8 @@ function CartPage() {
     if (!cart?.id || quantity < 1) return
     setUpdating(lineId)
     try {
-      await shopCart.update(cart.id, [{ id: lineId, quantity }])
-      await refreshCart()
-      window.dispatchEvent(new Event("pottlerkinder-cart-updated"))
+      const response = await shopCart.update(cart.id, [{ id: lineId, quantity }])
+      publishCart((response as { cart: any }).cart)
     } finally {
       setUpdating(null)
     }
