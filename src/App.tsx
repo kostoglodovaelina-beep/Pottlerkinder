@@ -55,7 +55,7 @@ import customHoodie from "@/imports/Hoodie.jpg"
 import customPolo from "@/imports/Polo.jpg"
 import solsStockholmRed from "@/assets/designer/shopper/sols-stockholm-red.webp"
 import customSweatshirt from "@/imports/Sweatshirt-1.jpg"
-import staminaBierkrugWhite from "@/assets/designer/mug/stamina-bierkrug-white.webp"
+import twoToneMugYellow from "@/assets/designer/mug/two-tone/gelb.webp"
 import customTshirt from "@/imports/t-shirt.jpg"
 import customShirt from "@/imports/Hemd.jpg"
 import customCap from "@/imports/Kappe.jpg"
@@ -108,6 +108,45 @@ import { shopCart } from "@/lib/shopify"
 
 // ─── Shared padding value (12vw clamped) ──────────────────────────────────────
 const SECTION_PAD = "clamp(16px, 12vw, 210px)"
+
+function PriceLegalNote() {
+  return (
+    <span className="price-legal-note">
+      inkl. MwSt., zzgl.{' '}
+      <button
+        type="button"
+        onClick={(event) => {
+          event.preventDefault()
+          event.stopPropagation()
+          window.dispatchEvent(new Event("pottlerkinder-open-shipping"))
+        }}
+      >
+        Versandkosten <sup>[1]</sup>
+      </button>
+    </span>
+  )
+}
+
+function ShippingCostsDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  if (!open) return null
+  return (
+    <div className="legal-dialog-layer" role="dialog" aria-modal="true" aria-labelledby="shipping-dialog-title">
+      <button type="button" className="legal-dialog-backdrop" aria-label="Fenster schließen" onClick={onClose} />
+      <section className="legal-dialog">
+        <button type="button" className="legal-dialog-close" aria-label="Schließen" onClick={onClose}>×</button>
+        <p className="legal-kicker">VERSAND & LIEFERUNG</p>
+        <h2 id="shipping-dialog-title">VERSANDKOSTEN</h2>
+        <div className="shipping-rate-card">
+          <span>DEUTSCHLAND · DHL / DEUTSCHE POST</span>
+          <b>6,15 €</b>
+          <small>pro Bestellung</small>
+        </div>
+        <p>Kostenloser Versand ab einem Warenwert von 85,00 €. Die verbindlichen Versandkosten werden vor Abschluss deiner Bestellung im Checkout angezeigt.</p>
+        <a href="/versandkosten" onClick={onClose}>ALLE LIEFERINFORMATIONEN ANSEHEN →</a>
+      </section>
+    </div>
+  )
+}
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -1139,7 +1178,7 @@ function CartDrawer({
   const subtotal = cart?.cost?.subtotalAmount || total
   const currency = subtotal?.currencyCode || "EUR"
   const subtotalValue = Number(subtotal?.amount || 0)
-  const shippingValue = subtotalValue >= 80 ? 0 : 9.99
+  const shippingValue = subtotalValue >= 85 ? 0 : 6.15
   const formatCartMoney = (amount: number) =>
     new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(
       amount,
@@ -1210,6 +1249,7 @@ function CartDrawer({
                   <strong>
                     {node.quantity} × {price}
                   </strong>
+                  <PriceLegalNote />
                 </div>
                 <button
                   type="button"
@@ -1247,7 +1287,7 @@ function CartDrawer({
             </div>
           </div>
           <p className="cart-shipping-note">
-            * KOSTENLOSER VERSAND AB 80,00 € WARENWERT.
+            * KOSTENLOSER VERSAND AB 85,00 € WARENWERT.
           </p>
           <a href="/katalog" onClick={onClose} className="cart-drawer-continue">
             ← WEITER EINKAUFEN
@@ -1964,7 +2004,7 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
               />
             ))}
           </div>
-          <p
+          <div className="product-card-price"
             style={{
               fontFamily: "Inter, sans-serif",
               fontWeight: 700,
@@ -1973,7 +2013,8 @@ function ProductCard({ product }: { product: BestsellerProduct }) {
             }}
           >
             {product.price}
-          </p>
+            <PriceLegalNote />
+          </div>
         </div>
         <button className="btn-ansehen flex items-center gap-1.5 px-4 py-2.5 rounded-[6px]">
           <span
@@ -2192,7 +2233,7 @@ function TrustBadgesBar() {
           <path d={svgPaths.p39c3ec00} fill="white" />
         </svg>
       ),
-      title: "Gratis Versand ab 80€",
+      title: "Gratis Versand ab 85€",
       sub: "3–5 Werktage Lieferzeit",
     },
     {
@@ -2497,15 +2538,17 @@ function Footer() {
                   HILFE
                 </p>
               </div>
+              <div className="footer-help-links">
               {[
-                "Zahlung",
-                "Versandkosten",
-                "Rücksendung & Umtausch",
-                "Widerrufsbelehrung",
-                "Kontakt",
-              ].map((link) => (
-                <p
-                  key={link}
+                ["Zahlung", "/zahlung"],
+                ["Versandkosten", "/versandkosten"],
+                ["Rücksendung & Umtausch", "/rueckgabe-umtausch"],
+                ["Widerrufsbelehrung", "/widerrufsbelehrung"],
+                ["Kontakt", "mailto:kontakt@pottlerkinder.de"],
+              ].map(([label, href]) => (
+                <a
+                  key={label}
+                  href={href}
                   className="footer-link mb-2"
                   style={{
                     fontFamily: "Inter, sans-serif",
@@ -2515,9 +2558,10 @@ function Footer() {
                     lineHeight: 2,
                   }}
                 >
-                  {link}
-                </p>
+                  {label}
+                </a>
               ))}
+              </div>
             </div>
 
             {/* ZAHLUNGSMETHODEN */}
@@ -2602,8 +2646,8 @@ function Footer() {
                   lineHeight: 1.6,
                 }}
               >
-                Lieferzeit 3–5 Werktage. Kostenloser Versand ab 80 €.
-                Expresslieferung ab 9,99 €.
+                Lieferzeit 3–5 Werktage. Versand innerhalb Deutschlands 6,15 €.
+                Kostenloser Versand ab 85 €.
               </p>
             </div>
 
@@ -2697,13 +2741,13 @@ function Footer() {
         >
           <div className="flex flex-wrap gap-4 sm:gap-5 justify-center sm:justify-start">
             {[
-              "Maloche/Jobs",
               "AGB",
               "Datenschutz",
               "Impressum",
               "Widerrufsbelehrung",
             ].map((link) => (
-              <span
+              <a
+                href={`/${link === "AGB" ? "agb" : link === "Datenschutz" ? "datenschutz" : link === "Impressum" ? "impressum" : "widerrufsbelehrung"}`}
                 key={link}
                 className="copy-link"
                 style={{
@@ -2714,7 +2758,7 @@ function Footer() {
                 }}
               >
                 {link}
-              </span>
+              </a>
             ))}
           </div>
           <p
@@ -2726,8 +2770,7 @@ function Footer() {
               textAlign: "center",
             }}
           >
-            © 2026 Pottlerkinder GmbH · Alle Preise inkl. 19% MwSt. zzgl.
-            Versandkosten
+            © 2026 Pottlerkinder · Alle Preise inkl. MwSt. zzgl. Versandkosten
           </p>
         </div>
       </div>
@@ -2871,6 +2914,107 @@ function TextPage({
         >
           {children}
         </article>
+      </main>
+    </PageShell>
+  )
+}
+
+type LegalSection = { title: string; text: string }
+
+const LEGAL_PAGES: Record<string, { eyebrow: string; title: string; lead: string; sections: LegalSection[] }> = {
+  "/agb": {
+    eyebrow: "RECHTLICHE INFORMATIONEN", title: "ALLGEMEINE GESCHÄFTSBEDINGUNGEN", lead: "Allgemeine Geschäftsbedingungen von Pottlerkinder, Inhaberin Natalia Lewandowski.",
+    sections: [
+      { title: "1. GELTUNGSBEREICH", text: "Diese Allgemeinen Geschäftsbedingungen gelten für alle Verträge über Waren und Dienstleistungen zwischen Pottlerkinder und Kundinnen und Kunden. Für Verbraucher gelten die gesetzlichen Vorschriften; gegenüber Unternehmern gelten ergänzende Regelungen dieser AGB." },
+      { title: "2. VERTRAGSGEGENSTAND & VERTRAGSSCHLUSS", text: "Wir bieten Textilien, DTF-Drucke, Stickereien, Tassen und weitere veredelte oder personalisierte Produkte an. Die Darstellung im Shop ist kein verbindliches Angebot. Mit der Bestellung geben Sie ein verbindliches Angebot ab; der Vertrag kommt mit unserer Auftragsbestätigung oder Lieferung zustande." },
+      { title: "3. INDIVIDUELL GEFERTIGTE PRODUKTE", text: "Produkte, die nach Kundenspezifikation angefertigt oder eindeutig personalisiert werden, sind vom gesetzlichen Widerrufsrecht ausgeschlossen. Dazu zählen insbesondere Motive, Namen, Logos, Texte und individuell veredelte Artikel." },
+      { title: "4. KUNDENDATEIEN, URHEBERRECHT & RECHTE DRITTER", text: "Für hochgeladene Motive, Logos und Dateien sind Sie verantwortlich. Sie bestätigen, über die erforderlichen Nutzungsrechte zu verfügen und keine Rechte Dritter oder gesetzlichen Vorschriften zu verletzen. Bei Ansprüchen Dritter stellen Sie Pottlerkinder von berechtigten Ansprüchen frei." },
+      { title: "5. PREISE, ZAHLUNG & LIEFERUNG", text: "Alle Preise verstehen sich in Euro einschließlich der gesetzlichen Mehrwertsteuer zuzüglich Versandkosten. Die verfügbaren Zahlungsarten werden im Checkout angezeigt. Der Versand erfolgt innerhalb Deutschlands über DHL oder Deutsche Post; Lieferzeiten können bei personalisierten Produkten bis zu 15 Werktage betragen." },
+      { title: "6. MÄNGEL, HAFTUNG & SCHLUSSBESTIMMUNGEN", text: "Es gelten die gesetzlichen Mängelrechte. Farbabweichungen, Materialeigenschaften und technisch bedingte Abweichungen bei Textil- oder Druckerzeugnissen können handelsüblich sein. Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gesetzliche Verbraucherrechte und die Regelungen zur Streitbeilegung bleiben unberührt." },
+    ],
+  },
+  "/datenschutz": {
+    eyebrow: "RECHTLICHE INFORMATIONEN", title: "DATENSCHUTZERKLÄRUNG", lead: "Informationen zur Verarbeitung personenbezogener Daten gemäß DSGVO und TDDDG.",
+    sections: [
+      { title: "1. VERANTWORTLICHE STELLE", text: "Pottlerkinder · Inhaberin Natalia Lewandowski · Horster Str. 118 · 45897 Gelsenkirchen · Deutschland. Telefon: +49 209 36171378 · WhatsApp: +49 176 26091435 · E-Mail: kontakt@pottlerkinder.de." },
+      { title: "2. RECHTSGRUNDLAGEN", text: "Wir verarbeiten Daten nach DSGVO und TDDDG, insbesondere zur Vertragserfüllung, aufgrund berechtigter Interessen, gesetzlicher Pflichten oder Ihrer Einwilligung." },
+      { title: "3. SHOP, BESTELLUNG & KUNDENKONTO", text: "Der Shop wird über Shopify bereitgestellt. Für Bestellungen und Kundenkonten verarbeiten wir insbesondere Name, Anschrift, E-Mail-Adresse, Zahlungs- und Bestelldaten. Die Verarbeitung dient der Bestellung, Lieferung, Zahlung, Kommunikation und Erfüllung gesetzlicher Aufbewahrungspflichten." },
+      { title: "4. PERSONALISIERTE INHALTE & KONTAKT", text: "Hochgeladene Designs, Texte und Motive werden ausschließlich zur Herstellung und Abwicklung der Bestellung verarbeitet. Bei einer Kontaktaufnahme verarbeiten wir die übermittelten Daten zur Bearbeitung Ihres Anliegens." },
+      { title: "5. DIENSTLEISTER, COOKIES & EXTERNE INHALTE", text: "Zahlungsdienste, Versanddienstleister (DHL/Deutsche Post), Shopify sowie gegebenenfalls Google Maps, Instagram und Analysedienste verarbeiten Daten nur im jeweils erforderlichen Umfang. Nicht notwendige Cookies und Analysefunktionen werden nur nach Ihrer Einwilligung eingesetzt." },
+      { title: "6. IHRE RECHTE", text: "Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit, Widerspruch sowie Widerruf einer Einwilligung. Außerdem besteht ein Beschwerderecht bei einer Datenschutzaufsichtsbehörde." },
+    ],
+  },
+  "/impressum": {
+    eyebrow: "RECHTLICHE INFORMATIONEN", title: "IMPRESSUM", lead: "Angaben gemäß § 5 DDG.",
+    sections: [
+      { title: "ANBIETER", text: "Pottlerkinder · Inhaberin: Natalia Lewandowski · Horster Str. 118 · 45897 Gelsenkirchen · Deutschland." },
+      { title: "KONTAKT", text: "Telefon: +49 209 36171378 · WhatsApp: +49 176 26091435 · E-Mail: kontakt@pottlerkinder.de." },
+      { title: "UMSATZSTEUER", text: "Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: DE355669789." },
+      { title: "INHALTLICH VERANTWORTLICH", text: "Natalia Lewandowski, Horster Str. 118, 45897 Gelsenkirchen. Pottlerkinder ist ein Einzelunternehmen und nicht im Handelsregister eingetragen." },
+      { title: "VERBRAUCHERSTREITBEILEGUNG", text: "Wir sind nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen." },
+    ],
+  },
+  "/versandkosten": {
+    eyebrow: "VERSAND & LIEFERUNG", title: "VERSANDKOSTEN", lead: "Transparente Lieferinformationen für Bestellungen innerhalb Deutschlands.",
+    sections: [
+      { title: "VERSAND INNERHALB DEUTSCHLANDS", text: "Wir versenden unsere Produkte innerhalb Deutschlands mit DHL / Deutsche Post. Die Versandkosten betragen 6,15 € pro Bestellung. Ab einem Bestellwert von 85,00 € ist der Versand innerhalb Deutschlands kostenfrei. Die Versandkosten werden im Bestellprozess vor Abschluss der Bestellung nochmals angezeigt." },
+      { title: "BEARBEITUNGSZEIT", text: "Standardprodukte: Die Bearbeitungszeit beträgt in der Regel 3–5 Werktage. Personalisierte und individuell angefertigte Produkte: Die Bearbeitungszeit beträgt in der Regel bis zu 15 Werktage. Die anschließende Versandlaufzeit richtet sich nach DHL und ist in diesen Bearbeitungszeiten nicht enthalten. Bei individuell gestalteten Produkten kann die Bearbeitungszeit je nach Umfang und Art des Auftrags variieren. Die für das jeweilige Produkt angegebene Lieferzeit ist maßgeblich." },
+      { title: "VERSANDBESTÄTIGUNG", text: "Sobald deine Bestellung an DHL übergeben wurde, erhältst du – sofern verfügbar – eine Versandbestätigung mit den Informationen zur Sendungsverfolgung." },
+      { title: "LIEFERADRESSE", text: "Bitte achte bei deiner Bestellung auf die korrekte und vollständige Lieferadresse. Für Verzögerungen, die durch fehlerhafte oder unvollständige Adressangaben entstehen, können zusätzliche Kosten anfallen." },
+      { title: "AUSLANDSLIEFERUNGEN", text: "Der Versand erfolgt derzeit ausschließlich innerhalb Deutschlands." },
+      { title: "PERSONALISIERTE PRODUKTE", text: "Bei personalisierten und individuell angefertigten Produkten beginnt die Bearbeitung nach Eingang der Bestellung bzw. nach vollständiger Klärung der erforderlichen Angaben und Gestaltung. Bitte beachte, dass sich die Bearbeitungszeit verlängern kann, wenn Angaben oder Freigaben für die Anfertigung fehlen. Informationen zum Widerrufsrecht bei individuell angefertigten und personalisierten Produkten findest du in unserer Widerrufsbelehrung." },
+    ],
+  },
+  "/rueckgabe-umtausch": {
+    eyebrow: "SERVICE", title: "RÜCKGABE & UMTAUSCH", lead: "So bearbeiten wir Rückgaben und Umtauschanfragen.",
+    sections: [
+      { title: "DEIN ANLIEGEN", text: "Du möchtest einen Artikel zurückgeben oder gegen einen anderen Artikel tauschen? Kein Problem – teile uns einfach kurz mit, um welchen Artikel es geht und was wir für dich tun dürfen. Bitte nenne dabei Bestellnummer, Artikel beziehungsweise Artikelnummer, Menge, Größe und Grund der Rückgabe." },
+      { title: "GRUND DER RÜCKGABE", text: "Mögliche Gründe: Größe passt nicht, gefällt mir nicht, anders als erwartet, falscher Artikel, beschädigt / fehlerhaft oder ein sonstiger Grund." },
+      { title: "RÜCKZAHLUNG ODER UMTAUSCH", text: "Du kannst eine Rückzahlung des Kaufbetrags oder einen Umtausch gegen einen anderen Artikel anfragen. Bei einem Umtausch nenne bitte den gewünschten Artikel, die Artikelnummer und Größe. Der gewünschte Ersatzartikel sollte dem ursprünglichen Warenwert entsprechen." },
+      { title: "KONTAKT", text: "Bei Fragen zur Rückgabe oder zum Umtausch erreichst du uns unter: Pottlerkinder – Natalia Lewandowski, Horster Str. 118, 45897 Gelsenkirchen. E-Mail: lubenskaja@gmail.com · Telefon: +49 209 36171378 · WhatsApp: +49 176 26091435." },
+    ],
+  },
+  "/widerrufsbelehrung": {
+    eyebrow: "RECHTLICHE INFORMATIONEN", title: "WIDERRUFSBELEHRUNG", lead: "Informationen zum gesetzlichen Widerrufsrecht für Verbraucherinnen und Verbraucher.",
+    sections: [
+      { title: "WIDERRUFSRECHT", text: "Verbrauchern steht grundsätzlich ein gesetzliches Widerrufsrecht zu. Die Widerrufsfrist beträgt grundsätzlich 14 Tage. Die Frist beginnt nach Maßgabe der gesetzlichen Vorschriften. Zur Ausübung des Widerrufsrechts muss der Verbraucher den Unternehmer mittels einer eindeutigen Erklärung über seinen Entschluss informieren, den Vertrag zu widerrufen." },
+      { title: "AUSSCHLUSS BZW. ERLÖSCHEN DES WIDERRUFSRECHTS", text: "Das Widerrufsrecht besteht nicht bei Waren, die nicht vorgefertigt sind und für deren Herstellung eine individuelle Auswahl oder Bestimmung durch den Verbraucher maßgeblich ist oder die eindeutig auf die persönlichen Bedürfnisse des Verbrauchers zugeschnitten sind. Hierzu gehören insbesondere individuell personalisierte Produkte, die nach den Vorgaben des Kunden hergestellt werden und nicht ohne Weiteres anderweitig verkauft werden können, beispielsweise Textilien, T-Shirts, Hoodies, Taschen, Tassen, Glasartikel, Geschenkartikel, Gravuren, Stickereien und Drucke." },
+      { title: "REGULÄRE WAREN OHNE INDIVIDUELLE ANPASSUNG", text: "Wird ein Produkt aus dem regulären Sortiment ohne individuelle Änderung oder Personalisierung von Druck, Stickerei, Text, Motiv oder sonstiger Gestaltung geliefert, handelt es sich grundsätzlich nicht um eine individuell angefertigte Ware. Für solche Waren gilt das gesetzliche Widerrufsrecht, soweit keine andere gesetzliche Ausnahme vorliegt. Das bloße Auswählen eines bereits vorhandenen Designs aus dem regulären Sortiment stellt grundsätzlich keine individuelle Gestaltung nach Kundenspezifikation dar." },
+      { title: "RÜCKGABE WEGEN NICHTGEFALLENS", text: "Bei regulären Waren kann der Verbraucher sein gesetzliches Widerrufsrecht nach Maßgabe der gesetzlichen Vorschriften ausüben. Bei individuell nach Kundenvorgaben angefertigten Waren ist eine Rückgabe allein wegen Nichtgefallens der individuellen Gestaltung grundsätzlich ausgeschlossen, soweit die gesetzlichen Voraussetzungen für den Ausschluss des Widerrufsrechts erfüllt sind." },
+      { title: "GESETZLICHE GEWÄHRLEISTUNGSRECHTE", text: "Der Ausschluss des Widerrufsrechts bei individuell angefertigten Waren bedeutet nicht, dass gesetzliche Gewährleistungsrechte ausgeschlossen werden. Bei mangelhaften Waren stehen dem Kunden die gesetzlichen Rechte zu, insbesondere bei Herstellungsfehlern, Beschädigungen, fehlerhafter Ausführung, erheblichen Abweichungen von der vereinbarten Gestaltung oder sonstigen Sachmängeln." },
+    ],
+  },
+  "/zahlung": {
+    eyebrow: "SERVICE", title: "ZAHLUNG", lead: "Sichere Zahlung über den Shopify-Checkout.",
+    sections: [{ title: "SICHERE ZAHLUNGSABWICKLUNG", text: "Die Zahlungsabwicklung erfolgt im sicheren Shopify-Checkout. Die für deine Bestellung verfügbaren Zahlungsarten werden dort vor Abschluss der Bestellung angezeigt. Je nach ausgewählter Zahlungsart verarbeitet der jeweilige Zahlungsdienstleister die zur Zahlungsabwicklung erforderlichen Daten. Wir speichern grundsätzlich keine vollständigen Kreditkartendaten." }, { title: "PREISE & BESTELLUNG", text: "Es gelten die zum Zeitpunkt der Bestellung angegebenen Preise. Die Preise verstehen sich in Euro und enthalten, soweit gesetzlich vorgeschrieben, die gesetzliche Umsatzsteuer. Zusätzlich anfallende Versandkosten werden vor Abschluss des Bestellvorgangs mitgeteilt. Bei individuell angefertigten Produkten kann die Herstellung erst nach Eingang der erforderlichen Zahlung beziehungsweise nach entsprechender Zahlungsbestätigung erfolgen." }],
+  },
+}
+
+function LegalPage({ path }: { path: string }) {
+  const page = LEGAL_PAGES[path]
+  if (!page) return null
+  return (
+    <PageShell inner>
+      <main className="legal-document-shell">
+        <div className="legal-document-wrap">
+          <nav className="legal-breadcrumb" aria-label="Seitennavigation">
+            <a href="/">STARTSEITE</a><span>/</span><span>RECHTLICHE INFORMATIONEN</span>
+          </nav>
+          <article className={`legal-document ${path === "/zahlung" ? "legal-payment-document" : ""}`}>
+            <header className="legal-document-head">
+              <p>{page.eyebrow}</p>
+              <h1>{page.title}</h1>
+              <div>{page.lead}</div>
+            </header>
+            {path === "/zahlung" && <div className="legal-payment-status"><span>✓</span><p>ZAHLUNG WIRD SICHER ÜBER DEN SHOPIFY-CHECKOUT ABGEWICKELT</p></div>}
+            <div className="legal-page-content">
+              {page.sections.map((section) => <section key={section.title}><h2>{section.title}</h2><p>{section.text}</p></section>)}
+            </div>
+            <footer className="legal-document-foot">
+              <a href="/">ZURÜCK ZUM SHOP</a>
+            </footer>
+          </article>
+        </div>
       </main>
     </PageShell>
   )
@@ -4097,7 +4241,7 @@ function CatalogPage() {
                   <div className="catalog-product-copy">
                     <h2>{product.name}</h2>
                     <p className="catalog-product-short">{product.short}</p>
-                    <strong>{product.price}</strong>
+                    <div className="catalog-price-block"><strong>{product.price}</strong><PriceLegalNote /></div>
                   </div>
                 </article>
               ))}
@@ -4197,9 +4341,12 @@ function SalePage() {
                 <div className="catalog-product-copy">
                   <h2>{product.name}</h2>
                   <p className="catalog-product-short">{product.short}</p>
-                  <strong>
+                  <div className="catalog-price-block">
+                    <strong>
                     <s>{product.price}</s> {product.price}
-                  </strong>
+                    </strong>
+                    <PriceLegalNote />
+                  </div>
                 </div>
               </article>
             ))}
@@ -4333,7 +4480,7 @@ function ProductPage({ product }: { product: any }) {
                 {product.category} · {product.gender}
               </p>
               <h1>{product.name}</h1>
-              <strong>{product.price}</strong>
+              <div className="product-detail-price"><strong>{product.price}</strong><PriceLegalNote /></div>
               <p className="product-detail-lead">{product.description}</p>
               <div className="product-option">
                 <span>FARBE</span>
@@ -4433,7 +4580,7 @@ function CartPage() {
   const subtotal = cart?.cost?.subtotalAmount || cart?.cost?.totalAmount
   const currency = subtotal?.currencyCode || "EUR"
   const subtotalValue = Number(subtotal?.amount || 0)
-  const shippingValue = subtotalValue >= 80 ? 0 : 9.99
+  const shippingValue = subtotalValue >= 85 ? 0 : 6.15
   const formatCartMoney = (amount: number) =>
     new Intl.NumberFormat("de-DE", { style: "currency", currency }).format(
       amount,
@@ -4488,13 +4635,16 @@ function CartPage() {
                       <div>
                         <p>{variant.product.title}</p>
                         <span>{variant.title}</span>
-                        <small>
+                        <div className="cart-line-price">
+                          <small>
                           {node.quantity} ×{" "}
                           {new Intl.NumberFormat("de-DE", {
                             style: "currency",
                             currency: variant.price.currencyCode,
                           }).format(Number(variant.price.amount))}
-                        </small>
+                          </small>
+                          <PriceLegalNote />
+                        </div>
                       </div>
                       <button
                         type="button"
@@ -4509,7 +4659,7 @@ function CartPage() {
               </div>
               <aside className="cart-summary">
                 <p>ZWISCHENSUMME</p>
-                <strong>{formatCartMoney(subtotalValue)}</strong>
+                <div className="cart-summary-price"><strong>{formatCartMoney(subtotalValue)}</strong><PriceLegalNote /></div>
                 <div className="cart-summary-shipping">
                   <span>VERSAND · DHL / GLS</span>
                   <b className={shippingValue === 0 ? "is-free" : ""}>
@@ -4522,7 +4672,7 @@ function CartPage() {
                   <span>VORAUSSICHTLICH GESAMT</span>
                   <b>{formatCartMoney(subtotalValue + shippingValue)}</b>
                 </div>
-                <small>* KOSTENLOSER VERSAND AB 80,00 € WARENWERT.</small>
+                <small>* KOSTENLOSER VERSAND AB 85,00 € WARENWERT.</small>
                 <a className="btn-red" href={cart.checkoutUrl}>
                   SICHER ZUR KASSE →
                 </a>
@@ -5545,8 +5695,8 @@ const DESIGNER_PRODUCTS = [
   {
     id: "mug",
     title: "GLÄSER & TASSEN",
-    name: "Bierkrug",
-    image: staminaBierkrugWhite,
+    name: "Tasse Two Tone",
+    image: twoToneMugYellow,
     type: "single",
     zone: "mug",
   },
@@ -6089,6 +6239,33 @@ const SHOPPER_COLORS = [
   image: shopperImages[`./assets/designer/shopper/${imageKey}.webp`],
   backImage: shopperImages[`./assets/designer/shopper/${imageKey}.webp`],
 }))
+const twoToneMugImages = import.meta.glob(
+  "./assets/designer/mug/two-tone/*.webp",
+  { eager: true, import: "default" },
+) as Record<string, string>
+const MUG_COLORS = [
+  ["blau", "WEISS / BLAU", "#0000ff", "blau"],
+  ["cambridge_blau", "WEISS / CAMBRIDGE BLAU", "#0962bb", "cambridge_blau"],
+  ["gelb", "WEISS / GELB", "#ffcc00", "gelb"],
+  ["goldgelb", "WEISS / GOLDGELB", "#ffc900", "goldgelb"],
+  ["grau", "WEISS / GRAU", "#9e9e9e", "grau"],
+  ["gruen", "WEISS / GRÜN", "#003300", "gruen"],
+  ["hellblau", "WEISS / HELLBLAU", "#66ccff", "hellblau"],
+  ["hellgruen", "WEISS / HELLGRÜN", "#97db3e", "hellgruen"],
+  ["maroon", "WEISS / MAROON", "#920404", "maroon"],
+  ["mint", "WEISS / MINT", "#40c1ac", "mint"],
+  ["orange", "WEISS / ORANGE", "#ff6600", "orange"],
+  ["rosa", "WEISS / ROSA", "#f7cac9", "rosa"],
+  ["rot", "WEISS / ROT", "#ff0000", "rot"],
+  ["schwarz", "WEISS / SCHWARZ", "#000000", "schwarz"],
+  ["tuerkis", "WEISS / TÜRKIS", "#50b3ba", "tuerkis"],
+  ["violett", "WEISS / VIOLETT", "#563969", "violett"],
+].map(([id, label, swatch, imageKey]) => ({
+  id,
+  label,
+  swatch,
+  image: twoToneMugImages[`./assets/designer/mug/two-tone/${imageKey}.webp`],
+}))
 const KINDER_SWEATSHIRT_COLORS = [
   ["102", "WHITE", "#ffffff", "white"],
   ["143", "CREAMY PINK", "#f4e1d9", "creamy_pink"],
@@ -6509,6 +6686,152 @@ const migrateLegacyDesignerImage = async (dataUrl: string) => {
   return saveDesignerImage(await response.blob())
 }
 
+// Fixed print-zone positions shared by every colour of a product model.
+const PRINT_ZONE_POSITIONS: Record<
+  string,
+  { x: number; y: number; width?: number; height?: number }
+> = {
+  "mug:STANDARD:STANDARD:front": { x: 50, y: 52, width: 64, height: 24 },
+  "shopper:STANDARD:STANDARD:front": { x: 49.04, y: 65.89 },
+  "shopper:STANDARD:STANDARD:back": { x: 51.8, y: 66.25 },
+  "hoodie:FRAUEN:STANDARD:front": { x: 49.05158201968026, y: 36.91783337280758, width: 27.61099130089125, height: 23.548914789474363 },
+  "tshirt:FRAUEN:STANDARD:front": { x: 49.75, y: 32.95677258912199, width: 34, height: 29 },
+  "polo:FRAUEN:STANDARD:front": { x: 61.88559228446475, y: 32.808035387001254, width: 14.75264407126829, height: 12.583137590199422 },
+  "sweatshirt:FRAUEN:STANDARD:front": { x: 50.89, y: 32.645318921845146, width: 36.150197769756716, height: 30.83399221538073 },
+  "shirt:FRAUEN:STANDARD:front": { x: 61.5, y: 31.41, width: 15.3, height: 13.05 },
+  "headwear:FRAUEN:STANDARD:front": { x: 50, y: 39.29, width: 34.5, height: 28.5 },
+  "headwear:MÄNNER:STANDARD:front": { x: 50, y: 40, width: 34.5, height: 28.5 },
+  "headwear:KINDER:STANDARD:front": { x: 50, y: 40, width: 34.5, height: 28.5 },
+  "headwear:UNISEX:STANDARD:front": { x: 50, y: 40, width: 34.5, height: 28.5 },
+  "hoodie:MÄNNER:STANDARD:front": { x: 50.44304461970935, y: 40.0674328918514, width: 33.72, height: 28.76 },
+  "tshirt:MÄNNER:STANDARD:front": { x: 50.3143502996849, y: 36.71221959096721, width: 34, height: 29 },
+  "polo:MÄNNER:STANDARD:front": { x: 59.6, y: 34.21, width: 15.3, height: 13.05 },
+  "sweatshirt:MÄNNER:STANDARD:front": { x: 50.3962685344715, y: 32.88338147576651, width: 35.18, height: 30.01 },
+  "shirt:MÄNNER:STANDARD:front": { x: 60.35, y: 36.51, width: 15.3, height: 13.05 },
+  "hoodie:KINDER:STANDARD:front": { x: 50.39999398786161, y: 44.58896303418676, width: 32.74, height: 27.92 },
+  "tshirt:KINDER:STANDARD:front": { x: 50.09, y: 40.30315879152627, width: 34, height: 29 },
+  "polo:KINDER:STANDARD:front": { x: 61.6, y: 30.42, width: 16.21, height: 13.83 },
+  "sweatshirt:KINDER:STANDARD:front": { x: 49.73845038965669, y: 34.172926292459344, width: 33.95, height: 28.96 },
+  "hoodie:FRAUEN:STANDARD:back": { x: 49.05158201968026, y: 36.91783337280758, width: 27.61099130089125, height: 23.548914789474363 },
+  "tshirt:FRAUEN:STANDARD:back": { x: 49.75, y: 32.95677258912199, width: 34, height: 29 },
+  "polo:FRAUEN:STANDARD:back": { x: 50.00000288337232, y: 32.36809332202457, width: 31.685740413864153, height: 27.02607270594295 },
+  "sweatshirt:FRAUEN:STANDARD:back": { x: 50.89, y: 32.645318921845146, width: 36.150197769756716, height: 30.83399221538073 },
+  "shirt:FRAUEN:STANDARD:back": { x: 49.05158201968026, y: 36.91783337280758, width: 27.61099130089125, height: 23.548914789474363 },
+  "hoodie:MÄNNER:STANDARD:back": { x: 50.44304461970935, y: 40.0674328918514, width: 33.72, height: 28.76 },
+  "tshirt:MÄNNER:STANDARD:back": { x: 50.3143502996849, y: 36.71221959096721, width: 34, height: 29 },
+  "polo:MÄNNER:STANDARD:back": { x: 50.753910760581306, y: 33.71357978131175, width: 34, height: 29 },
+  "sweatshirt:MÄNNER:STANDARD:back": { x: 50.3962685344715, y: 32.88338147576651, width: 35.18, height: 30.01 },
+  "shirt:MÄNNER:STANDARD:back": { x: 50.55434241075426, y: 37.799558325657756, width: 34, height: 29 },
+  "sweatshirt:KINDER:STANDARD:back": { x: 49.73845038965669, y: 34.172926292459344, width: 33.95, height: 28.96 },
+  "polo:KINDER:STANDARD:back": { x: 50.48121756864675, y: 32.30418185708582, width: 34, height: 29 },
+  "tshirt:KINDER:STANDARD:back": { x: 50.09, y: 40.30315879152627, width: 34, height: 29 },
+  "hoodie:KINDER:STANDARD:back": { x: 50.39999398786161, y: 44.58896303418676, width: 32.74, height: 27.92 },
+  "hoodie:UNISEX:STANDARD:front": { x: 49.23331418957621, y: 50.58899630187037, width: 27.228337588914858, height: 23.224170296427378 },
+  "hoodie:UNISEX:STANDARD:back": { x: 51.28844865948206, y: 36.48017417273122, width: 32.80745498738442, height: 27.98282925394553 },
+  "tshirt:UNISEX:STANDARD:front": { x: 49.78662729304617, y: 34.90193636491302, width: 34, height: 29 },
+  "tshirt:UNISEX:STANDARD:back": { x: 49.78662729304617, y: 34.90193636491302, width: 34, height: 29 },
+  "polo:UNISEX:STANDARD:front": { x: 61.514232406084375, y: 31.30907371759764, width: 15.254676944908462, height: 13.011342100068982 },
+  "polo:UNISEX:STANDARD:back": { x: 50.418983749360635, y: 31.4457618592659, width: 31.928963563059398, height: 27.233527744962426 },
+  "sweatshirt:UNISEX:STANDARD:front": { x: 49.879691098734526, y: 33.27789726902822, width: 36.78527232912706, height: 31.37567345719661 },
+  "sweatshirt:UNISEX:STANDARD:back": { x: 49.879691098734526, y: 33.27789726902822, width: 36.78527232912706, height: 31.37567345719661 },
+}
+
+function TwoToneMugMockup({
+  color,
+  label,
+  showGuides = true,
+}: {
+  color: string
+  label: string
+  showGuides?: boolean
+}) {
+  return (
+    <svg
+      className="designer-mockup designer-two-tone-mug"
+      viewBox="0 0 1000 1000"
+      role="img"
+      aria-label={`Tasse Two Tone in ${label}`}
+    >
+      <defs>
+        <linearGradient id="two-tone-mug-body" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#d7d8dc" />
+          <stop offset="0.12" stopColor="#f9f9fa" />
+          <stop offset="0.5" stopColor="#ffffff" />
+          <stop offset="0.88" stopColor="#f4f4f5" />
+          <stop offset="1" stopColor="#d4d5d9" />
+        </linearGradient>
+        <linearGradient id="two-tone-mug-edge" x1="0" x2="0" y1="0" y2="1">
+          <stop stopColor="#fdfdfd" />
+          <stop offset="1" stopColor="#dedfe2" />
+        </linearGradient>
+        <filter id="two-tone-mug-shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="8" stdDeviation="7" floodColor="#64666c" floodOpacity="0.25" />
+        </filter>
+      </defs>
+      <rect width="1000" height="1000" fill="#f5f6f8" />
+      <g filter="url(#two-tone-mug-shadow)">
+        <path
+          d="M184 438C91 401 58 450 58 510s33 109 126 72"
+          fill="none"
+          stroke={color}
+          strokeWidth="34"
+          strokeLinecap="round"
+        />
+        <path
+          d="M816 438c93-37 126 12 126 72s-33 109-126 72"
+          fill="none"
+          stroke={color}
+          strokeWidth="34"
+          strokeLinecap="round"
+        />
+        <path
+          d="M184 438C91 401 58 450 58 510s33 109 126 72M816 438c93-37 126 12 126 72s-33 109-126 72"
+          fill="none"
+          stroke="#ffffff"
+          strokeOpacity="0.28"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
+        <rect x="180" y="360" width="640" height="320" rx="5" fill="url(#two-tone-mug-body)" stroke="#c7c8cc" strokeWidth="2" />
+        <path d="M180 360h640v17H180z" fill="url(#two-tone-mug-edge)" opacity="0.9" />
+        <path d="M181 668h638v10H181z" fill="#dfe0e3" opacity="0.48" />
+        <path d="M185 370h630" stroke="#ffffff" strokeOpacity="0.82" strokeWidth="2" />
+        <path d="M180 678h640" stroke="#b9bbc0" strokeOpacity="0.8" strokeWidth="2" />
+        <path d="M180 362v314M820 362v314" stroke="#aeb0b5" strokeOpacity="0.6" strokeWidth="2" />
+      </g>
+      {showGuides && (
+        <g>
+          <path d="M180 360h640" stroke={color} strokeWidth="4" strokeLinecap="round" />
+          <path d="M393.33 340v356M606.67 340v356" fill="none" stroke="#ed1d25" strokeWidth="4" strokeDasharray="12 10" />
+        </g>
+      )}
+      {showGuides && <g transform="translate(0 112)">
+        <g transform="translate(250 0)">
+          <path d="M-73 0A73 73 0 0 0 0 73" fill="none" stroke="#ed1d25" strokeWidth="6" strokeLinecap="round" />
+          <circle cx="0" cy="0" r="68" fill="#c8c9cd" />
+          <circle cx="0" cy="0" r="60" fill={color} />
+          <circle cx="0" cy="0" r="57" fill="none" stroke="#ffffff" strokeOpacity="0.34" strokeWidth="3" />
+          <path d="M-68 0h-28" stroke="#b8b9bd" strokeWidth="15" strokeLinecap="round" />
+        </g>
+        <g transform="translate(500 0)">
+          <path d="M-52 52A73 73 0 0 0 52 52" fill="none" stroke="#ed1d25" strokeWidth="6" strokeLinecap="round" />
+          <circle cx="0" cy="0" r="68" fill="#c8c9cd" />
+          <circle cx="0" cy="0" r="60" fill={color} />
+          <circle cx="0" cy="0" r="57" fill="none" stroke="#ffffff" strokeOpacity="0.34" strokeWidth="3" />
+          <path d="M0-68v-28" stroke="#b8b9bd" strokeWidth="15" strokeLinecap="round" />
+        </g>
+        <g transform="translate(750 0)">
+          <path d="M0 73A73 73 0 0 0 73 0" fill="none" stroke="#ed1d25" strokeWidth="6" strokeLinecap="round" />
+          <circle cx="0" cy="0" r="68" fill="#c8c9cd" />
+          <circle cx="0" cy="0" r="60" fill={color} />
+          <circle cx="0" cy="0" r="57" fill="none" stroke="#ffffff" strokeOpacity="0.34" strokeWidth="3" />
+          <path d="M68 0h28" stroke="#b8b9bd" strokeWidth="15" strokeLinecap="round" />
+        </g>
+      </g>}
+    </svg>
+  )
+}
+
 function DesignerStudio() {
   const id = new URLSearchParams(window.location.search).get("product")
   const initialProduct =
@@ -6578,6 +6901,7 @@ function DesignerStudio() {
   const [capColor, setCapColor] = useState("312")
   const [kidsCapColor, setKidsCapColor] = useState("LIM")
   const [shopperColor, setShopperColor] = useState("268")
+  const [mugColor, setMugColor] = useState("gelb")
   const [printSide, setPrintSide] = useState<"front" | "back">("front")
   const [reviewOpen, setReviewOpen] = useState(false)
   const [productInfoOpen, setProductInfoOpen] = useState(false)
@@ -6585,6 +6909,12 @@ function DesignerStudio() {
     "details",
   )
   const [helpStep, setHelpStep] = useState<number | null>(null)
+  const [forbiddenThemesOpen, setForbiddenThemesOpen] = useState(false)
+  const [copyrightUploadOpen, setCopyrightUploadOpen] = useState(false)
+  const [copyrightAccepted, setCopyrightAccepted] = useState(false)
+  const [copyrightUploadConfirmed, setCopyrightUploadConfirmed] = useState(
+    () => window.localStorage.getItem("pottlerkinder-copyright-upload-confirmed") === "true",
+  )
   const [uploadError, setUploadError] = useState("")
   const [draftReady, setDraftReady] = useState(false)
   const [historyVersion, setHistoryVersion] = useState(0)
@@ -6606,6 +6936,7 @@ function DesignerStudio() {
   const modelPickerRef = useRef<HTMLElement | null>(null)
   const fontPickerRef = useRef<HTMLDivElement | null>(null)
   const colorPaletteRef = useRef<HTMLDivElement | null>(null)
+  const uploadInputRef = useRef<HTMLInputElement | null>(null)
   const emptySideDesign = () => ({
     uploadedImage: "",
     text: "",
@@ -6695,6 +7026,7 @@ function DesignerStudio() {
       capColor,
       kidsCapColor,
       shopperColor,
+      mugColor,
     },
     sideDesigns: Object.fromEntries(
       Object.entries(sideDesigns.current).map(([side, design]) => [side, {
@@ -6768,6 +7100,7 @@ function DesignerStudio() {
     setCapColor(colors.capColor || "312")
     setKidsCapColor(colors.kidsCapColor || "LIM")
     setShopperColor(colors.shopperColor || "268")
+    setMugColor(colors.mugColor || "gelb")
     const getSide = (side: "front" | "back") => {
       const design = { ...emptySideDesign(), ...(draft.sideDesigns?.[side] || {}) }
       return { ...design, uploadedImage: restoredLibrary[restoredLibraryIds.indexOf(design.imageId)] || "" }
@@ -6903,6 +7236,7 @@ function DesignerStudio() {
     capColor,
     kidsCapColor,
     shopperColor,
+    mugColor,
   ])
   const undo = () => {
     if (historyIndexRef.current <= 0) return
@@ -6943,6 +7277,17 @@ function DesignerStudio() {
   const isFrauenCap =
     product.id === "headwear" && ["FRAUEN", "MÄNNER", "UNISEX"].includes(gender)
   const isAnyCap = isFrauenCap || isKinderCap
+  const printZoneKey = [product.id, gender || "STANDARD", model, printSide].join(":")
+  const defaultPrintZone = {
+    x: 50,
+    y: isShopper ? 50 : isMug ? 49 : isAnyCap ? 40 : 43,
+    width: isMug ? 51 : isShopper ? 34 : isAnyCap ? 23 : 34,
+    height: isMug ? 23 : isShopper ? 34 : isAnyCap ? 19 : 29,
+  }
+  const currentPrintZone = {
+    ...defaultPrintZone,
+    ...PRINT_ZONE_POSITIONS[printZoneKey],
+  }
   const isOneSizeProduct = isAnyCap || ["mug", "shopper"].includes(product.id)
   const isColumbiaSweatshirt =
     product.id === "sweatshirt" &&
@@ -7028,7 +7373,11 @@ function DesignerStudio() {
     KINDER_CAP_COLORS[0]
   const selectedShopperColor =
     SHOPPER_COLORS.find((item) => item.id === shopperColor) || SHOPPER_COLORS[0]
-  const configuredColors = isShopper
+  const selectedMugColor =
+    MUG_COLORS.find((item) => item.id === mugColor) || MUG_COLORS[0]
+  const configuredColors = isMug
+    ? MUG_COLORS
+    : isShopper
     ? SHOPPER_COLORS
     : isFrauenHoodie
       ? FRAUEN_HOODIE_COLORS
@@ -7065,7 +7414,9 @@ function DesignerStudio() {
                                     : isFrauenCap
                                       ? FRAUEN_CAP_COLORS
                                       : COLUMBIA_SWEATSHIRT_COLORS
-  const selectedConfiguredColor = isShopper
+  const selectedConfiguredColor = isMug
+    ? selectedMugColor
+    : isShopper
     ? selectedShopperColor
     : isFrauenHoodie
       ? selectedHoodieColor
@@ -7145,7 +7496,9 @@ function DesignerStudio() {
                                     : isColumbiaSweatshirt
                                       ? `${gender[0]}${gender.slice(1).toLowerCase()} Sweatshirt`
                                       : product.name
-  const productImage = isShopper
+  const productImage = isMug
+    ? selectedMugColor.image
+    : isShopper
     ? selectedShopperColor.image
     : isFrauenHoodie
       ? printSide === "back"
@@ -7232,6 +7585,14 @@ function DesignerStudio() {
             sideDesigns.current.back.text.trim() ||
             sideDesigns.current.back.text2.trim(),
         )
+  const hasFrontDesign =
+    printSide === "front"
+      ? Boolean(uploadedImage || text.trim() || text2.trim())
+      : Boolean(
+          sideDesigns.current.front.uploadedImage ||
+            sideDesigns.current.front.text.trim() ||
+            sideDesigns.current.front.text2.trim(),
+        )
   const hasAnyDesign = Boolean(
     uploadedImage ||
       text.trim() ||
@@ -7244,7 +7605,10 @@ function DesignerStudio() {
       sideDesigns.current.back.text2.trim(),
   )
   const designPrice =
-    (isConfiguredTextile || isShopper) && hasBackDesign ? 59.99 : 50
+    50 +
+    6.15 +
+    ((isMug ? hasAnyDesign : hasFrontDesign) ? 4.99 : 0) +
+    ((isConfiguredTextile || isShopper) && hasBackDesign ? 9.99 : 0)
   const designPriceLabel = new Intl.NumberFormat("de-DE", {
     style: "currency",
     currency: "EUR",
@@ -7290,25 +7654,40 @@ function DesignerStudio() {
       setUploadError("MAXIMAL 3 BILDER KÖNNEN GESPEICHERT WERDEN. LÖSCHE EIN BILD, UM EINEN PLATZ FREIZUGEBEN.")
       return
     }
-    try {
-      const imageId = await saveDesignerImage(file)
-      const image = URL.createObjectURL(file)
-      setImageLibrary((items) => [...items, image])
-      setImageLibraryIds((items) => [...items, imageId])
-      setActiveImageIndex(imageLibrary.length)
-      setUploadedImage(image)
-      setObjectScale(1)
-      setObjectRotation(0)
-      setObjectX(0)
-      setObjectY(0)
-      setBrightness(100)
-      setContrast(100)
-      setObject("image")
-      setPanel("design")
-      setUploadError("")
-    } catch {
-      setUploadError("DAS BILD KONNTE NICHT GESPEICHERT WERDEN. BITTE VERSUCHE ES ERNEUT.")
-    }
+    // Show the image immediately. IndexedDB is only a convenience for restoring
+    // a draft after refresh and must never prevent a customer from designing.
+    const image = URL.createObjectURL(file)
+    const temporaryId = `temporary-${window.crypto.randomUUID()}`
+    setImageLibrary((items) => [...items, image])
+    setImageLibraryIds((items) => [...items, temporaryId])
+    setActiveImageIndex(imageLibrary.length)
+    setUploadedImage(image)
+    setObjectScale(1)
+    setObjectRotation(0)
+    setObjectX(0)
+    setObjectY(0)
+    setBrightness(100)
+    setContrast(100)
+    setObject("image")
+    setPanel("design")
+    setUploadError("")
+    void saveDesignerImage(file)
+      .then((storedId) => {
+        setImageLibraryIds((items) => items.map((id) => id === temporaryId ? storedId : id))
+      })
+      .catch(() => {
+        // Embedded/private browser sessions may not provide IndexedDB.
+      })
+  }
+  const requestImageUpload = (event: React.MouseEvent<HTMLLabelElement>) => {
+    if (copyrightUploadConfirmed) return
+    event.preventDefault()
+    setCopyrightAccepted(false)
+    setCopyrightUploadOpen(true)
+  }
+  const confirmCopyrightUpload = () => {
+    window.localStorage.setItem("pottlerkinder-copyright-upload-confirmed", "true")
+    setCopyrightUploadConfirmed(true)
   }
   const uploadSecond = (file?: File) => {
     if (!file || !["image/png", "image/jpeg"].includes(file.type) || file.size > 5 * 1024 * 1024) return
@@ -7433,6 +7812,7 @@ function DesignerStudio() {
     setProductId(next.id)
     if (["mug", "shopper"].includes(next.id)) setGender("")
     if (next.id === "shopper") setShopperColor("268")
+    if (next.id === "mug") setMugColor("gelb")
     setProductPickerOpen(false)
     setModelPickerOpen(false)
     setSize(
@@ -7601,7 +7981,8 @@ function DesignerStudio() {
                                   : isMaennerShirt
                                     ? MAENNER_SHIRT_SIZES[nextColor]
                                     : COLUMBIA_SWEATSHIRT_SIZES[nextColor]
-    if (isShopper) setShopperColor(nextColor)
+    if (isMug) setMugColor(nextColor)
+    else if (isShopper) setShopperColor(nextColor)
     else if (isKinderCap) setKidsCapColor(nextColor)
     else if (isFrauenCap) setCapColor(nextColor)
     else if (isFrauenHoodie) setHoodieColor(nextColor as typeof hoodieColor)
@@ -7819,7 +8200,9 @@ function DesignerStudio() {
     printSide === "front" ? activeDesign : sideDesigns.current.front
   const backReviewDesign =
     printSide === "back" ? activeDesign : sideDesigns.current.back
-  const frontPreviewImage = isShopper
+  const frontPreviewImage = isMug
+    ? selectedMugColor.image
+    : isShopper
     ? selectedShopperColor.image
     : isFrauenHoodie
       ? selectedHoodieColor.image
@@ -7858,7 +8241,9 @@ function DesignerStudio() {
                                       : isColumbiaSweatshirt
                                         ? selectedSweatshirtColor.image
                                         : product.image
-  const backPreviewImage = isShopper
+  const backPreviewImage = isMug
+    ? selectedMugColor.image
+    : isShopper
     ? selectedShopperColor.backImage
     : isFrauenHoodie
       ? selectedHoodieColor.backImage
@@ -7999,8 +8384,22 @@ function DesignerStudio() {
                     : "Slim"
   const renderReviewPrint = (design: ReturnType<typeof emptySideDesign>, side: "front" | "back") => {
     const previewPosition = (value: number | undefined) => (value || 0) * reviewPositionScale[side]
+    const reviewPrintZone = {
+      ...defaultPrintZone,
+      ...PRINT_ZONE_POSITIONS[
+        [product.id, gender || "STANDARD", model, side].join(":")
+      ],
+    }
     return (
-    <div className={`designer-review-print is-${product.zone}`}>
+    <div
+      className={`designer-review-print is-${product.zone}`}
+      style={{
+        left: `${reviewPrintZone.x}%`,
+        top: `${reviewPrintZone.y}%`,
+        width: `${reviewPrintZone.width}%`,
+        height: `${reviewPrintZone.height}%`,
+      }}
+    >
       {design.uploadedImage && (
         <img
           src={design.uploadedImage}
@@ -8039,13 +8438,14 @@ function DesignerStudio() {
   const removeImageFromLibrary = (imageIndex: number) => {
     const imageId = imageLibraryIds[imageIndex]
     const imageUrl = imageLibrary[imageIndex]
+    const removesActiveImage = imageUrl === uploadedImage
     setImageLibrary((items) => {
       const next = items.filter((_, index) => index !== imageIndex)
-      const nextIndex = Math.max(0, next.length - 1)
-      const nextImage = next[nextIndex] || ""
-      setActiveImageIndex(nextIndex)
-      setUploadedImage(nextImage)
-      if (!nextImage && (text.trim() || text2.trim())) {
+      setActiveImageIndex((currentIndex) =>
+        imageIndex < currentIndex ? currentIndex - 1 : Math.min(currentIndex, Math.max(0, next.length - 1)),
+      )
+      if (removesActiveImage) setUploadedImage("")
+      if (removesActiveImage && (text.trim() || text2.trim())) {
         setObject("text")
         setPanel("text")
       }
@@ -8058,20 +8458,35 @@ function DesignerStudio() {
       }
     }
     if (imageUrl) URL.revokeObjectURL(imageUrl)
-    if (imageId) void deleteDesignerImage(imageId)
+    if (imageId && !imageId.startsWith("temporary-")) void deleteDesignerImage(imageId).catch(() => {})
     setUploadError("")
   }
   const removeSelectedObject = () => {
     if (object === "image") {
-      const imageIndex =
-        imageLibrary[activeImageIndex] === uploadedImage
-          ? activeImageIndex
-          : imageLibrary.indexOf(uploadedImage)
-      removeImageFromLibrary(imageIndex)
+      sideDesigns.current[printSide] = {
+        ...sideDesigns.current[printSide],
+        uploadedImage: "",
+      }
+      setUploadedImage("")
+      if (text.trim() || text2.trim()) {
+        setObject("text")
+        setPanel("text")
+      }
       return
     }
-    if (activeSlot === "text2") setText2("")
-    else setText("")
+    if (activeSlot === "text2") {
+      sideDesigns.current[printSide] = {
+        ...sideDesigns.current[printSide],
+        text2: "",
+      }
+      setText2("")
+    } else {
+      sideDesigns.current[printSide] = {
+        ...sideDesigns.current[printSide],
+        text: "",
+      }
+      setText("")
+    }
     if (uploadedImage) {
       setObject("image")
       setPanel("design")
@@ -8201,7 +8616,7 @@ function DesignerStudio() {
   return (
     <div className="designer-studio">
       <aside className="designer-tools">
-        <a href="/designer" className="designer-brand">
+        <a href="/" className="designer-brand" aria-label="На главную">
           <img src={imgTowerLogo} alt="Pottlerkinder" />
           <img src={imgWordmarkLogo} alt="Pottlerkinder" />
         </a>
@@ -8230,11 +8645,17 @@ function DesignerStudio() {
         <div className="designer-tool-content">
           {panel === "design" ? (
             <>
-              <label className="designer-upload">
+              <label htmlFor="designer-image-upload" className="designer-upload" onClick={requestImageUpload}>
                 <input
+                  id="designer-image-upload"
+                  ref={uploadInputRef}
                   type="file"
                   accept="image/png,image/jpeg"
-                  onChange={(event) => upload(event.target.files?.[0])}
+                  onClick={(event) => { event.currentTarget.value = "" }}
+                  onChange={(event) => {
+                    upload(event.target.files?.[0])
+                    setCopyrightUploadOpen(false)
+                  }}
                 />
                 <b>BILD HOCHLADEN</b>
                 <span>PNG ODER JPEG · MAX. 5 MB</span>
@@ -8396,18 +8817,31 @@ function DesignerStudio() {
               transform: `translate(-50%, -50%) translate(${canvasX}px, ${canvasY}px) scale(${canvasScale})`,
             }}
           >
-            <img
-              className={`designer-mockup ${
-                isShopper && printSide === "back" ? "is-shopper-back" : ""
-              }`}
-              src={productImage}
-              alt={`Vorschau ${productName}`}
-              draggable="false"
-            />
+            {isMug ? (
+              <TwoToneMugMockup
+                color={selectedMugColor.swatch}
+                label={selectedMugColor.label}
+              />
+            ) : (
+              <img
+                className={`designer-mockup ${
+                  isShopper && printSide === "back" ? "is-shopper-back" : ""
+                }`}
+                src={productImage}
+                alt={`Vorschau ${productName}`}
+                draggable="false"
+              />
+            )}
             <div
               className={`designer-print-zone is-${product.zone} ${
                 isAnyCap && printSide === "back" ? "is-preview-only" : ""
               }`}
+              style={{
+                left: `${currentPrintZone.x}%`,
+                top: `${currentPrintZone.y}%`,
+                width: `${currentPrintZone.width}%`,
+                height: `${currentPrintZone.height}%`,
+              }}
             >
               <div className="designer-print-artwork">
                 {uploadedImage && (
@@ -8643,11 +9077,17 @@ function DesignerStudio() {
               <button
                 type="button"
                 className="designer-help-button"
+                onPointerDown={(event) => event.stopPropagation()}
                 onClick={() => setHelpStep(0)}
               >
                 <b>?</b> HILFE ZUM KONSTRUKTEUR
               </button>
-              <button type="button" className="designer-forbidden-button">
+              <button
+                type="button"
+                className="designer-forbidden-button"
+                onPointerDown={(event) => event.stopPropagation()}
+                onClick={() => setForbiddenThemesOpen(true)}
+              >
                 <b>!</b> VERBOTENE THEMEN
               </button>
             </div>
@@ -8710,7 +9150,7 @@ function DesignerStudio() {
                     className={item.id === product.id ? "is-active" : ""}
                     key={item.id}
                   >
-                    {item.id === "mug" ? "BIERKRUG" : item.title}
+                    {item.id === "mug" ? "TASSE TWO TONE" : item.title}
                   </button>
                 ))}
               </div>
@@ -8747,7 +9187,7 @@ function DesignerStudio() {
               </div>
             )}
           </section>
-          {(isConfiguredTextile || isAnyCap || isShopper) && (
+          {(isConfiguredTextile || isAnyCap || isShopper || isMug) && (
             <section>
               <p>FARBE</p>
               <div className="designer-model-colors">
@@ -8762,7 +9202,11 @@ function DesignerStudio() {
                           ? "is-active"
                           : ""
                       }
-                      style={{ background: item.swatch }}
+                      style={{
+                        background: isMug
+                          ? `linear-gradient(90deg, #fff 0 50%, ${item.swatch} 50% 100%)`
+                          : item.swatch,
+                      }}
                       onClick={() => chooseConfiguredColor(item.id)}
                       key={item.id}
                     />
@@ -8787,31 +9231,43 @@ function DesignerStudio() {
               PRODUKTDETAILS <b>→</b>
             </button>
           </section>
-          {(product.type === "textile" || isAnyCap || isShopper) && (
+          {(product.type === "textile" || isAnyCap || isShopper || isMug) && (
             <section>
               <p>DRUCKSEITE</p>
-              <div className="designer-side-choice">
-                <button
-                  type="button"
-                  className={printSide === "front" ? "is-active" : ""}
-                  onClick={() => choosePrintSide("front")}
-                >
-                  VORDERSEITE
-                </button>
-                <button
-                  type="button"
-                  className={printSide === "back" ? "is-active" : ""}
-                  onClick={() => choosePrintSide("back")}
-                  disabled={!isConfiguredTextile && !isAnyCap && !isShopper}
-                >
-                  {isAnyCap ? "RÜCKSEITE" : "RÜCKSEITE +9,99 €"}
-                </button>
-              </div>
-              {isAnyCap ? (
-                <small>NUR VORDERSEITE IST BEDRUCKBAR.</small>
-              ) : isConfiguredTextile || isShopper ? (
-                <small>AUFPREIS NUR BEI GESTALTETER RÜCKSEITE.</small>
-              ) : null}
+              {isMug ? (
+                <>
+                  <div className="designer-side-choice">
+                    <button type="button" className="is-active">
+                      RUNDUMDRUCK +4,99 €
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="designer-side-choice">
+                    <button
+                      type="button"
+                      className={printSide === "front" ? "is-active" : ""}
+                      onClick={() => choosePrintSide("front")}
+                    >
+                      VORNE +4,99 €
+                    </button>
+                    <button
+                      type="button"
+                      className={printSide === "back" ? "is-active" : ""}
+                      onClick={() => choosePrintSide("back")}
+                      disabled={!isConfiguredTextile && !isAnyCap && !isShopper}
+                    >
+                      {isAnyCap ? "HINTEN" : "HINTEN +9,99 €"}
+                    </button>
+                  </div>
+                  {isAnyCap ? (
+                    <small>NUR VORDERSEITE IST BEDRUCKBAR.</small>
+                  ) : isConfiguredTextile || isShopper ? (
+                    <small>AUFPREISE FÜR BEDRUCKTE SEITEN.</small>
+                  ) : null}
+                </>
+              )}
             </section>
           )}
           <section>
@@ -8831,9 +9287,10 @@ function DesignerStudio() {
           </section>
         </div>
         <footer>
-          <div>
-            <span>DEIN PREIS</span>
-            <strong>{designPriceLabel}</strong>
+          <div className="designer-price-summary">
+            <span className="designer-price-label">DEIN PREIS</span>
+            <strong className="designer-price-value">{designPriceLabel}</strong>
+            <PriceLegalNote />
           </div>
           <button
             type="button"
@@ -8886,41 +9343,26 @@ function DesignerStudio() {
                   {isMug ? (
                     <>
                       <p className="designer-info-kicker">
-                        STAMINA · BIERKRUG WEISS · 20 OZ
+                        SUBLITASSE TWO TONE · 11 OZ
                       </p>
-                      <h2>STAMINA BIERKRUG WEISS, 20 OZ</h2>
+                      <h2>TASSE TWO TONE</h2>
                       <p>
-                        Ob für den zünftigen Bierabend, als individuelles
-                        Geschenk oder als Highlight in der eigenen
-                        Trophäensammlung – unser hochwertiger Keramik-Bierkrug
-                        mit einem Fassungsvermögen von 20 oz (ca. 700 ml) ist
-                        der perfekte Begleiter für echte Bierliebhaber. Dank der
-                        speziellen Beschichtung ist dieser Krug optimal für die
-                        Sublimation geeignet. Gestalte ihn mit deinem eigenen
-                        Design, Logo oder Spruch – für ein garantiert
-                        einzigartiges Ergebnis! Die glänzend weiße Oberfläche
-                        sorgt für brillante, farbintensive Druckergebnisse, die
-                        beeindrucken.
+                        Die Sublitasse Two Tone ist die ideale Basis für
+                        farbstarke, individuelle Motive. Ihre hochweiß-glänzende
+                        Orca-Beschichtung sorgt für brillante
+                        Sublimationsergebnisse; die farbige Innenseite und der
+                        C-förmige Henkel setzen einen klaren Akzent.
                       </p>
                       <h3>PRODUKTDETAILS</h3>
                       <ul>
-                        <li>Fassungsvermögen: 20 oz (ca. 700 ml)</li>
-                        <li>Material: robuste, langlebige Keramik</li>
-                        <li>Farbe: Weiß mit Sublimationsbeschichtung</li>
-                        <li>
-                          Spülmaschinengeeignet (Handwäsche empfohlen für
-                          langlebigere Farben)
-                        </li>
-                        <li>
-                          Ideal für personalisierte Geschenke, Vereine, Events
-                          oder Fans
-                        </li>
-                        <li>1 Karton = 20 Stück</li>
+                        <li>Fassungsvermögen: 11 oz (ca. 330 ml)</li>
+                        <li>Material: Keramik</li>
+                        <li>Hochwertige Orca-Beschichtung</li>
+                        <li>Hochweiß-glänzende Oberfläche</li>
+                        <li>Farbige Innenseite und C-förmiger Henkel</li>
+                        <li>Höhe: 95 mm · Durchmesser: 80 mm</li>
+                        <li>Spülmaschinenfest für mehr als 3.000 Spülgänge</li>
                       </ul>
-                      <p>
-                        Verwandle jeden Schluck in ein Statement – mit deinem
-                        personalisierten Keramik-Bierkrug!
-                      </p>
                     </>
                   ) : isShopper ? (
                     <>
@@ -9420,7 +9862,7 @@ function DesignerStudio() {
                   <dl>
                     <div>
                       <dt>HERSTELLER</dt>
-                      <dd>Stamina</dd>
+                      <dd>Sublitasse</dd>
                     </div>
                     <div>
                       <dt>MATERIAL</dt>
@@ -9552,21 +9994,29 @@ function DesignerStudio() {
               }`}
             >
               <div className="designer-review-side">
-                <span>VORDERSEITE</span>
+                <span>VORNE</span>
                 <div className="designer-review-product" data-review-side="front">
-                  <img
-                    className="designer-mockup"
-                    src={frontPreviewImage}
-                    alt={`Vorderseite ${productName}`}
-                    draggable="false"
-                  />
+                  {isMug ? (
+                    <TwoToneMugMockup
+                      color={selectedMugColor.swatch}
+                      label={selectedMugColor.label}
+                      showGuides={false}
+                    />
+                  ) : (
+                    <img
+                      className="designer-mockup"
+                      src={frontPreviewImage}
+                      alt={`Vorderseite ${productName}`}
+                      draggable="false"
+                    />
+                  )}
                   {renderReviewPrint(frontReviewDesign, "front")}
                 </div>
               </div>
               {((hasBackDesign && (isConfiguredTextile || isShopper)) ||
                 isAnyCap) && (
                 <div className="designer-review-side">
-                  <span>RÜCKSEITE</span>
+                  <span>HINTEN</span>
                   <div className="designer-review-product" data-review-side="back">
                     <img
                       className={`designer-mockup ${
@@ -9585,16 +10035,16 @@ function DesignerStudio() {
               <span>
                 {product.name} · {size}
               </span>
-              <strong>{designPriceLabel}</strong>
+              <div className="designer-review-price"><strong>{designPriceLabel}</strong><PriceLegalNote /></div>
             </div>
             <div className="designer-review-actions">
               <button
                 type="button"
-                className="designer-back-edit"
-                onClick={() => setReviewOpen(false)}
-              >
-                ZURÜCK ZUR BEARBEITUNG
-              </button>
+              className="designer-back-edit"
+              onClick={() => setReviewOpen(false)}
+            >
+                <b>←</b> ZURÜCK ZUR BEARBEITUNG
+            </button>
               <button
                 type="button"
                 className="btn-red designer-final-cart"
@@ -9609,6 +10059,38 @@ function DesignerStudio() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+      {copyrightUploadOpen && (
+        <div className="legal-dialog-layer" role="dialog" aria-modal="true" aria-labelledby="copyright-upload-title">
+          <button type="button" className="legal-dialog-backdrop" aria-label="Fenster schließen" onClick={() => setCopyrightUploadOpen(false)} />
+          <section className="legal-dialog copyright-upload-dialog">
+            <button type="button" className="legal-dialog-close" aria-label="Schließen" onClick={() => setCopyrightUploadOpen(false)}>×</button>
+            <p className="legal-kicker">BILD HOCHLADEN</p>
+            <h2 id="copyright-upload-title">URHEBERRECHT BESTÄTIGEN</h2>
+            <p>Bitte bestätige vor dem ersten Upload, dass du dein Motiv rechtmäßig verwenden darfst.</p>
+            <label className="copyright-confirmation">
+              <input type="checkbox" checked={copyrightAccepted} onChange={(event) => setCopyrightAccepted(event.target.checked)} />
+              <span>Mit dem Hochladen bestätige ich, dass ich die erforderlichen Urheber- bzw. Nutzungsrechte an diesem Bild besitze und das Motiv nicht gegen deutsches Recht verstößt.</span>
+            </label>
+            {copyrightAccepted ? (
+              <label className="btn-red copyright-confirm-button" onClick={confirmCopyrightUpload}>
+                WEITER ZUR DATEIAUSWAHL →
+                <input
+                  className="copyright-file-input"
+                  type="file"
+                  accept="image/png,image/jpeg"
+                  onClick={(event) => { event.currentTarget.value = "" }}
+                  onChange={(event) => {
+                    upload(event.target.files?.[0])
+                    setCopyrightUploadOpen(false)
+                  }}
+                />
+              </label>
+            ) : (
+              <button type="button" className="btn-red copyright-confirm-button" disabled>WEITER ZUR DATEIAUSWAHL →</button>
+            )}
+          </section>
         </div>
       )}
       {helpStep !== null && (
@@ -9645,11 +10127,104 @@ function DesignerStudio() {
           </div>
         </div>
       )}
+      {forbiddenThemesOpen && (
+        <div
+          className="designer-forbidden-layer"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="forbidden-themes-title"
+          onPointerDown={() => setForbiddenThemesOpen(false)}
+        >
+          <section
+            className="designer-forbidden-dialog"
+            onPointerDown={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="designer-forbidden-close"
+              onClick={() => setForbiddenThemesOpen(false)}
+              aria-label="Hinweis schließen"
+            >
+              ×
+            </button>
+            <p className="designer-dialog-kicker">WICHTIGER HINWEIS</p>
+            <h2 id="forbidden-themes-title">
+              WELCHE MOTIVE KÖNNEN NICHT GEDRUCKT WERDEN?
+            </h2>
+            <p className="designer-forbidden-lead">
+              Wir müssen Druckaufträge ablehnen, wenn sie Marken, unzulässige
+              Inhalte oder bearbeitete Darstellungen geschützter Marken enthalten.
+            </p>
+            <div className="designer-forbidden-rules">
+              <article>
+                <h3>MARKEN &amp; URHEBERRECHT</h3>
+                <p>
+                  Nicht druckbar sind fremde Marken, Logos und urheberrechtlich
+                  geschützte Bilder – auch dann nicht, wenn sie verändert wurden.
+                </p>
+              </article>
+              <article>
+                <h3>HASS, GEWALT &amp; EXTREMISMUS</h3>
+                <p>
+                  Keine Kriegspropaganda, Hassrede oder Herabwürdigung aufgrund
+                  von Herkunft, Religion oder Nationalität. Ebenfalls verboten
+                  sind Gewaltverherrlichung, Terrorismus, extremistisches Material
+                  sowie NS-, Neonazi- und rechtsextreme Symbole, einschließlich
+                  Symbolen mit Hakenkreuz-Elementen.
+                </p>
+              </article>
+              <article>
+                <h3>POLITIK &amp; PERSONEN</h3>
+                <p>
+                  Nicht zulässig sind emotional wertende politische Botschaften,
+                  Aufrufe zu politischen Handlungen, Inhalte zu politisch
+                  bedeutsamen Ereignissen sowie Beleidigungen oder Gewaltaufrufe
+                  gegen Amtsträgerinnen und Amtsträger.
+                </p>
+              </article>
+              <article>
+                <h3>JUGENDSCHUTZ &amp; GESUNDHEIT</h3>
+                <p>
+                  Pornografische Inhalte, die Verherrlichung von Grausamkeit,
+                  Suizidaufrufe oder Hinweise zu Selbstverletzung sind ausgeschlossen.
+                  Das gilt ebenso für die Bewerbung von Alkohol, Tabak, Drogen,
+                  Rauschmitteln und deren Beschaffung oder Herstellung.
+                </p>
+              </article>
+              <article>
+                <h3>VERTRAULICHE INFORMATIONEN</h3>
+                <p>
+                  Inhalte mit Staats-, Geschäfts- oder Dienstgeheimnissen sowie
+                  verleumderische Aussagen können nicht verarbeitet werden.
+                </p>
+              </article>
+            </div>
+            <div className="designer-forbidden-footer">
+              <span>
+                Im Zweifel prüfen wir dein Motiv vor dem Druck individuell.
+              </span>
+              <button
+                type="button"
+                className="btn-red"
+                onClick={() => setForbiddenThemesOpen(false)}
+              >
+                VERSTANDEN
+              </button>
+            </div>
+          </section>
+        </div>
+      )}
     </div>
   )
 }
 
 export default function App() {
+  const [shippingDialogOpen, setShippingDialogOpen] = useState(false)
+  useEffect(() => {
+    const openShippingDialog = () => setShippingDialogOpen(true)
+    window.addEventListener("pottlerkinder-open-shipping", openShippingDialog)
+    return () => window.removeEventListener("pottlerkinder-open-shipping", openShippingDialog)
+  }, [])
   const pages: Record<string, React.ReactNode> = {
     "/katalog": <CatalogPage />,
     "/sale": <SalePage />,
@@ -9665,9 +10240,10 @@ export default function App() {
   }
   const productHandle =
     window.location.pathname.match(/^\/katalog\/([^/]+)$/)?.[1]
-  return productHandle ? (
+  const content = productHandle ? (
     <ShopifyProductPage handle={decodeURIComponent(productHandle)} />
   ) : (
-    (pages[window.location.pathname] ?? <HomePage />)
+    LEGAL_PAGES[window.location.pathname] ? <LegalPage path={window.location.pathname} /> : (pages[window.location.pathname] ?? <HomePage />)
   )
+  return <>{content}<ShippingCostsDialog open={shippingDialogOpen} onClose={() => setShippingDialogOpen(false)} /></>
 }
