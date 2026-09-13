@@ -127,10 +127,77 @@ function PriceLegalNote() {
   )
 }
 
+const cartSubscribers = new Set<(cart: any | null) => void>()
+let sharedCart: any | null | undefined
+let sharedCartRequest: Promise<any | null> | null = null
+const catalogCache = new Map<string, any[]>()
+const catalogRequests = new Map<string, Promise<any[]>>()
+
 function publishCart(cart: any | null) {
+  sharedCart = cart
+  cartSubscribers.forEach((listener) => listener(cart))
   window.dispatchEvent(
     new CustomEvent("pottlerkinder-cart-updated", { detail: { cart } }),
   )
+}
+
+function cartHasVariant(cart: any | null | undefined, variantId?: string) {
+  if (!variantId) return false
+  return (cart?.lines?.edges || []).some(
+    ({ node }: any) => node.merchandise?.id === variantId,
+  )
+}
+
+function selectedProductVariant(product: any, size: string, color: string) {
+  const colorLabel = product.colorOptions?.find((item: any) => item.value === color)?.label
+  return (
+    product.variants?.find((variant: any) => {
+      const options = variant.selectedOptions || []
+      const sizeOption = options.find((option: any) =>
+        ["größe", "groesse", "size"].includes(option.name.toLowerCase()),
+      )
+      const colorOption = options.find((option: any) =>
+        ["farbe", "color"].includes(option.name.toLowerCase()),
+      )
+      return (
+        (!sizeOption || sizeOption.value === size) &&
+        (!colorOption || !colorLabel || colorOption.value === colorLabel)
+      )
+    }) || product.variants?.[0]
+  )
+}
+
+function cartWithoutLine(cart: any, lineId: string) {
+  const removedLine = (cart?.lines?.edges || []).find(
+    ({ node }: any) => node.id === lineId,
+  )?.node
+  return {
+    ...cart,
+    totalQuantity: Math.max(0, (cart?.totalQuantity || 0) - (removedLine?.quantity || 0)),
+    lines: {
+      ...cart.lines,
+      edges: (cart?.lines?.edges || []).filter(
+        ({ node }: any) => node.id !== lineId,
+      ),
+    },
+  }
+}
+
+function cartWithLineQuantity(cart: any, lineId: string, quantity: number) {
+  const previousLine = (cart?.lines?.edges || []).find(
+    ({ node }: any) => node.id === lineId,
+  )?.node
+  const difference = quantity - (previousLine?.quantity || 0)
+  return {
+    ...cart,
+    totalQuantity: Math.max(0, (cart?.totalQuantity || 0) + difference),
+    lines: {
+      ...cart.lines,
+      edges: (cart?.lines?.edges || []).map(({ node }: any) =>
+        node.id === lineId ? { node: { ...node, quantity } } : { node },
+      ),
+    },
+  }
 }
 
 function ShippingCostsDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -143,7 +210,7 @@ function ShippingCostsDialog({ open, onClose }: { open: boolean; onClose: () => 
         <p className="legal-kicker">VERSAND & LIEFERUNG</p>
         <h2 id="shipping-dialog-title">VERSANDKOSTEN</h2>
         <div className="shipping-rate-card">
-          <span>DEUTSCHLAND · DHL / DEUTSCHE POST</span>
+          <span>DEUTSCHLAND · DHL / GLS</span>
           <b>6,15 €</b>
           <small>pro Bestellung</small>
         </div>
@@ -552,7 +619,7 @@ function Header() {
   const [catalogOpen, setCatalogOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [accountOpen, setAccountOpen] = useState(false)
-  const { cart, refreshCart } = useShopifyCart()
+  const { cart } = useShopifyCart()
   const {
     customer: accountCustomer,
     loading: accountLoading,
@@ -906,7 +973,6 @@ function Header() {
             <button
               type="button"
               onClick={() => {
-                refreshCart()
                 setCartOpen(true)
               }}
               className="btn-glass flex items-center gap-2 whitespace-nowrap"
@@ -1066,7 +1132,6 @@ function Header() {
             <button
               type="button"
               onClick={() => {
-                refreshCart()
                 setCartOpen(true)
               }}
               aria-label="Warenkorb"
@@ -1224,9 +1289,13 @@ function CartDrawer({
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setRemoving(lineId)
+    const previousCart = cart
+    publishCart(cartWithoutLine(cart, lineId))
     try {
       const response = await shopCart.remove(cart.id, [lineId])
       publishCart((response as { cart: any }).cart)
+    } catch {
+      publishCart(previousCart)
     } finally {
       setRemoving(null)
     }
@@ -1234,9 +1303,13 @@ function CartDrawer({
   const updateLineQuantity = async (lineId: string, quantity: number) => {
     if (!cart?.id || quantity < 1) return
     setRemoving(lineId)
+    const previousCart = cart
+    publishCart(cartWithLineQuantity(cart, lineId, quantity))
     try {
       const response = await shopCart.update(cart.id, [{ id: lineId, quantity }])
       publishCart((response as { cart: any }).cart)
+    } catch {
+      publishCart(previousCart)
     } finally {
       setRemoving(null)
     }
@@ -2998,7 +3071,7 @@ const LEGAL_PAGES: Record<string, { eyebrow: string; title: string; lead: string
       { title: "2. VERTRAGSGEGENSTAND & VERTRAGSSCHLUSS", text: "Wir bieten Textilien, DTF-Drucke, Stickereien, Tassen und weitere veredelte oder personalisierte Produkte an. Die Darstellung im Shop ist kein verbindliches Angebot. Mit der Bestellung geben Sie ein verbindliches Angebot ab; der Vertrag kommt mit unserer Auftragsbestätigung oder Lieferung zustande." },
       { title: "3. INDIVIDUELL GEFERTIGTE PRODUKTE", text: "Produkte, die nach Kundenspezifikation angefertigt oder eindeutig personalisiert werden, sind vom gesetzlichen Widerrufsrecht ausgeschlossen. Dazu zählen insbesondere Motive, Namen, Logos, Texte und individuell veredelte Artikel." },
       { title: "4. KUNDENDATEIEN, URHEBERRECHT & RECHTE DRITTER", text: "Für hochgeladene Motive, Logos und Dateien sind Sie verantwortlich. Sie bestätigen, über die erforderlichen Nutzungsrechte zu verfügen und keine Rechte Dritter oder gesetzlichen Vorschriften zu verletzen. Bei Ansprüchen Dritter stellen Sie Pottlerkinder von berechtigten Ansprüchen frei." },
-      { title: "5. PREISE, ZAHLUNG & LIEFERUNG", text: "Alle Preise verstehen sich in Euro einschließlich der gesetzlichen Mehrwertsteuer zuzüglich Versandkosten. Die verfügbaren Zahlungsarten werden im Checkout angezeigt. Der Versand erfolgt innerhalb Deutschlands über DHL oder Deutsche Post; Lieferzeiten können bei personalisierten Produkten bis zu 15 Werktage betragen." },
+      { title: "5. PREISE, ZAHLUNG & LIEFERUNG", text: "Alle Preise verstehen sich in Euro einschließlich der gesetzlichen Mehrwertsteuer zuzüglich Versandkosten. Die verfügbaren Zahlungsarten werden im Checkout angezeigt. Der Versand erfolgt innerhalb Deutschlands über DHL oder GLS; Lieferzeiten können bei personalisierten Produkten bis zu 15 Werktage betragen." },
       { title: "6. MÄNGEL, HAFTUNG & SCHLUSSBESTIMMUNGEN", text: "Es gelten die gesetzlichen Mängelrechte. Farbabweichungen, Materialeigenschaften und technisch bedingte Abweichungen bei Textil- oder Druckerzeugnissen können handelsüblich sein. Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gesetzliche Verbraucherrechte und die Regelungen zur Streitbeilegung bleiben unberührt." },
     ],
   },
@@ -3009,7 +3082,7 @@ const LEGAL_PAGES: Record<string, { eyebrow: string; title: string; lead: string
       { title: "2. RECHTSGRUNDLAGEN", text: "Wir verarbeiten Daten nach DSGVO und TDDDG, insbesondere zur Vertragserfüllung, aufgrund berechtigter Interessen, gesetzlicher Pflichten oder Ihrer Einwilligung." },
       { title: "3. SHOP, BESTELLUNG & KUNDENKONTO", text: "Der Shop wird über Shopify bereitgestellt. Für Bestellungen und Kundenkonten verarbeiten wir insbesondere Name, Anschrift, E-Mail-Adresse, Zahlungs- und Bestelldaten. Die Verarbeitung dient der Bestellung, Lieferung, Zahlung, Kommunikation und Erfüllung gesetzlicher Aufbewahrungspflichten." },
       { title: "4. PERSONALISIERTE INHALTE & KONTAKT", text: "Hochgeladene Designs, Texte und Motive werden ausschließlich zur Herstellung und Abwicklung der Bestellung verarbeitet. Bei einer Kontaktaufnahme verarbeiten wir die übermittelten Daten zur Bearbeitung Ihres Anliegens." },
-      { title: "5. DIENSTLEISTER, COOKIES & EXTERNE INHALTE", text: "Zahlungsdienste, Versanddienstleister (DHL/Deutsche Post), Shopify sowie gegebenenfalls Google Maps, Instagram und Analysedienste verarbeiten Daten nur im jeweils erforderlichen Umfang. Nicht notwendige Cookies und Analysefunktionen werden nur nach Ihrer Einwilligung eingesetzt." },
+      { title: "5. DIENSTLEISTER, COOKIES & EXTERNE INHALTE", text: "Zahlungsdienste, Versanddienstleister (DHL/GLS), Shopify sowie gegebenenfalls Google Maps, Instagram und Analysedienste verarbeiten Daten nur im jeweils erforderlichen Umfang. Nicht notwendige Cookies und Analysefunktionen werden nur nach Ihrer Einwilligung eingesetzt." },
       { title: "6. IHRE RECHTE", text: "Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit, Widerspruch sowie Widerruf einer Einwilligung. Außerdem besteht ein Beschwerderecht bei einer Datenschutzaufsichtsbehörde." },
     ],
   },
@@ -3026,7 +3099,7 @@ const LEGAL_PAGES: Record<string, { eyebrow: string; title: string; lead: string
   "/versandkosten": {
     eyebrow: "VERSAND & LIEFERUNG", title: "VERSANDKOSTEN", lead: "Transparente Lieferinformationen für Bestellungen innerhalb Deutschlands.",
     sections: [
-      { title: "VERSAND INNERHALB DEUTSCHLANDS", text: "Wir versenden unsere Produkte innerhalb Deutschlands mit DHL / Deutsche Post. Die Versandkosten betragen 6,15 € pro Bestellung. Ab einem Bestellwert von 85,00 € ist der Versand innerhalb Deutschlands kostenfrei. Die Versandkosten werden im Bestellprozess vor Abschluss der Bestellung nochmals angezeigt." },
+      { title: "VERSAND INNERHALB DEUTSCHLANDS", text: "Wir versenden unsere Produkte innerhalb Deutschlands mit DHL / GLS. Die Versandkosten betragen 6,15 € pro Bestellung. Ab einem Bestellwert von 85,00 € ist der Versand innerhalb Deutschlands kostenfrei. Die Versandkosten werden im Bestellprozess vor Abschluss der Bestellung nochmals angezeigt." },
       { title: "BEARBEITUNGSZEIT", text: "Standardprodukte: Die Bearbeitungszeit beträgt in der Regel 3–5 Werktage. Personalisierte und individuell angefertigte Produkte: Die Bearbeitungszeit beträgt in der Regel bis zu 15 Werktage. Die anschließende Versandlaufzeit richtet sich nach DHL und ist in diesen Bearbeitungszeiten nicht enthalten. Bei individuell gestalteten Produkten kann die Bearbeitungszeit je nach Umfang und Art des Auftrags variieren. Die für das jeweilige Produkt angegebene Lieferzeit ist maßgeblich." },
       { title: "VERSANDBESTÄTIGUNG", text: "Sobald deine Bestellung an DHL übergeben wurde, erhältst du – sofern verfügbar – eine Versandbestätigung mit den Informationen zur Sendungsverfolgung." },
       { title: "LIEFERADRESSE", text: "Bitte achte bei deiner Bestellung auf die korrekte und vollständige Lieferadresse. Für Verzögerungen, die durch fehlerhafte oder unvollständige Adressangaben entstehen, können zusätzliche Kosten anfallen." },
@@ -3738,9 +3811,13 @@ function shopifyCatalogProduct(product: any) {
   const category = SHOPIFY_CATEGORY_MAP[categoryValue] || "T-SHIRTS"
   const genderValue = normalizeTag(tag("gender_") || "UNISEX")
   const gender = SHOPIFY_GENDER_MAP[genderValue] || "UNISEX"
-  const selectedColors = Array.from(
+  const colorOptions = Array.from(
     new Set(option("farbe").concat(option("color"))),
-  ).map((item: string) => SHOPIFY_COLORS[item.toLowerCase()] || "#777")
+  ).map((item: string) => ({
+    label: item,
+    value: SHOPIFY_COLORS[item.toLowerCase()] || "#777",
+  }))
+  const selectedColors = colorOptions.map((item) => item.value)
   const selectedSizes = Array.from(
     new Set(option("größe").concat(option("groesse"), option("size"))),
   )
@@ -3776,6 +3853,7 @@ function shopifyCatalogProduct(product: any) {
       : undefined,
     gender,
     colors: selectedColors.length ? selectedColors : ["#161616"],
+    colorOptions,
     price: formatPrice(firstVariant?.price),
     compareAtPrice: firstVariant?.compareAtPrice
       ? formatPrice(firstVariant.compareAtPrice)
@@ -3792,68 +3870,84 @@ function useShopifyCatalog(handle?: string) {
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
     let active = true
-    const loadCatalog = () =>
-      fetch(
+    const cacheKey = handle || "all"
+    const loadCatalog = () => {
+      const cachedProducts = catalogCache.get(cacheKey)
+      if (cachedProducts) return Promise.resolve(cachedProducts)
+
+      const activeRequest = catalogRequests.get(cacheKey)
+      if (activeRequest) return activeRequest
+
+      const request = fetch(
         `/api/products${handle ? `?handle=${encodeURIComponent(handle)}` : ""}`,
-        { cache: "no-store" },
       )
         .then((response) =>
           response.ok
             ? response.json()
             : Promise.reject(new Error("Shopify products unavailable")),
         )
-        .then(
-          (data) =>
-            active &&
-            setProducts(
-              (data.products || []).map(shopifyCatalogProduct).filter(Boolean),
-            ),
-        )
-        .catch((requestError) => active && setError(requestError.message))
-    const refreshOnFocus = () => {
-      if (document.visibilityState === "visible") loadCatalog()
+        .then((data) => {
+          const mappedProducts = (data.products || [])
+            .map(shopifyCatalogProduct)
+            .filter(Boolean)
+          catalogCache.set(cacheKey, mappedProducts)
+          return mappedProducts
+        })
+        .finally(() => catalogRequests.delete(cacheKey))
+      catalogRequests.set(cacheKey, request)
+      return request
     }
+
     loadCatalog()
-    window.addEventListener("focus", refreshOnFocus)
+      .then((nextProducts) => active && setProducts(nextProducts))
+      .catch((requestError) => active && setError(requestError.message))
     return () => {
       active = false
-      window.removeEventListener("focus", refreshOnFocus)
     }
   }, [handle])
   return { products, error }
 }
 
 function useShopifyCart() {
-  const [cart, setCart] = useState<any | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [cart, setCart] = useState<any | null>(sharedCart ?? null)
+  const [loading, setLoading] = useState(sharedCart === undefined)
   const refreshCart = () => {
     const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
     if (!cartId) {
-      setCart(null)
-      setLoading(false)
-      return
+      publishCart(null)
+      return Promise.resolve(null)
     }
-    setLoading(true)
-    shopCart
+    if (!sharedCartRequest) {
+      sharedCartRequest = shopCart
       .get(cartId)
       .then((response) => {
         const nextCart = (response as { cart: any }).cart
         if (!nextCart) window.localStorage.removeItem("pottlerkinder-cart-id")
-        setCart(nextCart || null)
+        publishCart(nextCart || null)
+        return nextCart || null
       })
       .catch(() => {
         window.localStorage.removeItem("pottlerkinder-cart-id")
-        setCart(null)
+        publishCart(null)
+        return null
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        sharedCartRequest = null
+      })
+    }
+    return sharedCartRequest
   }
   useEffect(() => {
-    refreshCart()
+    const receiveSharedCart = (nextCart: any | null) => {
+      setCart(nextCart)
+      setLoading(false)
+    }
+    cartSubscribers.add(receiveSharedCart)
+    refreshCart().finally(() => setLoading(false))
     const receiveCart = (event: Event) => {
       const nextCart = (event as CustomEvent<{ cart?: any | null }>).detail?.cart
       if (nextCart !== undefined) {
-        setCart(nextCart)
-        setLoading(false)
+        receiveSharedCart(nextCart)
         return
       }
       refreshCart()
@@ -3861,6 +3955,7 @@ function useShopifyCart() {
     window.addEventListener("pottlerkinder-cart-updated", receiveCart)
     window.addEventListener("pottler-account-logout", refreshCart)
     return () => {
+      cartSubscribers.delete(receiveSharedCart)
       window.removeEventListener("pottlerkinder-cart-updated", receiveCart)
       window.removeEventListener("pottler-account-logout", refreshCart)
     }
@@ -4012,12 +4107,13 @@ function FilterOptionIcon({ label }: { label: string }) {
   return <Icon aria-hidden="true" className="catalog-filter-option-icon" />
 }
 
-function CatalogAddToCartButton({ product }: { product: any }) {
+function CatalogAddToCartButton({ product, cart }: { product: any; cart: any | null }) {
   // Catalog items are sourced exclusively from Shopify.
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
+  const variant = product.variants?.[0]
+  const inCart = cartHasVariant(cart, variant?.id)
 
   const addToCart = async () => {
-    const variant = product.variants?.[0]
     if (!variant?.id) {
       setStatus("error")
       return
@@ -4041,7 +4137,7 @@ function CatalogAddToCartButton({ product }: { product: any }) {
   const label =
     status === "loading"
       ? "WIRD HINZUGEFÜGT"
-      : status === "success"
+      : inCart
         ? "HINZUGEFÜGT"
         : status === "error"
           ? "ERNEUT VERSUCHEN"
@@ -4050,7 +4146,7 @@ function CatalogAddToCartButton({ product }: { product: any }) {
   return (
     <button
       type="button"
-      className={`catalog-add-to-cart ${status === "success" ? "is-success" : ""} ${status === "error" ? "is-error" : ""}`}
+      className={`catalog-add-to-cart ${inCart ? "is-success" : ""} ${status === "error" ? "is-error" : ""}`}
       onClick={addToCart}
       disabled={status === "loading"}
       aria-label={`${product.name} – ${label}`}
@@ -4064,6 +4160,7 @@ function CatalogAddToCartButton({ product }: { product: any }) {
 
 function CatalogPage() {
   const { products: shopifyProducts, error: shopifyError } = useShopifyCatalog()
+  const { cart } = useShopifyCart()
   const catalogProducts = shopifyProducts ?? []
   const params = new URLSearchParams(window.location.search)
   const [category, setCategory] = useState(
@@ -4374,7 +4471,7 @@ function CatalogPage() {
                         <strong>{product.price}</strong>
                         <PriceLegalNote />
                       </div>
-                      <CatalogAddToCartButton product={product} />
+                      <CatalogAddToCartButton product={product} cart={cart} />
                     </div>
                   </div>
                 </article>
@@ -4422,6 +4519,7 @@ function CatalogPage() {
 
 function SalePage() {
   const { products: shopifyProducts, error: shopifyError } = useShopifyCatalog()
+  const { cart } = useShopifyCart()
   const [page, setPage] = useState(1)
   const resultsRef = useRef<HTMLElement>(null)
   const perPage = 20
@@ -4482,7 +4580,7 @@ function SalePage() {
                       </strong>
                       <PriceLegalNote />
                     </div>
-                    <CatalogAddToCartButton product={product} />
+                    <CatalogAddToCartButton product={product} cart={cart} />
                   </div>
                 </div>
               </article>
@@ -4548,17 +4646,12 @@ function ProductPage({ product }: { product: any }) {
   const productImages = product.images || [
     { url: product.image, altText: product.name },
   ]
+  const { cart } = useShopifyCart()
   const [cartStatus, setCartStatus] =
     useState<"idle" | "loading" | "success" | "error">("idle")
+  const variant = selectedProductVariant(product, size, selectedColor)
+  const inCart = cartHasVariant(cart, variant?.id)
   const addToCart = async () => {
-    const variant =
-      product.variants?.find((item: any) =>
-        item.selectedOptions?.some(
-          (option: any) =>
-            ["größe", "groesse", "size"].includes(option.name.toLowerCase()) &&
-            option.value === size,
-        ),
-      ) || product.variants?.[0]
     if (!variant?.id) {
       setCartStatus("error")
       return
@@ -4657,16 +4750,18 @@ function ProductPage({ product }: { product: any }) {
                   </div>
                 </div>
                 <button
-                  className="btn-red product-cart-button"
+                  className={`btn-red product-cart-button ${inCart ? "is-success" : ""}`}
                   onClick={addToCart}
                   disabled={cartStatus === "loading"}
                 >
                   {cartStatus === "loading"
                     ? "WIRD HINZUGEFÜGT"
+                    : inCart
+                    ? "IM WARENKORB"
                     : "IN DEN WARENKORB"}{" "}
                   <span>→</span>
                 </button>
-                {cartStatus === "success" && (
+                {inCart && (
                   <p className="product-cart-feedback">
                     IM WARENKORB GESPEICHERT.
                   </p>
@@ -4736,9 +4831,13 @@ function CartPage() {
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setUpdating(lineId)
+    const previousCart = cart
+    publishCart(cartWithoutLine(cart, lineId))
     try {
       const response = await shopCart.remove(cart.id, [lineId])
       publishCart((response as { cart: any }).cart)
+    } catch {
+      publishCart(previousCart)
     } finally {
       setUpdating(null)
     }
@@ -4746,9 +4845,13 @@ function CartPage() {
   const updateLineQuantity = async (lineId: string, quantity: number) => {
     if (!cart?.id || quantity < 1) return
     setUpdating(lineId)
+    const previousCart = cart
+    publishCart(cartWithLineQuantity(cart, lineId, quantity))
     try {
       const response = await shopCart.update(cart.id, [{ id: lineId, quantity }])
       publishCart((response as { cart: any }).cart)
+    } catch {
+      publishCart(previousCart)
     } finally {
       setUpdating(null)
     }

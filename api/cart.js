@@ -1,6 +1,6 @@
 import { sendError, storefront } from "./_shopify.js"
 
-const cartFields = `id checkoutUrl totalQuantity cost { totalAmount { amount currencyCode } } lines(first:100) { edges { node { id quantity merchandise { ... on ProductVariant { id title price { amount currencyCode } availableForSale quantityAvailable product { title handle featuredImage { url altText } } } } } } }`
+const cartFields = `id checkoutUrl totalQuantity buyerIdentity { countryCode customer { id } } cost { totalAmount { amount currencyCode } } lines(first:100) { edges { node { id quantity merchandise { ... on ProductVariant { id title price { amount currencyCode } availableForSale quantityAvailable product { title handle featuredImage { url altText } } } } } } }`
 const cartPayload = `cart { ${cartFields} } userErrors { field message } warnings { code message }`
 
 // The customer session is intentionally HttpOnly: the browser never receives
@@ -24,35 +24,6 @@ function validateCartRequest(action, cartId, lines) {
   if (["create", "add"].includes(action) && !lines.every((line) => validId(line?.merchandiseId) && Number.isInteger(line.quantity) && line.quantity > 0)) throw new Error("Invalid cart lines")
   if (action === "update" && !lines.every((line) => validId(line?.id) && Number.isInteger(line.quantity) && line.quantity >= 0)) throw new Error("Invalid cart lines")
   if (action === "remove" && !lines.every(validId)) throw new Error("Invalid cart lines")
-}
-
-async function validateSellableLines(lines) {
-  if (!lines.length) return
-  const ids = lines.map((line) => line.merchandiseId)
-  const data = await storefront(
-    `query($ids:[ID!]!){nodes(ids:$ids){... on ProductVariant{id availableForSale quantityAvailable}}}`,
-    { ids },
-  )
-  const variants = new Map((data.nodes || []).filter(Boolean).map((variant) => [variant.id, variant]))
-  for (const line of lines) {
-    const variant = variants.get(line.merchandiseId)
-    if (!variant?.availableForSale || (typeof variant.quantityAvailable === "number" && line.quantity > variant.quantityAvailable)) {
-      throw new Error("Dieser Artikel ist nicht mehr verfügbar")
-    }
-  }
-}
-
-async function validateCartUpdates(cartId, updates) {
-  if (!updates.length) return
-  const data = await storefront(`query($cartId:ID!){cart(id:$cartId){${cartFields}}}`, { cartId })
-  const cartLines = new Map((data.cart?.lines?.edges || []).map(({ node }) => [node.id, node]))
-  for (const update of updates) {
-    const cartLine = cartLines.get(update.id)
-    const variant = cartLine?.merchandise
-    if (!cartLine || !variant?.availableForSale || (typeof variant.quantityAvailable === "number" && update.quantity > variant.quantityAvailable)) {
-      throw new Error("Dieser Artikel ist nicht mehr in der gewünschten Menge verfügbar")
-    }
-  }
 }
 
 async function removeSoldOutLines(cart) {
@@ -84,13 +55,22 @@ async function syncCartBuyerIdentity(cart, token) {
   }
 }
 
+function needsBuyerIdentitySync(cart, token) {
+  return Boolean(token && cart?.id && !cart.buyerIdentity?.customer?.id)
+}
+
+async function finalizeCart(cart, token) {
+  const availableCart = await removeSoldOutLines(cart)
+  return needsBuyerIdentitySync(availableCart, token)
+    ? syncCartBuyerIdentity(availableCart, token)
+    : availableCart
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "POST only" })
   try {
     const { action, cartId, lines = [] } = req.body || {}
     validateCartRequest(action, cartId, lines)
-    if (["create", "add"].includes(action)) await validateSellableLines(lines)
-    if (action === "update") await validateCartUpdates(cartId, lines)
     const token = customerAccessToken(req)
     if (action === "detach") {
       const data = await storefront(`query($cartId:ID!){cart(id:$cartId){${cartFields}}}`, { cartId })
@@ -106,9 +86,9 @@ export default async function handler(req, res) {
     if (!mutations[action]) return res.status(400).json({ error: "Unknown cart action" })
     const [query, variables] = mutations[action]
     const data = await storefront(query, variables)
-    if (action === "get") return res.status(200).json({ cart: await syncCartBuyerIdentity(await removeSoldOutLines(data.cart), token) })
+    if (action === "get") return res.status(200).json({ cart: await finalizeCart(data.cart, token) })
     const result = Object.values(data)[0]
     if (result.userErrors?.length) return res.status(422).json({ errors: result.userErrors })
-    res.status(200).json({ cart: await syncCartBuyerIdentity(result.cart, token) })
+    res.status(200).json({ cart: await finalizeCart(result.cart, token) })
   } catch (error) { sendError(res, error) }
 }
