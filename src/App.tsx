@@ -105,6 +105,7 @@ import pageCompany from "@/imports/assets/pages/company.webp"
 import pageHistory from "@/imports/assets/pages/history.webp"
 import pageBlog from "@/imports/assets/pages/blog.webp"
 import { shopCart } from "@/lib/shopify"
+import CompanyPageContent from "@/components/CompanyPageContent"
 
 // ─── Shared padding value (12vw clamped) ──────────────────────────────────────
 const SECTION_PAD = "clamp(16px, 12vw, 210px)"
@@ -3329,50 +3330,13 @@ function LegalPage({ path }: { path: string }) {
   )
 }
 
-const companyOffers = [
-  "Arbeitskleidung mit Firmenlogo – T-Shirts, Poloshirts, Sweatshirts, Hoodies, Jacken und mehr",
-  "Mitarbeiterbekleidung – einheitlicher und professioneller Auftritt Ihres Teams",
-  "Personalisierte Kleidung – Namen, Positionen, Logos und individuelle Beschriftungen",
-  "Firmen- und Vereinsbekleidung – individuell nach Ihren Vorstellungen",
-  "Werbeartikel – personalisierte Tassen, Taschen, Caps, Bierkrüge, Schiefer-Untersetzer und weitere Produkte",
-  "Kunden- und Mitarbeitergeschenke – individuelle Geschenkideen für besondere Anlässe",
-  "Merchandise – eigene Kollektionen mit Ihrem Logo, Slogan oder Design",
-  "Kleinserien und Einzelstücke – auch für kleinere Unternehmen und individuelle Projekte",
-  "Individuelle Gestaltung – wir setzen Ihre Ideen, Logos und Motive professionell auf verschiedene Produkte um",
-]
-
 function CompanyPage() {
   return (
-    <TextPage
-      image={PAGE_BACKDROPS.company}
-      eyebrow="POTTLERKINDER FÜR B2B"
-      title="INDIVIDUELLE LÖSUNGEN FÜR UNTERNEHMEN"
-      lead="Wir bieten Unternehmen individuelle Lösungen rund um Arbeitskleidung, Firmenbekleidung, Textilveredelung und Werbeartikel."
-    >
-      <p>
-        Ob kleines Unternehmen, Handwerksbetrieb, Gastronomie, Verein oder
-        größeres Unternehmen – wir gestalten und veredeln Produkte passend zu
-        Ihrem Corporate Design.
-      </p>
-      <h2>WAS WIR FÜR IHR UNTERNEHMEN ANBIETEN</h2>
-      <ul>
-        {companyOffers.map((offer) => (
-          <li key={offer}>{offer}</li>
-        ))}
-      </ul>
-      <h2>IDEAL FÜR</h2>
-      <p>
-        Handwerksbetriebe • Gastronomie • Einzelhandel • Dienstleister •
-        Industrie • Vereine • Start-ups • Unternehmen jeder Größe
-      </p>
-      <p className="page-highlight">
-        Sie haben eine Idee – wir machen daraus ein individuelles Produkt für
-        Ihr Unternehmen.
-      </p>
-      <p className="page-signature">
-        Pottlerkinder – individuell. professionell. aus dem Pott.
-      </p>
-    </TextPage>
+    <div className="b2b-page-shell">
+      <PageShell inner>
+        <CompanyPageContent />
+      </PageShell>
+    </div>
   )
 }
 
