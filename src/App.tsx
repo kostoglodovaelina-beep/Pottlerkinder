@@ -48,6 +48,7 @@ import hero3 from "@/imports/assets/hero/hero3.webp"
 import svgPaths from "@/imports/assets/icons/svg-paths"
 import imgTowerLogo from "@/imports/assets/header/logo-tower.webp"
 import imgWordmarkLogo from "@/imports/assets/header/logo-wordmark.webp"
+import imgWordmarkLogoTight from "@/imports/assets/header/logo-wordmark-tight.webp"
 import imgZubehorPhoto from "@/imports/assets/categories/accessories.webp"
 import imgHeaderCoal from "@/imports/assets/header/coal-texture.webp"
 import imgGlobe from "@/imports/assets/header/language-globe.webp"
@@ -102,7 +103,6 @@ import womenHoodieNewLightGreyBack from "@/assets/designer/women-hoodie/back/new
 import womenHoodieBlackBack from "@/assets/designer/women-hoodie/back/black-back.jpg"
 import pageCompany from "@/imports/assets/pages/company.webp"
 import pageHistory from "@/imports/assets/pages/history.webp"
-import pageCollieries from "@/imports/assets/pages/collieries.webp"
 import pageBlog from "@/imports/assets/pages/blog.webp"
 import { shopCart } from "@/lib/shopify"
 
@@ -115,6 +115,8 @@ function PriceLegalNote() {
       <span>inkl. MwSt., zzgl.</span>{' '}
       <button
         type="button"
+        data-carousel-control
+        onPointerDown={(event) => event.stopPropagation()}
         onClick={(event) => {
           event.preventDefault()
           event.stopPropagation()
@@ -132,6 +134,141 @@ let sharedCart: any | null | undefined
 let sharedCartRequest: Promise<any | null> | null = null
 const catalogCache = new Map<string, any[]>()
 const catalogRequests = new Map<string, Promise<any[]>>()
+
+const DEMO_CART_STORAGE_KEY = "pottlerkinder-demo-cart"
+const DEMO_PRODUCT_HANDLE = "demo-ruhrpott-t-shirt"
+const DEMO_PRODUCT_IMAGES = [imgProduct1, imgProduct3, imgProduct4]
+const DEMO_PRODUCT_NAMES = [
+  "RUHRPOTT", "KOHLE & KANTE", "GLÜCK AUF", "SCHICHTWECHSEL",
+  "EHRLICHE MALOCHE", "POTT ORIGINAL", "KUMPELSTÜCK", "FÖRDERTURM",
+]
+
+function createDemoProduct(index: number) {
+  const number = String(index + 1).padStart(2, "0")
+  const slug = index === 0 ? DEMO_PRODUCT_HANDLE : `${DEMO_PRODUCT_HANDLE}-${number}`
+  const price = 19.9 + (index % 5) * 2
+  const name = index === 0 ? "DEMO RUHRPOTT T-SHIRT" : `DEMO ${DEMO_PRODUCT_NAMES[index % DEMO_PRODUCT_NAMES.length]} T-SHIRT ${number}`
+  const image = DEMO_PRODUCT_IMAGES[index % DEMO_PRODUCT_IMAGES.length]
+  return {
+    id: `demo-product-${number}`,
+    isDemo: true,
+    slug,
+    image,
+    images: [{ url: image, altText: name }],
+    name,
+    category: "T-SHIRTS",
+    gender: "UNISEX",
+    colors: ["#161616", "#f4f4f4"],
+    colorOptions: [
+      { label: "Schwarz", value: "#161616" },
+      { label: "Weiß", value: "#f4f4f4" },
+    ],
+    price: new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(price),
+    compareAtPrice: null,
+    short: "Demo-Artikel · nur in dieser Vorschau",
+    description: "Testartikel für die Vorschau. Farbe, Größe und die lokale Warenkorb-Funktion können hier vollständig ausprobiert werden.",
+    sizes: ["S", "M", "L", "XL"],
+    variants: ["Schwarz", "Weiß"].flatMap((color) =>
+      ["S", "M", "L", "XL"].map((size) => ({
+        id: `demo-${number}-${color.toLowerCase()}-${size.toLowerCase()}`,
+        title: `${color} / ${size}`,
+        price: price.toFixed(2),
+        availableForSale: true,
+        quantityAvailable: 25,
+        selectedOptions: [
+          { name: "Farbe", value: color },
+          { name: "Größe", value: size },
+        ],
+      })),
+    ),
+  }
+}
+
+const DEMO_PRODUCTS = Array.from({ length: 41 }, (_, index) =>
+  createDemoProduct(index),
+)
+
+function demoCartWithLines(lines: any[]) {
+  const subtotal = lines.reduce(
+    (sum, { node }) => sum + Number(node.merchandise.price.amount) * node.quantity,
+    0,
+  )
+  return {
+    id: "demo-cart",
+    isDemoCart: true,
+    totalQuantity: lines.reduce((sum, { node }) => sum + node.quantity, 0),
+    cost: {
+      subtotalAmount: { amount: subtotal.toFixed(2), currencyCode: "EUR" },
+      totalAmount: { amount: subtotal.toFixed(2), currencyCode: "EUR" },
+    },
+    lines: { edges: lines },
+  }
+}
+
+function readDemoCart() {
+  try {
+    const stored = window.localStorage.getItem(DEMO_CART_STORAGE_KEY)
+    if (!stored) return null
+    const cart = JSON.parse(stored)
+    return cart?.isDemoCart ? cart : null
+  } catch {
+    window.localStorage.removeItem(DEMO_CART_STORAGE_KEY)
+    return null
+  }
+}
+
+function publishDemoCart(lines: any[]) {
+  if (!lines.length) {
+    window.localStorage.removeItem(DEMO_CART_STORAGE_KEY)
+    publishCart(null)
+    return null
+  }
+  const cart = demoCartWithLines(lines)
+  window.localStorage.setItem(DEMO_CART_STORAGE_KEY, JSON.stringify(cart))
+  publishCart(cart)
+  return cart
+}
+
+function addDemoVariant(product: any, variant: any) {
+  const current = readDemoCart()
+  const lines = current?.lines?.edges || []
+  const existing = lines.find(({ node }: any) => node.merchandise.id === variant.id)
+  const nextLines = existing
+    ? lines.map(({ node }: any) =>
+        node.merchandise.id === variant.id
+          ? { node: { ...node, quantity: node.quantity + 1 } }
+          : { node },
+      )
+    : [
+        ...lines,
+        {
+          node: {
+            id: `demo-line-${variant.id}`,
+            quantity: 1,
+            merchandise: {
+              ...variant,
+              price: { amount: variant.price, currencyCode: "EUR" },
+              product: {
+                title: product.name,
+                featuredImage: { url: product.image, altText: product.name },
+              },
+            },
+          },
+        },
+      ]
+  return publishDemoCart(nextLines)
+}
+
+function updateDemoCartLine(lineId: string, quantity: number) {
+  const lines = readDemoCart()?.lines?.edges || []
+  return publishDemoCart(
+    lines
+      .filter(({ node }: any) => node.id !== lineId || quantity > 0)
+      .map(({ node }: any) =>
+        node.id === lineId ? { node: { ...node, quantity } } : { node },
+      ),
+  )
+}
 
 function publishCart(cart: any | null) {
   sharedCart = cart
@@ -340,7 +477,6 @@ const TEXT_COLOR_SWATCHES = [
 const PAGE_BACKDROPS = {
   company: pageCompany,
   history: pageHistory,
-  collieries: pageCollieries,
   blog: pageBlog,
 }
 
@@ -691,8 +827,6 @@ function Header() {
           { label: "•" },
           { label: "BLOG", to: "/blog" },
           { label: "•" },
-          { label: "ZECHEN", to: "/zechen" },
-          { label: "•" },
           { label: "DEUTSCH" },
         ].map((item, i) =>
           item.to ? (
@@ -765,12 +899,6 @@ function Header() {
               "linear-gradient(90deg, rgba(10,10,10,0.52), rgba(18,18,18,0.18) 50%, rgba(10,10,10,0.52))",
           }}
         />
-        {/* Bottom red accent lines */}
-        <div className="header-center-lines absolute left-0 right-0 top-[82%] h-px z-20 hidden lg:block pointer-events-none">
-          <span className="header-line header-line-left" />
-          <span className="header-line header-line-right" />
-        </div>
-
         {/* ── Desktop: single-row layout matching reference ── */}
         <div
           className="hidden lg:flex items-center max-w-[1440px] mx-auto w-full"
@@ -781,7 +909,10 @@ function Header() {
           }}
         >
           {/* LEFT NAV */}
-          <div className="flex items-center gap-2 flex-shrink-0 relative z-10">
+          <div
+            className="flex items-center gap-2 flex-shrink-0 relative z-10"
+            style={{ marginRight: "clamp(18px, 2vw, 34px)" }}
+          >
             {[
               { label: "KATALOG", hasLines: true },
               { label: "SALE" },
@@ -883,23 +1014,25 @@ function Header() {
                 filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.75))",
               }}
             />
-            <img
-              src={imgWordmarkLogo}
-              alt="Pottlerkinder"
-              className="object-contain"
-              style={{
-                width: "clamp(156px, 13vw, 205px)",
-                height: "clamp(30px, 2.6vw, 40px)",
-                filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.75))",
-              }}
-            />
+            <span className="header-wordmark-wrap">
+              <span className="header-wordmark-line header-wordmark-line-left" />
+              <span className="header-wordmark-line header-wordmark-line-right" />
+              <img
+                src={imgWordmarkLogoTight}
+                alt="Pottlerkinder"
+                className="header-wordmark-image"
+              />
+            </span>
           </a>
 
           {/* RED LINE — right of logo */}
           <div className="hidden" />
 
           {/* RIGHT NAV */}
-          <div className="flex items-center gap-2 flex-shrink-0 relative z-[30]">
+          <div
+            className="flex items-center gap-2 flex-shrink-0 relative z-[30]"
+            style={{ marginLeft: "clamp(18px, 2vw, 34px)" }}
+          >
             {/* EIGENER DESIGN */}
             <button
               onClick={() => {
@@ -1289,6 +1422,11 @@ function CartDrawer({
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setRemoving(lineId)
+    if (cart.isDemoCart) {
+      updateDemoCartLine(lineId, 0)
+      setRemoving(null)
+      return
+    }
     const previousCart = cart
     publishCart(cartWithoutLine(cart, lineId))
     try {
@@ -1303,6 +1441,11 @@ function CartDrawer({
   const updateLineQuantity = async (lineId: string, quantity: number) => {
     if (!cart?.id || quantity < 1) return
     setRemoving(lineId)
+    if (cart.isDemoCart) {
+      updateDemoCartLine(lineId, quantity)
+      setRemoving(null)
+      return
+    }
     const previousCart = cart
     publishCart(cartWithLineQuantity(cart, lineId, quantity))
     try {
@@ -1406,7 +1549,7 @@ function CartDrawer({
             <div className="cart-drawer-grand-total">
               <span>VORAUSSICHTLICH GESAMT</span>
               <strong>
-                {subtotal
+                {lines.length > 0
                   ? formatCartMoney(subtotalValue + shippingValue)
                   : "—"}
               </strong>
@@ -1642,7 +1785,7 @@ function HeroCarousel() {
                 }}
                 className="uppercase"
               >
-                EIGENES DESIGN
+                EIGENER DESIGN
               </span>
             </a>
           </div>
@@ -1836,7 +1979,8 @@ function BannerSection() {
               drucken es mit modernster DTF-Technologie auf Bio-Baumwolle – fair
               und nachhaltig.
             </p>
-            <button
+            <a
+              href="/designer"
               className="btn-red flex items-center justify-center self-start rounded-[4px]"
               style={{
                 height: "clamp(44px, 3.5vw, 56px)",
@@ -1854,7 +1998,7 @@ function BannerSection() {
               >
                 JETZT GESTALTEN
               </span>
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -2182,19 +2326,24 @@ function BestsellerSection() {
   const [drag, setDrag] = useState<{ x: number position: number } | null>(null)
   const { products: shopifyProducts } = useShopifyCatalog()
   const bestsellers = useMemo<BestsellerProduct[]>(
-    () =>
-      [...(shopifyProducts ?? [])]
+    () => {
+      const products = shopifyProducts ?? []
+      const demoProducts = products.filter((product) => product.isDemo)
+      const liveProducts = products
+        .filter((product) => !product.isDemo)
         .sort(() => Math.random() - 0.5)
         .slice(0, 20)
-        .map((product) => ({
+      return [...demoProducts, ...liveProducts]
+        .map((product: any) => ({
           slug: product.slug,
           img: product.image,
-          badge: "BESTSELLER",
+          badge: product.isDemo ? "DEMO" : "BESTSELLER",
           category: product.category,
           name: product.name,
           price: product.price,
           swatches: product.colors,
-        })),
+        }))
+    },
     [shopifyProducts],
   )
   const carouselRef = useRef<HTMLDivElement>(null)
@@ -2281,6 +2430,8 @@ function BestsellerSection() {
         }`}
         ref={carouselRef}
         onPointerDown={(event) => {
+          if ((event.target as HTMLElement).closest("[data-carousel-control]"))
+            return
           if (!canLoopBestsellers || event.button !== 0) return
           event.currentTarget.setPointerCapture(event.pointerId)
           setDrag({ x: event.clientX, position: carouselPosition.current })
@@ -2304,7 +2455,11 @@ function BestsellerSection() {
           setDrag(null)
           if (!wasClick) return
           const target = event.target as HTMLElement
-          if (target.closest(".btn-wishlist")) return
+          if (
+            target.closest(".btn-wishlist") ||
+            target.closest("[data-carousel-control]")
+          )
+            return
           const card = target.closest<HTMLElement>(".product-card")
           const productUrl = card?.dataset.productUrl
           if (productUrl) {
@@ -2609,7 +2764,13 @@ function Footer() {
           </p>
           <div className="flex gap-5">
             {/* Facebook */}
-            <button className="btn-social w-14 h-14 rounded-[14px] bg-[#373737] border border-white/60 flex items-center justify-center cursor-pointer">
+            <a
+              href="https://www.facebook.com/share/1GotazpmgX/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Pottlerkinder auf Facebook"
+              className="btn-social w-14 h-14 rounded-[14px] bg-[#373737] border border-white/60 flex items-center justify-center cursor-pointer"
+            >
               <span
                 style={{
                   fontFamily: "Georgia, serif",
@@ -2621,9 +2782,15 @@ function Footer() {
               >
                 f
               </span>
-            </button>
+            </a>
             {/* Instagram */}
-            <button className="btn-social w-14 h-14 rounded-[14px] bg-[#373737] border border-white/60 flex items-center justify-center cursor-pointer">
+            <a
+              href="https://www.instagram.com/pottlerkinder.14?stkn=MTdsbnhjdWtyMDR4NA=="
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Pottlerkinder auf Instagram"
+              className="btn-social w-14 h-14 rounded-[14px] bg-[#373737] border border-white/60 flex items-center justify-center cursor-pointer"
+            >
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
                 <rect
                   x="1.25"
@@ -2643,7 +2810,7 @@ function Footer() {
                 />
                 <circle cx="21" cy="7" r="1.75" fill="white" />
               </svg>
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -3391,190 +3558,6 @@ function BlogPage() {
   )
 }
 
-const COLLIERIES = [
-  {
-    name: "ZECHE TREMONIA",
-    image:
-      "https://images.unsplash.com/photo-1642658475391-b5bc1332888e?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Die Anfänge der Zeche Tremonia liegen weit zurück in der Vergangenheit. Bereits in der zweiten Hälfte des 18. Jahrhunderts begann Wilhelm Friedrich von Hövel am Rande der Emscher mit Schürfarbeiten. Im Jahr 1774 wurden vier Schächte abgeteuft und eine Kohlenbank erschlossen. Von Hövel benannte sein Bergwerk „Zeche Dickmüllerbaum“. 1855 wurde die Bergbau-AG Tremonia gegründet und das Bergwerk gleichnamig umbenannt. 1931 erfolgte die Stilllegung; 1996 wurde auch die Versuchsgrube aufgegeben. Heute deuten lediglich zwei ehemalige Verwaltungsgebäude auf die Existenz der Anlage hin.",
-  },
-  {
-    name: "ZECHE CONSOL",
-    image:
-      "https://images.unsplash.com/photo-1734675511024-12f6f8d4bd3e?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Die Zeche Consolidation, im Volksmund „Consol“, begann 1865 mit der Förderung von Steinkohle. Als großer Pionier des Ruhrbergbaus gilt der Essener Kaufmann Friedrich Grillo, Mitbegründer der Anlage. Lange blieben die Schächte 3 und 4 Hauptförderschächte, bevor 1922 das Doppelstrebengerüst für Schacht 9 errichtet wurde. 1997 wurde die Kohleförderung eingestellt. Das stählerne Fördergerüst über Schacht 9 sowie das Betonfördergerüst über Schacht 4 gehören heute zu den Highlights des Industriedenkmals.",
-  },
-  {
-    name: "ZECHE AUGUSTE VICTORIA",
-    image:
-      "https://images.unsplash.com/photo-1784122672978-4016cf00f948?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Die Zeche Auguste Victoria war eine der letzten aktiven Zechen des Ruhrgebiets. Die Schächte 3/7 und 4/5 spielten geschichtlich unterschiedliche Rollen. An den Schächten 4/5 wurden neben Kohle auch Erze abgebaut; 1928 begann das Abteufen, 1936 der Abbau von Roherz, Zink und Silber. Das Koepe-Strebengerüst über Schacht 4 steht seit 1995 unter Denkmalschutz. Die klassische Kohleförderung fand vorrangig über die Schächte 3/7 statt. 2015 wurde das Bergwerk Auguste Victoria stillgelegt.",
-  },
-  {
-    name: "ZECHE ZOLLERN",
-    image:
-      "https://images.unsplash.com/photo-1714039103670-679b67dd3f37?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Die Zeche Zollern in Dortmund wurde von Zeitgenossen als „Schloss der Arbeit“ betitelt: Die Anlage erinnert eher an eine Residenz als an einen einfachen Bergbaustandort. Nach der Stilllegung in den 60er Jahren sollte sie abgerissen werden. Die Gebäudekette rund um die Maschinenhalle mit ihrem prächtigen Jugendstilportal blieb dank großer Widerstände erhalten. Heute führt das LWL-Industriemuseum Zeche Zollern mit Exponaten und Lebensläufen der Arbeiter in die Geschichte des Bergbaus ein.",
-  },
-  {
-    name: "ZECHE PROSPER",
-    image:
-      "https://images.unsplash.com/photo-1734627731011-b07c35e04e54?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Die Zeche Prosper, Teil des Bergwerks Prosper-Haniel, war seit Ende 2015 das einzig verbliebene aktive Steinkohlebergwerk im Ruhrgebiet. Die Schließung kurz vor Weihnachten 2018 besiegelte das Ende der Steinkohlenförderung in Deutschland. Prosper I wurde 1856 gegründet, 1875 folgte Prosper II. Der Prosper-Turm hielt technischen Weiterentwicklungen stand und ist heute das einzige Exemplar seiner Art in der Region. Ein Förderband brachte Rohkohle durch einen schrägen Tunnel aus 779 Metern Tiefe ans Tageslicht.",
-  },
-  {
-    name: "ZECHE LOHBERG",
-    image:
-      "https://images.unsplash.com/photo-1740907628172-acd27c2e1de8?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Die Zeche Lohberg gehörte lange zum Thyssen-Imperium. 1914 begann die regelmäßige Kohleförderung, 1930 erreichte die Anlage den Status einer Großschachtanlage. Das 70,5 Meter hohe Fördergerüst über Schacht II war damals das höchste Fördergerüst im Ruhrgebiet und ist bis heute weithin sichtbar. Nach der Stilllegung 2006 wurde das Gelände zum Begegnungsort für Kunst und Kultur umgewandelt: Das Kreativ.Quartier Lohberg entstand.",
-  },
-  {
-    name: "ZECHE SCHLÄGEL & EISEN",
-    image:
-      "https://images.unsplash.com/photo-1687198562209-8a4e31dff71b?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Die Anfänge der Zeche Schlägel und Eisen gehen auf 1873 zurück. Namensgebend ist die Gewerkschaft Schlägel und Eisen, die bei Erkundungsbohrungen ein erstes Kohlenflöz anbohrte. In den 1930er Jahren wurden die Schächte zur Zentralschachtanlage ausgebaut. 1975 erreichte die Zeche mit gut zwei Millionen Tonnen Kohle ihre höchste Förderleistung. Ihr Erkennungsmerkmal ist das älteste erhaltene deutsche Strebengerüst der Bauart Promnitz in Nordrhein-Westfalen – eine seltene dreibeinige Konstruktion.",
-  },
-  {
-    name: "ZECHE FRIEDRICH HEINRICH",
-    image:
-      "https://images.unsplash.com/photo-1655382852570-af94883b8855?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "In gut 100 Jahren Geschichte wurden auf der Zeche Friedrich Heinrich weit über 200 Millionen Tonnen Steinkohle gefördert. Der Rekord der Jahresfördermenge lag 1993 bei 4,17 Millionen Tonnen. Die auch als „Versuchszeche“ bekannte Friedrich Heinrich erreichte 1958 als erste im Ruhrgebiet den vollständig mechanisierten Abbau. Ende 2012 wurde mit der Stilllegung des Bergwerks West die Kohleförderung am Niederrhein beendet.",
-  },
-  {
-    name: "ZECHE BLUMENTHAL",
-    image:
-      "https://images.unsplash.com/photo-1734627731059-d0315c779857?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Als Probebohrungen 1872 auf Kohle stießen, begann die Geschichte des Bergwerks General Blumenthal. 1873 startete der Bau und Schacht I wurde abgeteuft. In den folgenden Jahrzehnten kam es wiederholt zu schweren Schlagwetterereignissen. Nach der Errichtung von Schacht 6 firmierte die Anlage als General Blumenthal 1/2/6. 2001 wurden sämtliche Blumenthaler Übertage-Anlagen aufgegeben. Außer den Schächten Blumenthal 7 und Haard erinnert heute nur wenig an diese Bergbauvergangenheit.",
-  },
-  {
-    name: "ZECHE FÜRST LEOPOLD",
-    image:
-      "https://images.unsplash.com/photo-1780004033152-3612e3017352?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Die Zeche Fürst Leopold spiegelt den Strukturwandel im Ruhrgebiet. Auf dem Gelände finden sich historische Industrieanlagen sowie Kunst, Kultur und Gastronomie. Die bauliche Struktur blieb weitgehend erhalten. 1913 wurde hier erstmals Kohle gefördert; bis zur Schließung 2001 durchlief das Bergwerk viele Entwicklungsstufen. Zu den Highlights zählen die bis 2008 mit Dampf betriebenen Fördermaschinen.",
-  },
-  {
-    name: "ZECHE MÖLLER",
-    image:
-      "https://images.unsplash.com/photo-1736162087099-47170d710a3e?auto=format&fit=crop&w=1200&q=80",
-    description:
-      "Die Möllerschächte haben eine bewegte Geschichte. Bereits zwischen 1871 und 1873 wurden erste Bohrungen durchgeführt, 1876 entstanden die Grubenfelder „Vereinigte Gladbeck“. August Thyssen begann 1881, Anteile zu kaufen; 1896 starteten die ersten Abteufarbeiten von Schacht Thyssen 1. Nach dem Erwerb durch den preußischen Staat entwickelte sich das Bergwerk wirtschaftlich erfolgreich. Trotz starker Proteste wurden die Möllerschächte am 1. April 1967 stillgelegt.",
-  },
-]
-function CollieriesPage() {
-  const [selected, setSelected] = useState<typeof COLLIERIES[number] | null>(
-    null,
-  )
-  return (
-    <PageShell inner>
-      <main className="flex-1">
-        <PageHero
-          image={PAGE_BACKDROPS.collieries}
-          eyebrow="ZECHEN DES RUHRGEBIETS"
-          title="ORTE, DIE DAS REVIER PRÄGEN"
-          lead=""
-        />
-        <section
-          className="max-w-[1440px] mx-auto py-12 sm:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-        >
-          {COLLIERIES.map((zeche) => (
-            <button
-              key={zeche.name}
-              onClick={() => setSelected(zeche)}
-              className="zeche-card relative text-left overflow-hidden min-h-[230px] bg-[linear-gradient(135deg,#1d1d1d,#090909)]"
-            >
-              <span
-                className="absolute top-5 left-6 text-[#b92a2a]"
-                style={{
-                  fontFamily: "Oswald, sans-serif",
-                  fontSize: 15,
-                  letterSpacing: "3px",
-                }}
-              >
-                ◆ ZECHENARCHIV
-              </span>
-              <span
-                className="relative z-10 block h-full p-6 flex flex-col justify-end text-white"
-                style={{
-                  fontFamily: "Oswald, sans-serif",
-                  fontWeight: 700,
-                  fontSize: 28,
-                  letterSpacing: "2px",
-                }}
-              >
-                {zeche.name}
-                <small
-                  className="mt-2 text-[#e34b4b]"
-                  style={{ fontSize: 12, letterSpacing: "2px" }}
-                >
-                  ANSICHT ÖFFNEN →
-                </small>
-              </span>
-            </button>
-          ))}
-        </section>
-      </main>
-      {selected && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/80 p-4 flex items-center justify-center"
-          onClick={() => setSelected(null)}
-        >
-          <div
-            className="zeche-modal relative max-w-2xl w-full overflow-hidden bg-[#111] border border-[#722]"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="p-8">
-              <button
-                aria-label="Schließen"
-                className="absolute right-4 top-3 text-white text-2xl"
-                onClick={() => setSelected(null)}
-              >
-                ×
-              </button>
-              <p
-                className="text-[#d73737]"
-                style={{
-                  fontFamily: "Oswald, sans-serif",
-                  letterSpacing: "2px",
-                }}
-              >
-                ZECHENARCHIV
-              </p>
-              <h2
-                className="mt-3 text-white"
-                style={{
-                  fontFamily: "Oswald, sans-serif",
-                  fontWeight: 700,
-                  fontSize: 38,
-                  letterSpacing: "2px",
-                }}
-              >
-                {selected.name}
-              </h2>
-              <p
-                className="mt-5 text-[#c7c7c7]"
-                style={{ fontFamily: "Inter, sans-serif", lineHeight: 1.7 }}
-              >
-                {selected.description}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-    </PageShell>
-  )
-}
-
 const BASE_CATALOG_PRODUCTS = [
   {
     slug: "glueck-auf-shirt",
@@ -3870,6 +3853,15 @@ function useShopifyCatalog(handle?: string) {
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
     let active = true
+    const demoProduct = DEMO_PRODUCTS.find((product) => product.slug === handle)
+    if (demoProduct) {
+      setProducts([demoProduct])
+      setError(null)
+      return () => {
+        active = false
+      }
+    }
+    if (!handle) setProducts((current) => current ?? DEMO_PRODUCTS)
     const cacheKey = handle || "all"
     const loadCatalog = () => {
       const cachedProducts = catalogCache.get(cacheKey)
@@ -3890,8 +3882,11 @@ function useShopifyCatalog(handle?: string) {
           const mappedProducts = (data.products || [])
             .map(shopifyCatalogProduct)
             .filter(Boolean)
-          catalogCache.set(cacheKey, mappedProducts)
-          return mappedProducts
+          const productsWithDemo = handle
+            ? mappedProducts
+            : [...DEMO_PRODUCTS, ...mappedProducts]
+          catalogCache.set(cacheKey, productsWithDemo)
+          return productsWithDemo
         })
         .finally(() => catalogRequests.delete(cacheKey))
       catalogRequests.set(cacheKey, request)
@@ -3900,7 +3895,11 @@ function useShopifyCatalog(handle?: string) {
 
     loadCatalog()
       .then((nextProducts) => active && setProducts(nextProducts))
-      .catch((requestError) => active && setError(requestError.message))
+      .catch((requestError) => {
+        if (!active) return
+        setProducts(handle ? [] : DEMO_PRODUCTS)
+        setError(requestError.message)
+      })
     return () => {
       active = false
     }
@@ -3912,6 +3911,11 @@ function useShopifyCart() {
   const [cart, setCart] = useState<any | null>(sharedCart ?? null)
   const [loading, setLoading] = useState(sharedCart === undefined)
   const refreshCart = () => {
+    const demoCart = readDemoCart()
+    if (demoCart) {
+      publishCart(demoCart)
+      return Promise.resolve(demoCart)
+    }
     const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
     if (!cartId) {
       publishCart(null)
@@ -4121,6 +4125,11 @@ function CatalogAddToCartButton({ product, cart }: { product: any; cart: any | n
 
     setStatus("loading")
     try {
+      if (product.isDemo) {
+        addDemoVariant(product, variant)
+        setStatus("success")
+        return
+      }
       const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
       const response = cartId
         ? await shopCart.add(cartId, [{ merchandiseId: variant.id, quantity: 1 }])
@@ -4215,7 +4224,7 @@ function CatalogPage() {
             Number(a.price.replace(",", "."))
           : 0,
     )
-  const productsPerPage = 50
+  const productsPerPage = 30
   const totalPages = Math.max(1, Math.ceil(products.length / productsPerPage))
   const visibleProducts = products.slice(
     (page - 1) * productsPerPage,
@@ -4506,7 +4515,7 @@ function CatalogPage() {
                   onClick={() => changePage(Math.min(totalPages, page + 1))}
                   disabled={page === totalPages}
                 >
-                  NÄCHSTE 50 →
+                  NÄCHSTE SEITE →
                 </button>
               </nav>
             )}
@@ -4522,7 +4531,7 @@ function SalePage() {
   const { cart } = useShopifyCart()
   const [page, setPage] = useState(1)
   const resultsRef = useRef<HTMLElement>(null)
-  const perPage = 20
+  const perPage = 30
   const saleProducts = (shopifyProducts ?? []).filter(
     (product) => product.compareAtPrice,
   )
@@ -4613,7 +4622,7 @@ function SalePage() {
                 onClick={() => changePage(Math.min(totalPages, page + 1))}
                 disabled={page === totalPages}
               >
-                NÄCHSTE 20 →
+                NÄCHSTE SEITE →
               </button>
             </nav>
           )}
@@ -4658,6 +4667,11 @@ function ProductPage({ product }: { product: any }) {
     }
     setCartStatus("loading")
     try {
+      if (product.isDemo) {
+        addDemoVariant(product, variant)
+        setCartStatus("success")
+        return
+      }
       const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
       const response = cartId
         ? await shopCart.add(cartId, [
@@ -4831,6 +4845,11 @@ function CartPage() {
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setUpdating(lineId)
+    if (cart.isDemoCart) {
+      updateDemoCartLine(lineId, 0)
+      setUpdating(null)
+      return
+    }
     const previousCart = cart
     publishCart(cartWithoutLine(cart, lineId))
     try {
@@ -4845,6 +4864,11 @@ function CartPage() {
   const updateLineQuantity = async (lineId: string, quantity: number) => {
     if (!cart?.id || quantity < 1) return
     setUpdating(lineId)
+    if (cart.isDemoCart) {
+      updateDemoCartLine(lineId, quantity)
+      setUpdating(null)
+      return
+    }
     const previousCart = cart
     publishCart(cartWithLineQuantity(cart, lineId, quantity))
     try {
@@ -7873,7 +7897,6 @@ function DesignerStudio() {
   )
   const designPrice =
     50 +
-    6.15 +
     ((isMug ? hasAnyDesign : hasFrontDesign) ? 4.99 : 0) +
     ((isConfiguredTextile || isShopper) && hasBackDesign ? 9.99 : 0)
   const designPriceLabel = new Intl.NumberFormat("de-DE", {
@@ -10499,7 +10522,6 @@ export default function App() {
     "/unternehmen": <CompanyPage />,
     "/ueber-uns": <AboutPage />,
     "/geschichte": <HistoryPage />,
-    "/zechen": <CollieriesPage />,
     "/blog": <BlogPage />,
     "/account": <AccountPage />,
     "/account/callback": <AccountCallbackPage />,
