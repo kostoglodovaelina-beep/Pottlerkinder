@@ -1,0 +1,21 @@
+.newsletter-form { position: relative; font: 400 14px/1.7 Inter,sans-serif; }
+.site-footer .newsletter-form > input[type="email"] { display: block; width: 100%; min-height: 48px; padding: 11px 13px; color: #eee; background: #171717; border: 1px solid #505050; border-radius: 4px; font: 400 16px/1.5 Inter,sans-serif; outline: none; box-shadow: none; }
+.site-footer .newsletter-form > input[type="email"]:focus { outline: none; box-shadow: none; background: #232323; }
+.site-footer .newsletter-form > input[type="email"]:focus-visible { background: #333; }
+.newsletter-consent { display: flex; align-items: start; gap: 10px; margin-top: 12px; }
+.newsletter-consent input { flex: 0 0 18px; width: 18px; height: 18px; margin-top: 5px; accent-color: #c43541; cursor: pointer; }
+.newsletter-consent label { display: block; min-height: 44px; padding-block: 3px; color: #bdbdbd; font: 400 12px/1.7 Inter,sans-serif; cursor: pointer; }
+.newsletter-submit { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%; min-height: 48px; margin-top: 15px; padding: 11px 10px; border: 1px solid #b64752; border-radius: 2px; color: #fff; cursor: pointer; }
+.newsletter-submit:disabled { background: #333 !important; color: #ccc; border-color: #666; box-shadow: none; cursor: not-allowed; }
+.newsletter-form a { color: #ddd; text-decoration: underline; text-underline-offset: 3px; }
+.newsletter-form a:hover { color: #f4a0aa; }
+.site-footer .footer-newsletter .newsletter-error,
+.site-footer .footer-newsletter .newsletter-feedback.is-error p { margin-top: 9px; color: #ffa7b0 !important; font-size: 14px !important; line-height: 1.7 !important; }
+.newsletter-form [aria-invalid="true"] { border-color: #e98996 !important; }
+.site-footer .footer-newsletter .newsletter-feedback.is-success p { margin-top: 13px; padding-left: 12px; border-left: 2px solid #eb929d; color: #eee !important; font-size: 14px !important; }
+.newsletter-feedback:focus { outline: none; }
+.newsletter-honeypot { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); }
+.newsletter-form :is(a,button,input[type="checkbox"]):focus-visible { outline: 2px solid #f2afb6; outline-offset: 3px; }
+@keyframes newsletter-spin { to { transform: rotate(360deg); } }
+.newsletter-sending { width: 17px; height: 17px; animation: newsletter-spin 1s linear infinite; }
+@media(prefers-reduced-motion:reduce) { .newsletter-sending { animation: none; } }

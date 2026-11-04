@@ -21,45 +21,41 @@ import {
   FaUsers,
 } from "react-icons/fa"
 import { GiPoloShirt } from "react-icons/gi"
+import { FiArrowDown, FiArrowLeft, FiArrowRight, FiArrowUp, FiArrowUpRight, FiChevronDown, FiGlobe, FiGrid, FiLayers, FiMapPin, FiMenu, FiPackage, FiUser, FiX } from "react-icons/fi"
 import { HexColorPicker } from "react-colorful"
 
-import imgHeroStripe from "@/imports/assets/sections/ticker-stripe.webp"
-import imgBannerImage from "@/imports/assets/sections/design-banner-photo.webp"
-import imgBannerImage1 from "@/imports/assets/sections/design-banner-overlay.webp"
-import imgBannerContent from "@/imports/assets/sections/design-banner-texture.webp"
-import imgProduct1 from "@/imports/assets/products/glueck-auf-tshirt.webp"
-import imgProduct2 from "@/imports/assets/products/foerderturm-hoodie.webp"
-import imgProduct3 from "@/imports/assets/products/kumpel-tshirt.webp"
-import imgProduct4 from "@/imports/assets/products/bergmann-tshirt.webp"
-import imgProduct5 from "@/imports/assets/products/schicht-im-schacht-polo.webp"
-import imgCoalTexture from "@/imports/assets/sections/coal-texture.webp"
-import imgHeaderBg from "@/imports/assets/header/header-background.webp"
-import imgAccount from "@/imports/assets/header/account-icon.webp"
-import imgCart from "@/imports/assets/header/cart-icon.webp"
-import imgFooterBg from "@/imports/assets/sections/footer-background.webp"
-import img11 from "@/imports/assets/categories/dtf-transfers.webp"
-import img33 from "@/imports/assets/categories/hoodies.webp"
-import img44 from "@/imports/assets/categories/polos.webp"
-import img55 from "@/imports/assets/categories/glasses-and-mugs.webp"
-import img66 from "@/imports/assets/categories/t-shirts.webp"
-import hero1 from "@/imports/assets/hero/hero1.webp"
-import hero2 from "@/imports/assets/hero/hero2.webp"
-import hero3 from "@/imports/assets/hero/hero3.webp"
-import svgPaths from "@/imports/assets/icons/svg-paths"
-import imgTowerLogo from "@/imports/assets/header/logo-tower.webp"
-import imgWordmarkLogo from "@/imports/assets/header/logo-wordmark.webp"
-import imgWordmarkLogoTight from "@/imports/assets/header/logo-wordmark-tight.webp"
-import imgZubehorPhoto from "@/imports/assets/categories/accessories.webp"
-import imgHeaderCoal from "@/imports/assets/header/coal-texture.webp"
-import imgGlobe from "@/imports/assets/header/language-globe.webp"
-import customHoodie from "@/imports/designer/reference-products/hoodie.jpg"
-import customPolo from "@/imports/designer/reference-products/polo.jpg"
+import imgHeroStripe from "@/assets/site/sections/ticker-stripe.webp"
+import imgBannerImage from "@/assets/site/sections/design-banner-photo.webp"
+import imgBannerImage1 from "@/assets/site/sections/design-banner-overlay.webp"
+import imgBannerContent from "@/assets/site/sections/design-banner-texture.webp"
+import productUnavailable from "@/assets/product-unavailable.svg"
+import imgCoalTexture from "@/assets/site/sections/coal-texture.webp"
+import imgHeaderBg from "@/assets/site/header/header-background.webp"
+import imgAccount from "@/assets/site/header/account-icon.webp"
+import imgCart from "@/assets/site/header/cart-icon.webp"
+import imgFooterBg from "@/assets/site/sections/footer-background.webp"
+import img11 from "@/assets/site/categories/dtf-transfers.webp"
+import img33 from "@/assets/site/categories/hoodies.webp"
+import img44 from "@/assets/site/categories/polos.webp"
+import img55 from "@/assets/site/categories/glasses-and-mugs.webp"
+import img66 from "@/assets/site/categories/t-shirts.webp"
+import hero1 from "@/assets/site/hero/hero1.webp"
+import hero2 from "@/assets/site/hero/hero2.webp"
+import hero3 from "@/assets/site/hero/hero3.webp"
+import svgPaths from "@/assets/site/icons/svg-paths"
+import imgTowerLogo from "@/assets/site/header/logo-tower.webp"
+import imgWordmarkLogo from "@/assets/site/header/logo-wordmark.webp"
+import imgWordmarkLogoTight from "@/assets/site/header/logo-wordmark-tight.webp"
+import imgZubehorPhoto from "@/assets/site/categories/accessories.webp"
+import imgHeaderCoal from "@/assets/site/header/coal-texture.webp"
+import customHoodie from "@/assets/designer/reference-products/hoodie.webp"
+import customPolo from "@/assets/designer/reference-products/polo.webp"
 import solsStockholmRed from "@/assets/designer/shopper/sols-stockholm-red.webp"
-import customSweatshirt from "@/imports/designer/reference-products/sweatshirt.jpg"
+import customSweatshirt from "@/assets/designer/reference-products/sweatshirt.webp"
 import twoToneMugYellow from "@/assets/designer/mug/two-tone/gelb.webp"
-import customTshirt from "@/imports/designer/reference-products/t-shirt.jpg"
-import customShirt from "@/imports/designer/reference-products/shirt.jpg"
-import customCap from "@/imports/designer/reference-products/cap.jpg"
+import customTshirt from "@/assets/designer/reference-products/t-shirt.webp"
+import customShirt from "@/assets/designer/reference-products/shirt.webp"
+import customCap from "@/assets/designer/reference-products/cap.webp"
 import womenCapBlack from "@/assets/designer/women-cap/front/black-verified.webp"
 import womenCapRed from "@/assets/designer/women-cap/front/red-verified.webp"
 import womenCapWhite from "@/assets/designer/women-cap/front/white-verified.webp"
@@ -78,34 +74,48 @@ import womenCapBottleGreenBack from "@/assets/designer/women-cap/back/bottle_gre
 import womenCapFrenchNavyWhiteBack from "@/assets/designer/women-cap/back/french_navy_white-verified.webp"
 import womenCapRoyalBlueBack from "@/assets/designer/women-cap/back/royal_blue-verified.webp"
 import womenCapFrenchNavyBack from "@/assets/designer/women-cap/back/french_navy-verified.webp"
-import sizeGuideShirt from "@/assets/designer/size-guide-shirt-white.png"
-import hoodieBlack from "@/imports/designer/reference-hoodies/black.jpg"
-import hoodieFireRed from "@/imports/designer/reference-hoodies/fire-red.jpg"
-import hoodieNavy from "@/imports/designer/reference-hoodies/navy.jpg"
-import hoodieAzureBlue from "@/imports/designer/reference-hoodies/azure-blue.jpg"
-import hoodieCharcoal from "@/imports/designer/reference-hoodies/charcoal.jpg"
-import hoodieFrenchNavy from "@/imports/designer/reference-hoodies/french-navy.jpg"
-import hoodieHeatherNavy from "@/imports/designer/reference-hoodies/heather-navy.jpg"
-import hoodieHeatherGrey from "@/imports/designer/reference-hoodies/heather-grey.jpg"
-import hoodieNewLightGrey from "@/imports/designer/reference-hoodies/light-grey.jpg"
-import hoodieOlive from "@/imports/designer/reference-hoodies/olive.jpg"
-import hoodieWhite from "@/imports/designer/reference-hoodies/white.jpg"
-import womenHoodieWhiteBack from "@/assets/designer/women-hoodie/back/white-back.jpg"
-import womenHoodieFireRedBack from "@/assets/designer/women-hoodie/back/fire_red-back.jpg"
-import womenHoodieOliveBack from "@/assets/designer/women-hoodie/back/olive-back.jpg"
-import womenHoodieAzureBlueBack from "@/assets/designer/women-hoodie/back/azure_blue-back.jpg"
-import womenHoodieNavyBack from "@/assets/designer/women-hoodie/back/navy-back.jpg"
-import womenHoodieHeatherNavyBack from "@/assets/designer/women-hoodie/back/heather_navy-back.jpg"
-import womenHoodieFrenchNavyBack from "@/assets/designer/women-hoodie/back/french_navy-back.jpg"
-import womenHoodieCharcoalBack from "@/assets/designer/women-hoodie/back/charcoal-back.jpg"
-import womenHoodieHeatherGreyBack from "@/assets/designer/women-hoodie/back/heather_grey-back.jpg"
-import womenHoodieNewLightGreyBack from "@/assets/designer/women-hoodie/back/new_light_grey-back.jpg"
-import womenHoodieBlackBack from "@/assets/designer/women-hoodie/back/black-back.jpg"
-import pageCompany from "@/imports/assets/pages/company.webp"
-import pageHistory from "@/imports/assets/pages/history.webp"
-import pageBlog from "@/imports/assets/pages/blog.webp"
+import sizeGuideShirt from "@/assets/designer/size-guide-shirt-white.webp"
+import hoodieBlack from "@/assets/designer/women-hoodie/front/black.webp"
+import hoodieFireRed from "@/assets/designer/women-hoodie/front/fire-red.webp"
+import hoodieNavy from "@/assets/designer/women-hoodie/front/navy.webp"
+import hoodieAzureBlue from "@/assets/designer/women-hoodie/front/azure-blue.webp"
+import hoodieCharcoal from "@/assets/designer/women-hoodie/front/charcoal.webp"
+import hoodieFrenchNavy from "@/assets/designer/women-hoodie/front/french-navy.webp"
+import hoodieHeatherNavy from "@/assets/designer/women-hoodie/front/heather-navy.webp"
+import hoodieHeatherGrey from "@/assets/designer/women-hoodie/front/heather-grey.webp"
+import hoodieNewLightGrey from "@/assets/designer/women-hoodie/front/light-grey.webp"
+import hoodieOlive from "@/assets/designer/women-hoodie/front/olive.webp"
+import hoodieWhite from "@/assets/designer/women-hoodie/front/white.webp"
+import womenHoodieWhiteBack from "@/assets/designer/women-hoodie/back/white-back.webp"
+import womenHoodieFireRedBack from "@/assets/designer/women-hoodie/back/fire_red-back.webp"
+import womenHoodieOliveBack from "@/assets/designer/women-hoodie/back/olive-back.webp"
+import womenHoodieAzureBlueBack from "@/assets/designer/women-hoodie/back/azure_blue-back.webp"
+import womenHoodieNavyBack from "@/assets/designer/women-hoodie/back/navy-back.webp"
+import womenHoodieHeatherNavyBack from "@/assets/designer/women-hoodie/back/heather_navy-back.webp"
+import womenHoodieFrenchNavyBack from "@/assets/designer/women-hoodie/back/french_navy-back.webp"
+import womenHoodieCharcoalBack from "@/assets/designer/women-hoodie/back/charcoal-back.webp"
+import womenHoodieHeatherGreyBack from "@/assets/designer/women-hoodie/back/heather_grey-back.webp"
+import womenHoodieNewLightGreyBack from "@/assets/designer/women-hoodie/back/new_light_grey-back.webp"
+import womenHoodieBlackBack from "@/assets/designer/women-hoodie/back/black-back.webp"
+import pageCompany from "@/assets/site/pages/company.webp"
+import pageHistory from "@/assets/site/pages/history.webp"
+import pageBlog from "@/assets/site/pages/blog.webp"
 import { shopCart } from "@/lib/shopify"
 import CompanyPageContent from "@/components/CompanyPageContent"
+import CatalogView from "@/components/CatalogView"
+import ProductView from "@/components/ProductView"
+import BestsellerCarousel from "@/components/BestsellerCarousel"
+import "@/styles/components/site-header.css"
+import "@/styles/components/commerce-surfaces.css"
+import HistoryContent from "@/components/HistoryContent"
+import NewsPageContent from "@/components/NewsPageContent"
+import ContactPageContent from "@/components/ContactPageContent"
+import PaymentMethods from "@/components/PaymentMethods"
+import NewsletterForm from "@/components/NewsletterForm"
+import ServiceInfoDialog from "@/components/ServiceInfoDialog"
+import { SERVICE_INFO_EVENTS, type ServiceInfoKind } from "@/lib/service-info"
+import useDialogFocus from "@/lib/use-dialog-focus"
+import { findProductVariant } from "@/lib/product"
 
 // ─── Shared padding value (12vw clamped) ──────────────────────────────────────
 const SECTION_PAD = "clamp(16px, 12vw, 210px)"
@@ -116,6 +126,7 @@ function PriceLegalNote() {
       <span>inkl. MwSt., zzgl.</span>{' '}
       <button
         type="button"
+        className="shipping-cost-link"
         data-carousel-control
         onPointerDown={(event) => event.stopPropagation()}
         onClick={(event) => {
@@ -136,140 +147,13 @@ let sharedCartRequest: Promise<any | null> | null = null
 const catalogCache = new Map<string, any[]>()
 const catalogRequests = new Map<string, Promise<any[]>>()
 
-const DEMO_CART_STORAGE_KEY = "pottlerkinder-demo-cart"
-const DEMO_PRODUCT_HANDLE = "demo-ruhrpott-t-shirt"
-const DEMO_PRODUCT_IMAGES = [imgProduct1, imgProduct3, imgProduct4]
-const DEMO_PRODUCT_NAMES = [
-  "RUHRPOTT", "KOHLE & KANTE", "GLÜCK AUF", "SCHICHTWECHSEL",
-  "EHRLICHE MALOCHE", "POTT ORIGINAL", "KUMPELSTÜCK", "FÖRDERTURM",
-]
 
-function createDemoProduct(index: number) {
-  const number = String(index + 1).padStart(2, "0")
-  const slug = index === 0 ? DEMO_PRODUCT_HANDLE : `${DEMO_PRODUCT_HANDLE}-${number}`
-  const price = 19.9 + (index % 5) * 2
-  const name = index === 0 ? "DEMO RUHRPOTT T-SHIRT" : `DEMO ${DEMO_PRODUCT_NAMES[index % DEMO_PRODUCT_NAMES.length]} T-SHIRT ${number}`
-  const image = DEMO_PRODUCT_IMAGES[index % DEMO_PRODUCT_IMAGES.length]
-  return {
-    id: `demo-product-${number}`,
-    isDemo: true,
-    slug,
-    image,
-    images: [{ url: image, altText: name }],
-    name,
-    category: "T-SHIRTS",
-    gender: "UNISEX",
-    colors: ["#161616", "#f4f4f4"],
-    colorOptions: [
-      { label: "Schwarz", value: "#161616" },
-      { label: "Weiß", value: "#f4f4f4" },
-    ],
-    price: new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(price),
-    compareAtPrice: null,
-    short: "Demo-Artikel · nur in dieser Vorschau",
-    description: "Testartikel für die Vorschau. Farbe, Größe und die lokale Warenkorb-Funktion können hier vollständig ausprobiert werden.",
-    sizes: ["S", "M", "L", "XL"],
-    variants: ["Schwarz", "Weiß"].flatMap((color) =>
-      ["S", "M", "L", "XL"].map((size) => ({
-        id: `demo-${number}-${color.toLowerCase()}-${size.toLowerCase()}`,
-        title: `${color} / ${size}`,
-        price: price.toFixed(2),
-        availableForSale: true,
-        quantityAvailable: 25,
-        selectedOptions: [
-          { name: "Farbe", value: color },
-          { name: "Größe", value: size },
-        ],
-      })),
-    ),
-  }
-}
 
-const DEMO_PRODUCTS = Array.from({ length: 41 }, (_, index) =>
-  createDemoProduct(index),
-)
 
-function demoCartWithLines(lines: any[]) {
-  const subtotal = lines.reduce(
-    (sum, { node }) => sum + Number(node.merchandise.price.amount) * node.quantity,
-    0,
-  )
-  return {
-    id: "demo-cart",
-    isDemoCart: true,
-    totalQuantity: lines.reduce((sum, { node }) => sum + node.quantity, 0),
-    cost: {
-      subtotalAmount: { amount: subtotal.toFixed(2), currencyCode: "EUR" },
-      totalAmount: { amount: subtotal.toFixed(2), currencyCode: "EUR" },
-    },
-    lines: { edges: lines },
-  }
-}
 
-function readDemoCart() {
-  try {
-    const stored = window.localStorage.getItem(DEMO_CART_STORAGE_KEY)
-    if (!stored) return null
-    const cart = JSON.parse(stored)
-    return cart?.isDemoCart ? cart : null
-  } catch {
-    window.localStorage.removeItem(DEMO_CART_STORAGE_KEY)
-    return null
-  }
-}
 
-function publishDemoCart(lines: any[]) {
-  if (!lines.length) {
-    window.localStorage.removeItem(DEMO_CART_STORAGE_KEY)
-    publishCart(null)
-    return null
-  }
-  const cart = demoCartWithLines(lines)
-  window.localStorage.setItem(DEMO_CART_STORAGE_KEY, JSON.stringify(cart))
-  publishCart(cart)
-  return cart
-}
 
-function addDemoVariant(product: any, variant: any) {
-  const current = readDemoCart()
-  const lines = current?.lines?.edges || []
-  const existing = lines.find(({ node }: any) => node.merchandise.id === variant.id)
-  const nextLines = existing
-    ? lines.map(({ node }: any) =>
-        node.merchandise.id === variant.id
-          ? { node: { ...node, quantity: node.quantity + 1 } }
-          : { node },
-      )
-    : [
-        ...lines,
-        {
-          node: {
-            id: `demo-line-${variant.id}`,
-            quantity: 1,
-            merchandise: {
-              ...variant,
-              price: { amount: variant.price, currencyCode: "EUR" },
-              product: {
-                title: product.name,
-                featuredImage: { url: product.image, altText: product.name },
-              },
-            },
-          },
-        },
-      ]
-  return publishDemoCart(nextLines)
-}
 
-function updateDemoCartLine(lineId: string, quantity: number) {
-  const lines = readDemoCart()?.lines?.edges || []
-  return publishDemoCart(
-    lines
-      .filter(({ node }: any) => node.id !== lineId || quantity > 0)
-      .map(({ node }: any) =>
-        node.id === lineId ? { node: { ...node, quantity } } : { node },
-      ),
-  )
-}
 
 function publishCart(cart: any | null) {
   sharedCart = cart
@@ -283,25 +167,6 @@ function cartHasVariant(cart: any | null | undefined, variantId?: string) {
   if (!variantId) return false
   return (cart?.lines?.edges || []).some(
     ({ node }: any) => node.merchandise?.id === variantId,
-  )
-}
-
-function selectedProductVariant(product: any, size: string, color: string) {
-  const colorLabel = product.colorOptions?.find((item: any) => item.value === color)?.label
-  return (
-    product.variants?.find((variant: any) => {
-      const options = variant.selectedOptions || []
-      const sizeOption = options.find((option: any) =>
-        ["größe", "groesse", "size"].includes(option.name.toLowerCase()),
-      )
-      const colorOption = options.find((option: any) =>
-        ["farbe", "color"].includes(option.name.toLowerCase()),
-      )
-      return (
-        (!sizeOption || sizeOption.value === size) &&
-        (!colorOption || !colorLabel || colorOption.value === colorLabel)
-      )
-    }) || product.variants?.[0]
   )
 }
 
@@ -338,27 +203,6 @@ function cartWithLineQuantity(cart: any, lineId: string, quantity: number) {
   }
 }
 
-function ShippingCostsDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  if (!open) return null
-  return (
-    <div className="legal-dialog-layer" role="dialog" aria-modal="true" aria-labelledby="shipping-dialog-title">
-      <button type="button" className="legal-dialog-backdrop" aria-label="Fenster schließen" onClick={onClose} />
-      <section className="legal-dialog">
-        <button type="button" className="legal-dialog-close" aria-label="Schließen" onClick={onClose}>×</button>
-        <p className="legal-kicker">VERSAND & LIEFERUNG</p>
-        <h2 id="shipping-dialog-title">VERSANDKOSTEN</h2>
-        <div className="shipping-rate-card">
-          <span>DEUTSCHLAND · DHL / GLS</span>
-          <b>6,15 €</b>
-          <small>pro Bestellung</small>
-        </div>
-        <p>Kostenloser Versand ab einem Warenwert von 85,00 €. Die verbindlichen Versandkosten werden vor Abschluss deiner Bestellung im Checkout angezeigt.</p>
-        <a href="/versandkosten" onClick={onClose}>ALLE LIEFERINFORMATIONEN ANSEHEN →</a>
-      </section>
-    </div>
-  )
-}
-
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const HERO_SLIDES = [
@@ -369,7 +213,7 @@ const HERO_SLIDES = [
     line2: "DEM",
     line3: "REVIER",
     redLine: "line3",
-    sub: "Authentisches Streetwear aus dem Ruhrgebiet. Bio-Baumwolle, Direktdruck — mit Kohlestaub in den Genen.",
+    sub: "Authentische Streetwear aus dem Ruhrgebiet. Individuelle Prints und klare Motive — mit Kohlestaub in den Genen.",
   },
   {
     img: hero2,
@@ -387,7 +231,7 @@ const HERO_SLIDES = [
     line2: "DEIN",
     line3: "DESIGN",
     redLine: "line3",
-    sub: "Wähle aus 500+ Motiven oder lade dein Bild hoch. DTF-Druck auf Bio-Baumwolle — schnell und fair.",
+    sub: "Wähle dein Motiv oder lade dein Bild hoch. Individueller DTF-Druck auf ausgewählten Textilien.",
   },
 ]
 
@@ -398,54 +242,6 @@ const CATEGORIES = [
   { img: img55, name: "GLÄSER & TASSEN" },
   { img: imgZubehorPhoto, name: "ACCESSOIRES" },
   { img: img11, name: "DTF-TRANSFERS" },
-]
-
-const PRODUCTS = [
-  {
-    img: imgProduct1,
-    badge: "TOP",
-    category: "Für das Revier",
-    name: "Glück Auf T-Shirt",
-    rating: 87,
-    price: "24,90 €",
-    swatches: ["#111111", "#444444", "#888888"],
-  },
-  {
-    img: imgProduct2,
-    badge: "NEU",
-    category: "Industrial Feel · Warm",
-    name: "Förderturm Hoodie",
-    rating: 53,
-    price: "40,90 €",
-    swatches: ["#111111", "#2D3748"],
-  },
-  {
-    img: imgProduct3,
-    badge: "★ TOP",
-    category: "Kumpel Kollektion",
-    name: "Kumpel T-Shirt",
-    rating: 71,
-    price: "24,90 €",
-    swatches: ["#1A1A1A", "#333333"],
-  },
-  {
-    img: imgProduct4,
-    badge: "NEU",
-    category: "Revier Klassiker",
-    name: "Bergmann T-Shirt",
-    rating: 96,
-    price: "24,90 €",
-    swatches: ["#111111", "#ffffff"],
-  },
-  {
-    img: imgProduct5,
-    badge: "★ TOP",
-    category: "Für die Zeit nach der Schicht",
-    name: "Schicht im Schacht Polo",
-    rating: 58,
-    price: "34,90 €",
-    swatches: ["#111111", "#1A202C", "#718096"],
-  },
 ]
 
 const TICKER_ITEMS = ["GLÜCK AUF", "◆", "MADE IM POTT", "◆", "RUHRGEBIET", "◆"]
@@ -565,124 +361,9 @@ function TickerSpacerBottom() {
 
 // ─── Brand Mark (Förderturm / winding tower) ────────────────────────────────────
 
-function HeadframeMark({
-  className = "",
-  style,
-}: {
-  className?: string
-  style?: React.CSSProperties
-}) {
-  return (
-    <svg
-      viewBox="0 0 100 100"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-      style={style}
-      aria-hidden="true"
-    >
-      {/* apex cap + head beam */}
-      <path d="M42 15 L50 7 L58 15" strokeWidth={4} />
-      <path d="M30 15 H70" strokeWidth={4} />
-      {/* winding sheave wheels */}
-      <circle cx="41" cy="28" r="8" strokeWidth={3.4} />
-      <circle cx="59" cy="28" r="8" strokeWidth={3.4} />
-      <circle cx="41" cy="28" r="1.7" fill="currentColor" stroke="none" />
-      <circle cx="59" cy="28" r="1.7" fill="currentColor" stroke="none" />
-      {/* tower legs */}
-      <path d="M32 15 L28 77" strokeWidth={4} />
-      <path d="M68 15 L72 77" strokeWidth={4} />
-      {/* lattice bracing */}
-      <path d="M30 42 L70 64" strokeWidth={2.6} />
-      <path d="M70 42 L30 64" strokeWidth={2.6} />
-      <path d="M29.5 53 H70.5" strokeWidth={2.6} />
-      {/* shaft house */}
-      <path d="M24 77 H76 V94 H24 Z" strokeWidth={3.6} />
-      {/* windows */}
-      <path
-        d="M38 77 V94 M50 77 V94 M62 77 V94 M24 85.5 H76"
-        strokeWidth={2.6}
-      />
-      {/* ground line */}
-      <path d="M18 94 H82" strokeWidth={4} />
-    </svg>
-  )
-}
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
-function CatalogIcon({
-  type,
-}: {
-  type: "women" | "men" | "kids" | "accessories" | "glass" | "dtf"
-}) {
-  const common = {
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  }
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="19"
-      height="19"
-      aria-hidden="true"
-      className="catalog-icon"
-    >
-      {type === "men" && (
-        <>
-          <circle cx="12" cy="5" r="3" fill="currentColor" />
-          <path d="M8 10h8v10H8z" fill="currentColor" />
-        </>
-      )}
-      {type === "women" && (
-        <>
-          <circle cx="12" cy="5" r="3" fill="currentColor" />
-          <path d="M12 10 17 20H7l5-10Z" fill="currentColor" />
-        </>
-      )}
-      {type === "kids" && (
-        <>
-          <circle cx="12" cy="6" r="2.5" fill="currentColor" />
-          <path d="M9 10h6l2 4-2 1v5H9v-5l-2-1 2-4Z" fill="currentColor" />
-        </>
-      )}
-      {type === "accessories" && (
-        <>
-          <path
-            d="M5 8h14v13H5V8Zm5-3h4a3 3 0 0 1 3 3H7a3 3 0 0 1 3-3Z"
-            fill="currentColor"
-          />
-          <rect x="7" y="11" width="10" height="1.6" rx=".8" fill="#171717" />
-        </>
-      )}
-      {type === "glass" && (
-        <>
-          <path
-            d="M5 5h13v9a6 6 0 0 1-12 0V5Zm13 3h2a3 3 0 0 1 0 6h-2v-2h2a1 1 0 0 0 0-2h-2V8ZM11 19h2v2h4v2H7v-2h4v-2Z"
-            fill="currentColor"
-          />
-        </>
-      )}
-      {type === "dtf" && (
-        <>
-          <path
-            d="M6 3h9l4 4v14H6V3Zm9 1.8V8h3.2L15 4.8ZM9 11h7v7H9v-7Z"
-            fill="currentColor"
-          />
-          <path
-            d="m12.5 12.1.65 1.55 1.68.14-1.28 1.1.4 1.64-1.45-.86-1.45.86.39-1.64-1.27-1.1 1.67-.14.66-1.55Z"
-            fill="#171717"
-          />
-        </>
-      )}
-    </svg>
-  )
-}
 
 const ACCOUNT_SECTIONS = [
   { id: "personal", label: "PERSÖNLICHE DATEN" },
@@ -756,13 +437,42 @@ function Header() {
   const [catalogOpen, setCatalogOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [accountOpen, setAccountOpen] = useState(false)
-  const { cart } = useShopifyCart()
+  const headerRef = useRef<HTMLElement>(null)
+  const { cart, loading: cartLoading } = useShopifyCart()
   const {
     customer: accountCustomer,
     loading: accountLoading,
     signOut: signOutAccount,
   } = useCustomerAccount()
   const cartQuantity = cart?.totalQuantity || 0
+  useEffect(() => {
+    const dismiss = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) {
+        setCatalogOpen(false)
+        setMobileMenuOpen(false)
+      }
+    }
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return
+      if (document.querySelector(".legal-dialog-layer")) return
+      const trigger = Array.from(
+        headerRef.current?.querySelectorAll<HTMLElement>(
+          '[aria-expanded="true"]',
+        ) || [],
+      ).find((element) => element.getBoundingClientRect().width > 0)
+      setCatalogOpen(false)
+      setMobileMenuOpen(false)
+      setAccountOpen(false)
+      setCartOpen(false)
+      trigger?.focus()
+    }
+    document.addEventListener("pointerdown", dismiss)
+    document.addEventListener("keydown", onEscape)
+    return () => {
+      document.removeEventListener("pointerdown", dismiss)
+      document.removeEventListener("keydown", onEscape)
+    }
+  }, [])
   useEffect(() => {
     if (!accountOpen) return
     const closeOnOutsideClick = (event: PointerEvent) => {
@@ -817,10 +527,13 @@ function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white border border-black shadow-[0px_4px_4px_rgba(0,0,0,0.25)]">
+    <header
+      ref={headerRef}
+      className="site-header sticky top-0 z-50 w-full border border-black"
+    >
       {/* TopBar */}
       <div
-        className="bg-[#ebebeb] h-[30px] w-full flex items-center justify-end gap-5 overflow-hidden"
+        className="site-header-utility h-[30px] w-full flex items-center justify-end gap-5 overflow-hidden"
         style={{ paddingRight: SECTION_PAD }}
       >
         {[
@@ -834,7 +547,7 @@ function Header() {
             <a
               key={i}
               href={item.to}
-              className="text-[#1f1f1f] whitespace-nowrap topbar-link"
+              className="whitespace-nowrap topbar-link"
               style={{
                 fontFamily: "Montserrat, sans-serif",
                 fontWeight: 700,
@@ -847,7 +560,7 @@ function Header() {
           ) : (
             <span
               key={i}
-              className="text-[#1f1f1f] whitespace-nowrap"
+              className="whitespace-nowrap"
               style={{
                 fontFamily: "Montserrat, sans-serif",
                 fontWeight: 700,
@@ -856,16 +569,7 @@ function Header() {
               }}
             >
               {item.label === "DEUTSCH" && (
-                <img
-                  src={imgGlobe}
-                  alt="Sprache"
-                  className="inline-block w-4 h-4 mr-1.5 align-[-3px] object-contain"
-                  style={{
-                    filter: "invert(1)",
-                    mixBlendMode: "multiply",
-                    transform: "translateY(2px)",
-                  }}
-                />
+                <FiGlobe aria-hidden="true" className="site-language-icon" />
               )}
               {item.label}
             </span>
@@ -875,14 +579,13 @@ function Header() {
 
       {/* Main header */}
       <div
-        className="relative bg-[#141414] w-full"
-        onMouseLeave={() => setCatalogOpen(false)}
+        className="site-header-main relative bg-[#141414] w-full"
         style={{ minHeight: 136 }}
       >
         <img
           src={imgHeaderCoal}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-[0.2] pointer-events-none"
+          className="site-header-coal absolute inset-0 w-full h-full object-cover opacity-[0.2] pointer-events-none"
           style={{
             objectPosition: "center 42%",
             filter: "contrast(1.15) saturate(0.6)",
@@ -891,7 +594,7 @@ function Header() {
         <img
           src={imgHeaderBg}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none"
+          className="site-header-texture absolute inset-0 w-full h-full object-cover opacity-40 pointer-events-none"
         />
         <div
           className="absolute inset-0 pointer-events-none"
@@ -902,98 +605,134 @@ function Header() {
         />
         {/* ── Desktop: single-row layout matching reference ── */}
         <div
-          className="hidden lg:flex items-center max-w-[1440px] mx-auto w-full"
+          className="site-header-desktop hidden lg:flex items-center max-w-[1440px] mx-auto w-full"
           style={{
             height: "clamp(116px, 8.4vw, 142px)",
             paddingLeft: SECTION_PAD,
             paddingRight: SECTION_PAD,
           }}
         >
-          {/* LEFT NAV */}
-          <div
-            className="flex items-center gap-2 flex-shrink-0 relative z-10"
+          {/* Fixed footprint preserves the original logo and decorative-line position. */}
+          <nav
+            className="site-header-left relative z-10"
+            aria-label="Hauptnavigation"
             style={{ marginRight: "clamp(18px, 2vw, 34px)" }}
           >
-            {[
-              { label: "KATALOG", hasLines: true },
-              { label: "SALE" },
-              { label: "FÜR UNTERNEHMEN" },
-            ].map((item) =>
-              item.label === "FÜR UNTERNEHMEN" ? (
-                <a
-                  key={item.label}
-                  href="/unternehmen"
-                  className="btn-glass flex items-center gap-2 whitespace-nowrap"
-                  style={{ padding: "9px 14px" }}
+            <div className="site-catalog-control">
+              <button
+                type="button"
+                className={`site-nav-link ${
+                  window.location.pathname.startsWith("/katalog") ||
+                  window.location.pathname === "/sale"
+                    ? "is-active"
+                    : ""
+                }`}
+                aria-expanded={catalogOpen}
+                aria-controls="site-catalog-menu"
+                onClick={() => {
+                  setCatalogOpen(!catalogOpen)
+                  setAccountOpen(false)
+                }}
+              >
+                <FiGrid aria-hidden="true" />
+                <span>Katalog</span>
+                <FiChevronDown
+                  className="site-nav-chevron"
+                  aria-hidden="true"
+                />
+              </button>
+              {catalogOpen && (
+                <div
+                  id="site-catalog-menu"
+                  className="desktop-catalog-menu hidden lg:block"
                 >
-                  <span
-                    style={{
-                      fontFamily: "Montserrat, sans-serif",
-                      fontWeight: 800,
-                      fontSize: "clamp(10px, 0.9vw, 13px)",
-                      letterSpacing: "2px",
-                      color: "white",
-                      textShadow: "0 1px 3px rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                </a>
-              ) : item.label === "SALE" ? (
-                <a
-                  key={item.label}
-                  href="/sale"
-                  className="btn-glass flex items-center gap-2 whitespace-nowrap"
-                  style={{ padding: "9px 14px" }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "Montserrat, sans-serif",
-                      fontWeight: 800,
-                      fontSize: "clamp(10px, 0.9vw, 13px)",
-                      letterSpacing: "2px",
-                      color: "white",
-                    }}
-                  >
-                    SALE
-                  </span>
-                </a>
-              ) : (
-                <button
-                  key={item.label}
-                  onClick={() =>
-                    item.label === "KATALOG" && setCatalogOpen(!catalogOpen)
-                  }
-                  className="btn-glass flex items-center gap-2 whitespace-nowrap"
-                  style={{ padding: "9px 14px" }}
-                >
-                  {item.hasLines && (
-                    <span className="flex flex-col gap-[3.5px]">
-                      {[0, 1, 2].map((j) => (
-                        <span
-                          key={j}
-                          className="block h-px bg-white rounded"
-                          style={{ width: 13 }}
-                        />
-                      ))}
-                    </span>
-                  )}
-                  <span
-                    style={{
-                      fontFamily: "Montserrat, sans-serif",
-                      fontWeight: 800,
-                      fontSize: "clamp(10px, 0.9vw, 13px)",
-                      letterSpacing: "2px",
-                      color: "white",
-                      textShadow: "0 1px 3px rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    {item.label}
-                  </span>
-                </button>
-              ),
-            )}
-          </div>
+                  <a href="/katalog" className="site-catalog-all">
+                    Alle Produkte <FiArrowUpRight aria-hidden="true" />
+                  </a>
+                  <p className="catalog-menu-kicker">KOLLEKTIONEN</p>
+                  {[
+                    {
+                      label: "FRAUEN",
+                      icon: "women" as const,
+                      children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
+                    },
+                    {
+                      label: "MÄNNER",
+                      icon: "men" as const,
+                      children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
+                    },
+                    {
+                      label: "KINDER",
+                      icon: "kids" as const,
+                      children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
+                    },
+                    {
+                      label: "UNISEX",
+                      icon: "unisex" as const,
+                      children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
+                    },
+                    {
+                      label: "ACCESSOIRES",
+                      icon: "accessories" as const,
+                      sectionStart: true,
+                      children: ["KOPFBEDECKUNG", "SHOPPER", "SCHMUCK", "PINS"],
+                    },
+                    {
+                      label: "GLÄSER & TASSEN",
+                      icon: "glass" as const,
+                      children: ["TASSEN", "BIERGLÄSER", "UNTERSETZER"],
+                    },
+                    {
+                      label: "DTF-TRANSFERS",
+                      icon: "dtf" as const,
+                      children: ["FÜR KLEIDUNG & TEXTILIEN"],
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className={`catalog-menu-item ${
+                        item.sectionStart ? "catalog-section-start" : ""
+                      }`}
+                    >
+                      <button
+                        onClick={() => {
+                          window.location.href = catalogTarget(item.label)
+                        }}
+                        className="catalog-menu-trigger"
+                      >
+                        <FilterOptionIcon label={item.label} />
+                        <span>{item.label}</span>
+                        <span className="catalog-chevron" />
+                      </button>
+                      {item.children && (
+                        <div className="catalog-submenu">
+                          {item.children.map((child) => (
+                            <button
+                              onClick={() => {
+                                window.location.href = catalogTarget(
+                                  item.label,
+                                  child,
+                                )
+                              }}
+                              key={child}
+                            >
+                              {child}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <a href="/unternehmen" className="site-nav-link">
+              Für Unternehmen
+            </a>
+            <a href="/katalog?sale=1" className="site-nav-link site-sale-link">
+              Sale
+            </a>
+          </nav>
 
           {/* RED LINE — left of logo */}
           <div className="hidden" />
@@ -1001,7 +740,7 @@ function Header() {
           {/* LOGO */}
           <a
             href="/"
-            aria-label="На главную"
+            aria-label="Zur Startseite"
             className="flex flex-col items-center justify-center flex-shrink-0"
             style={{ gap: 1 }}
           >
@@ -1029,68 +768,33 @@ function Header() {
           {/* RED LINE — right of logo */}
           <div className="hidden" />
 
-          {/* RIGHT NAV */}
+          {/* Primary action and customer utilities. */}
           <div
-            className="flex items-center gap-2 flex-shrink-0 relative z-[30]"
+            className="site-header-right"
             style={{ marginLeft: "clamp(18px, 2vw, 34px)" }}
           >
-            {/* EIGENER DESIGN */}
-            <button
-              onClick={() => {
-                window.location.href = "/designer"
-              }}
-              className="btn-red flex items-center gap-2 whitespace-nowrap rounded-[5px]"
-              style={{ padding: "9px 16px" }}
-            >
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                <path
-                  d="M11.5 2.5H2.5V11.5M2.5 2.5L11.5 11.5"
-                  stroke="white"
-                  strokeLinecap="round"
-                  strokeWidth="2"
-                />
-              </svg>
-              <span
-                style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 800,
-                  fontSize: "clamp(10px, 0.9vw, 13px)",
-                  letterSpacing: "2px",
-                  color: "white",
-                }}
-              >
-                EIGENER DESIGN
-              </span>
-            </button>
-            {/* LOGIN */}
-            <div className="relative z-[30]">
+            <a href="/designer" className="site-design-action">
+              Eigener Design <FiArrowUpRight aria-hidden="true" />
+            </a>
+            <div className="relative">
               <button
                 type="button"
                 data-account-trigger
-                onClick={() => setAccountOpen((open) => !open)}
+                className="site-account-action"
+                aria-label={accountCustomer ? "Konto" : "Login"}
                 aria-expanded={accountOpen}
-                className="btn-glass flex items-center gap-2 whitespace-nowrap"
-                style={{ padding: "9px 14px" }}
+                onClick={() => {
+                  setAccountOpen(!accountOpen)
+                  setCatalogOpen(false)
+                }}
               >
-                <img
-                  src={imgAccount}
-                  alt=""
-                  className="w-4 h-4 object-contain mix-blend-screen flex-shrink-0"
-                />
-                <span
-                  style={{
-                    fontFamily: "Montserrat, sans-serif",
-                    fontWeight: 800,
-                    fontSize: "clamp(10px, 0.9vw, 13px)",
-                    letterSpacing: "2px",
-                    color: "white",
-                  }}
-                >
+                <img src={imgAccount} alt="" className="site-legacy-icon" />
+                <span className="site-action-label">
                   {accountLoading
-                    ? "LOGIN"
+                    ? "Login"
                     : accountCustomer
-                      ? "KONTO"
-                      : "LOGIN"}
+                      ? "Konto"
+                      : "Login"}
                 </span>
               </button>
               {accountOpen && (
@@ -1103,31 +807,22 @@ function Header() {
                 </div>
               )}
             </div>
-            {/* WARENKORB */}
             <button
               type="button"
+              className="site-cart-action"
+              aria-expanded={cartOpen}
+              aria-haspopup="dialog"
+              aria-label={`Warenkorb${
+                cartQuantity ? ` (${cartQuantity})` : ""
+              }`}
               onClick={() => {
                 setCartOpen(true)
+                setAccountOpen(false)
+                setCatalogOpen(false)
               }}
-              className="btn-glass flex items-center gap-2 whitespace-nowrap"
-              style={{ padding: "9px 14px" }}
             >
-              <img
-                src={imgCart}
-                alt=""
-                className="w-4 h-4 object-contain mix-blend-screen flex-shrink-0"
-              />
-              <span
-                style={{
-                  fontFamily: "Montserrat, sans-serif",
-                  fontWeight: 800,
-                  fontSize: "clamp(10px, 0.9vw, 13px)",
-                  letterSpacing: "2px",
-                  color: "white",
-                }}
-              >
-                WARENKORB
-              </span>
+              <img src={imgCart} alt="" className="site-legacy-icon" />
+              <span className="site-action-label">Warenkorb</span>
               {cartQuantity > 0 && (
                 <span className="cart-count">{cartQuantity}</span>
               )}
@@ -1135,89 +830,6 @@ function Header() {
           </div>
         </div>
 
-        {catalogOpen && (
-          <div
-            className="desktop-catalog-menu hidden lg:block"
-            style={{
-              left: "max(16px, calc((100% - 1440px) / 2 + clamp(16px, 12vw, 210px)))",
-            }}
-          >
-            <p className="catalog-menu-kicker">KOLLEKTIONEN</p>
-            {[
-              {
-                label: "FRAUEN",
-                icon: "women" as const,
-                children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
-              },
-              {
-                label: "MÄNNER",
-                icon: "men" as const,
-                children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
-              },
-              {
-                label: "KINDER",
-                icon: "kids" as const,
-                children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
-              },
-              {
-                label: "UNISEX",
-                icon: "unisex" as const,
-                children: ["HOODIES", "T-SHIRTS", "SWEATSHIRTS", "POLOS"],
-              },
-              {
-                label: "ACCESSOIRES",
-                icon: "accessories" as const,
-                sectionStart: true,
-                children: ["KOPFBEDECKUNG", "SHOPPER", "SCHMUCK", "PINS"],
-              },
-              {
-                label: "GLÄSER & TASSEN",
-                icon: "glass" as const,
-                children: ["TASSEN", "BIERGLÄSER", "UNTERSETZER"],
-              },
-              {
-                label: "DTF-TRANSFERS",
-                icon: "dtf" as const,
-                children: ["FÜR KLEIDUNG & TEXTILIEN"],
-              },
-            ].map((item) => (
-              <div
-                key={item.label}
-                className={`catalog-menu-item ${
-                  item.sectionStart ? "catalog-section-start" : ""
-                }`}
-              >
-                <button
-                  onClick={() => {
-                    window.location.href = catalogTarget(item.label)
-                  }}
-                  className="catalog-menu-trigger"
-                >
-                  <FilterOptionIcon label={item.label} />
-                  <span>{item.label}</span>
-                  <span className="catalog-chevron" />
-                </button>
-                {item.children && (
-                  <div className="catalog-submenu">
-                    {item.children.map((child) => (
-                      <button
-                        onClick={() => {
-                          window.location.href = catalogTarget(
-                            item.label,
-                            child,
-                          )
-                        }}
-                        key={child}
-                      >
-                        {child}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
         {/* ── Mobile header row ── */}
         <div
           className="mobile-header flex lg:hidden items-center justify-between px-4"
@@ -1225,7 +837,7 @@ function Header() {
         >
           <a
             href="/"
-            aria-label="На главную"
+            aria-label="Zur Startseite"
             className="mobile-brand flex flex-col items-center justify-center"
             style={{ gap: 1 }}
           >
@@ -1251,38 +863,52 @@ function Header() {
             />
           </a>
           <div className="mobile-actions flex items-center gap-3">
-            <div className="relative">
-              <button
-                type="button"
-                data-account-trigger
-                onClick={() => setAccountOpen((open) => !open)}
-                aria-label="Login"
-                aria-expanded={accountOpen}
-                className="btn-glass mobile-icon-btn"
-              >
-                <img src={imgAccount} alt="" className="mobile-icon-glyph" />
-              </button>
-            </div>
             <button
               type="button"
+              data-account-trigger
+              className="site-icon-action"
+              aria-label={accountCustomer ? "Konto" : "Login"}
+              aria-expanded={accountOpen}
+              onClick={() => {
+                setAccountOpen(!accountOpen)
+                setMobileMenuOpen(false)
+              }}
+            >
+              <img src={imgAccount} alt="" className="site-legacy-icon" />
+            </button>
+            <button
+              type="button"
+              className="site-icon-action"
+              aria-label="Warenkorb"
+              aria-expanded={cartOpen}
+              aria-haspopup="dialog"
               onClick={() => {
                 setCartOpen(true)
+                setAccountOpen(false)
+                setMobileMenuOpen(false)
               }}
-              aria-label="Warenkorb"
-              className="btn-glass mobile-icon-btn"
             >
-              <img src={imgCart} alt="" className="mobile-icon-glyph" />
+              <img src={imgCart} alt="" className="site-legacy-icon" />
               {cartQuantity > 0 && (
                 <span className="cart-count">{cartQuantity}</span>
               )}
             </button>
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="btn-glass mobile-menu-btn flex flex-col items-center justify-center gap-[5px] cursor-pointer"
+              type="button"
+              className="site-icon-action"
+              aria-label={mobileMenuOpen ? "Menü schließen" : "Menü öffnen"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="site-mobile-nav"
+              onClick={() => {
+                setMobileMenuOpen(!mobileMenuOpen)
+                setAccountOpen(false)
+              }}
             >
-              <span className="block w-5 h-0.5 bg-white rounded" />
-              <span className="block w-5 h-0.5 bg-white rounded" />
-              <span className="block w-5 h-0.5 bg-white rounded" />
+              {mobileMenuOpen ? (
+                <FiX aria-hidden="true" />
+              ) : (
+                <FiMenu aria-hidden="true" />
+              )}
             </button>
           </div>
         </div>
@@ -1297,69 +923,37 @@ function Header() {
           </div>
         )}
 
-        {/* Mobile dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#0d0d0d] border-t border-[rgba(255,255,255,0.07)] px-5 py-4 flex flex-col gap-1">
-            {["KATALOG", "SALE"].map((item) =>
-              item === "SALE" ? (
-                <a
-                  key={item}
-                  href="/sale"
-                  className="mobile-menu-action text-left"
-                  style={{
-                    fontFamily: "Montserrat, sans-serif",
-                    fontWeight: 800,
-                    fontSize: 13,
-                    letterSpacing: "2px",
-                  }}
-                >
-                  SALE
-                </a>
-              ) : (
-                <button
-                  key={item}
-                  className="mobile-menu-action text-left"
-                  style={{
-                    fontFamily: "Montserrat, sans-serif",
-                    fontWeight: 800,
-                    fontSize: 13,
-                    letterSpacing: "2px",
-                  }}
-                >
-                  {item}
-                </button>
-              ),
-            )}
-            <a
-              href="/unternehmen"
-              className="mobile-menu-action text-left"
-              style={{
-                fontFamily: "Montserrat, sans-serif",
-                fontWeight: 800,
-                fontSize: 13,
-                letterSpacing: "2px",
-              }}
-            >
-              FÜR UNTERNEHMEN
+          <nav
+            id="site-mobile-nav"
+            className="site-mobile-menu lg:hidden"
+            aria-label="Mobile Navigation"
+          >
+            <a href="/katalog">
+              Katalog <FiArrowUpRight aria-hidden="true" />
             </a>
-            <a
-              href="/designer"
-              className="mobile-menu-action mobile-menu-design text-left mt-1"
-              style={{
-                fontFamily: "Montserrat, sans-serif",
-                fontWeight: 800,
-                fontSize: 13,
-                letterSpacing: "2px",
-              }}
-            >
-              EIGENER DESIGN
+            <a href="/unternehmen">
+              Für Unternehmen <FiArrowUpRight aria-hidden="true" />
             </a>
-          </div>
+            <a href="/katalog?sale=1" className="site-sale-link">
+              Sale <FiArrowUpRight aria-hidden="true" />
+            </a>
+            <a href="/geschichte">
+              Geschichte <FiArrowUpRight aria-hidden="true" />
+            </a>
+            <a href="/blog">
+              Blog <FiArrowUpRight aria-hidden="true" />
+            </a>
+            <a href="/designer" className="site-mobile-design">
+              Eigener Design <FiArrowUpRight aria-hidden="true" />
+            </a>
+          </nav>
         )}
       </div>
       {cartOpen && (
         <CartDrawer
           cart={cart}
+          loading={cartLoading}
           onClose={() => setCartOpen(false)}
         />
       )}
@@ -1405,10 +999,55 @@ function CartQuantityControl({
 function CartDrawer({
   cart,
   onClose,
+  loading = false,
 }: {
   cart: any | null
   onClose: () => void
+  loading?: boolean
 }) {
+  const panelRef = useRef<HTMLElement>(null)
+  const closeRef = useRef(onClose)
+  closeRef.current = onClose
+  useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    panelRef.current
+      ?.querySelector<HTMLElement>(".cart-drawer-head button")
+      ?.focus()
+    const keyboard = (event: KeyboardEvent) => {
+      if (document.querySelector(".legal-dialog-layer")) return
+      if (event.key === "Escape") {
+        event.preventDefault()
+        closeRef.current()
+      }
+      if (event.key !== "Tab") return
+      const controls = Array.from(
+        panelRef.current?.querySelectorAll<HTMLElement>(
+          "button:not([disabled]), a[href], input:not([disabled])",
+        ) || [],
+      ).filter((element) => element.getBoundingClientRect().width > 0)
+      const first = controls[0]
+      const last = controls[controls.length - 1]
+      if (!panelRef.current?.contains(document.activeElement)) {
+        event.preventDefault()
+        const destination = event.shiftKey ? last : first
+        destination?.focus()
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last?.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first?.focus()
+      }
+    }
+    document.addEventListener("keydown", keyboard)
+    return () => {
+      document.removeEventListener("keydown", keyboard)
+      document.body.style.overflow = previousOverflow
+      if (previousFocus?.isConnected) previousFocus.focus()
+    }
+  }, [])
   const [removing, setRemoving] = useState<string | null>(null)
   const lines = cart?.lines?.edges || []
   const total = cart?.cost?.totalAmount
@@ -1423,11 +1062,7 @@ function CartDrawer({
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setRemoving(lineId)
-    if (cart.isDemoCart) {
-      updateDemoCartLine(lineId, 0)
-      setRemoving(null)
-      return
-    }
+    
     const previousCart = cart
     publishCart(cartWithoutLine(cart, lineId))
     try {
@@ -1442,15 +1077,13 @@ function CartDrawer({
   const updateLineQuantity = async (lineId: string, quantity: number) => {
     if (!cart?.id || quantity < 1) return
     setRemoving(lineId)
-    if (cart.isDemoCart) {
-      updateDemoCartLine(lineId, quantity)
-      setRemoving(null)
-      return
-    }
+    
     const previousCart = cart
     publishCart(cartWithLineQuantity(cart, lineId, quantity))
     try {
-      const response = await shopCart.update(cart.id, [{ id: lineId, quantity }])
+      const response = await shopCart.update(cart.id, [
+        { id: lineId, quantity },
+      ])
       publishCart((response as { cart: any }).cart)
     } catch {
       publishCart(previousCart)
@@ -1460,7 +1093,7 @@ function CartDrawer({
   }
   return (
     <div
-      className="cart-drawer-layer"
+      className="cart-drawer-layer commerce-drawer-layer"
       role="dialog"
       aria-modal="true"
       aria-label="Warenkorb"
@@ -1468,27 +1101,40 @@ function CartDrawer({
       <button
         type="button"
         className="cart-drawer-backdrop"
+        tabIndex={-1}
         onClick={onClose}
         aria-label="Warenkorb schließen"
       />
-      <aside className="cart-drawer">
+      <aside ref={panelRef} className="cart-drawer">
         <header className="cart-drawer-head">
           <div>
-            <span>DEINE AUSWAHL</span>
+            <span>Deine Auswahl</span>
             <h2>
-              WARENKORB <b>{cart?.totalQuantity || 0}</b>
+              Warenkorb <b>{cart?.totalQuantity || 0}</b>
             </h2>
           </div>
           <button type="button" onClick={onClose} aria-label="Schließen">
-            ×
+            <FiX aria-hidden="true" />
           </button>
         </header>
         <div className="cart-drawer-lines">
-          {!cart && (
-            <p className="cart-drawer-empty">WARENKORB WIRD GELADEN.</p>
+          {loading && (
+            <p className="cart-drawer-empty" role="status">
+              Dein Warenkorb wird geladen …
+            </p>
           )}
-          {cart && lines.length === 0 && (
-            <p className="cart-drawer-empty">DEIN WARENKORB IST LEER.</p>
+          {!loading && lines.length === 0 && (
+            <div className="cart-drawer-empty">
+              <img src={imgCart} alt="" className="cart-drawer-minecart" />
+              <h3>Platz für dein nächstes Lieblingsstück.</h3>
+              <p>
+                Dein Warenkorb ist noch leer. Entdecke unsere Produkte aus dem
+                Revier.
+              </p>
+              <a href="/katalog" onClick={onClose}>
+                Zum Katalog <FiArrowUpRight aria-hidden="true" />
+              </a>
+            </div>
           )}
           {lines.map(({ node }: any) => {
             const variant = node.merchandise
@@ -1508,7 +1154,11 @@ function CartDrawer({
                   )}
                 </div>
                 <div className="cart-drawer-copy">
-                  <p>{variant.product.title}</p>
+                  <p>
+                    <a href={`/katalog/${variant.product.handle || ""}`}>
+                      {variant.product.title}
+                    </a>
+                  </p>
                   <span>{variant.title}</span>
                   <strong>
                     {node.quantity} × {price}
@@ -1516,8 +1166,14 @@ function CartDrawer({
                   <PriceLegalNote />
                   <CartQuantityControl
                     quantity={node.quantity}
-                    maxQuantity={typeof variant.quantityAvailable === "number" ? variant.quantityAvailable : null}
-                    onChange={(quantity) => updateLineQuantity(node.id, quantity)}
+                    maxQuantity={
+                      typeof variant.quantityAvailable === "number"
+                        ? variant.quantityAvailable
+                        : null
+                    }
+                    onChange={(quantity) =>
+                      updateLineQuantity(node.id, quantity)
+                    }
                     disabled={removing === node.id}
                   />
                 </div>
@@ -1533,41 +1189,52 @@ function CartDrawer({
             )
           })}
         </div>
-        <footer className="cart-drawer-foot">
-          <div className="cart-drawer-costs">
-            <div>
-              <span>ZWISCHENSUMME</span>
-              <strong>{subtotal ? formatCartMoney(subtotalValue) : "—"}</strong>
+        {lines.length > 0 && (
+          <footer className="cart-drawer-foot">
+            <div className="cart-drawer-costs">
+              <div>
+                <span>ZWISCHENSUMME</span>
+                <strong>
+                  {subtotal ? formatCartMoney(subtotalValue) : "—"}
+                </strong>
+              </div>
+              <div>
+                <span>VERSAND · DHL / GLS</span>
+                <strong className={shippingValue === 0 ? "is-free" : ""}>
+                  {shippingValue === 0
+                    ? "KOSTENLOS"
+                    : formatCartMoney(shippingValue)}
+                </strong>
+              </div>
+              <div className="cart-drawer-grand-total">
+                <span>VORAUSSICHTLICH GESAMT</span>
+                <strong>
+                  {lines.length > 0
+                    ? formatCartMoney(subtotalValue + shippingValue)
+                    : "—"}
+                </strong>
+              </div>
             </div>
-            <div>
-              <span>VERSAND · DHL / GLS</span>
-              <strong className={shippingValue === 0 ? "is-free" : ""}>
-                {shippingValue === 0
-                  ? "KOSTENLOS"
-                  : formatCartMoney(shippingValue)}
-              </strong>
-            </div>
-            <div className="cart-drawer-grand-total">
-              <span>VORAUSSICHTLICH GESAMT</span>
-              <strong>
-                {lines.length > 0
-                  ? formatCartMoney(subtotalValue + shippingValue)
-                  : "—"}
-              </strong>
-            </div>
-          </div>
-          <p className="cart-shipping-note">
-            * KOSTENLOSER VERSAND AB 85,00 € WARENWERT.
-          </p>
-          <a href="/katalog" onClick={onClose} className="cart-drawer-continue">
-            ← WEITER EINKAUFEN
-          </a>
-          {cart?.checkoutUrl && lines.length > 0 && (
-            <a href={cart.checkoutUrl} className="btn-red cart-drawer-checkout">
-              SICHER ZUR KASSE <span>→</span>
+            <p className="cart-shipping-note">
+              * KOSTENLOSER VERSAND AB 85,00 € WARENWERT.
+            </p>
+            <a
+              href="/katalog"
+              onClick={onClose}
+              className="cart-drawer-continue"
+            >
+              ← WEITER EINKAUFEN
             </a>
-          )}
-        </footer>
+            {cart?.checkoutUrl && lines.length > 0 && (
+              <a
+                href={cart.checkoutUrl}
+                className="btn-red cart-drawer-checkout"
+              >
+                SICHER ZUR KASSE <span>→</span>
+              </a>
+            )}
+          </footer>
+        )}
       </aside>
     </div>
   )
@@ -1588,7 +1255,34 @@ function AccountMenu({
   }
   const name = customerName(customer)
   return (
-    <div className="account-menu" role="menu">
+    <div
+      className="account-menu commerce-account-menu"
+      role="menu"
+      aria-label="Pottlerkinder-Konto"
+      onKeyDown={(event) => {
+        if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return
+        const items = Array.from(
+          event.currentTarget.querySelectorAll<HTMLButtonElement>(
+            'button[role="menuitem"]',
+          ),
+        )
+        if (!items.length) return
+        event.preventDefault()
+        const current = items.indexOf(
+          document.activeElement as HTMLButtonElement,
+        )
+        const next =
+          event.key === "Home"
+            ? 0
+            : event.key === "End"
+              ? items.length - 1
+              : (current +
+                  (event.key === "ArrowDown" ? 1 : -1) +
+                  items.length) %
+                items.length
+        items[next]?.focus()
+      }}
+    >
       <div className="account-menu-head">
         <span>GLÜCK AUF</span>
         {customer && <strong>{name || "MEIN KONTO"}</strong>}
@@ -1597,9 +1291,10 @@ function AccountMenu({
         <button
           type="button"
           className="account-menu-login btn-red"
+          role="menuitem"
           onClick={() => go("personal")}
         >
-          ANMELDEN
+          ANMELDEN <FiArrowUpRight aria-hidden="true" />
         </button>
       )}
       {ACCOUNT_SECTIONS.map((item) => (
@@ -1609,8 +1304,17 @@ function AccountMenu({
           onClick={() => go(item.id)}
           role="menuitem"
         >
-          <span>{item.label}</span>
-          <b aria-hidden="true">›</b>
+          <span className="commerce-menu-item-label">
+            {item.id === "personal" ? (
+              <FiUser aria-hidden="true" />
+            ) : item.id === "addresses" ? (
+              <FiMapPin aria-hidden="true" />
+            ) : (
+              <FiPackage aria-hidden="true" />
+            )}
+            {item.label}
+          </span>
+          <FiArrowUpRight aria-hidden="true" />
         </button>
       ))}
       {customer && (
@@ -1618,6 +1322,7 @@ function AccountMenu({
           <button
             type="button"
             className="btn-glass account-menu-logout"
+            role="menuitem"
             onClick={async () => {
               await onSignOut()
               onClose()
@@ -1637,8 +1342,19 @@ function HeroCarousel() {
   const [current, setCurrent] = useState(0)
 
   useEffect(() => {
-    const t = setInterval(() => setCurrent((c) => (c + 1) % 3), 7000)
-    return () => clearInterval(t)
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)")
+    let timer: ReturnType<typeof setInterval> | undefined
+    const update = () => {
+      if (timer) clearInterval(timer)
+      if (!preference.matches)
+        timer = setInterval(() => setCurrent((c) => (c + 1) % 3), 7000)
+    }
+    update()
+    preference.addEventListener("change", update)
+    return () => {
+      if (timer) clearInterval(timer)
+      preference.removeEventListener("change", update)
+    }
   }, [])
 
   const slide = HERO_SLIDES[current]
@@ -1794,7 +1510,7 @@ function HeroCarousel() {
           {/* Mini stats */}
           <div className="hidden sm:flex gap-10 lg:gap-14">
             {[
-              { value: "100%", label: "Bio-Cotton" },
+              { value: "Echter Pott", label: "Klare Haltung" },
               { value: "Schneller", label: "Versand" },
               { value: "Beste", label: "Qualität" },
             ].map((stat) => (
@@ -1840,13 +1556,11 @@ function HeroCarousel() {
         {[0, 1, 2].map((i) => (
           <button
             key={i}
+            type="button"
             onClick={() => setCurrent(i)}
             className="hero-dot"
-            style={{
-              width: i === current ? 22 : 8,
-              height: 8,
-              background: i === current ? "#dc2626" : "rgba(255,255,255,0.28)",
-            }}
+            aria-label={`Startseitenmotiv ${i + 1} anzeigen`}
+            aria-pressed={i === current}
           />
         ))}
       </div>
@@ -1976,9 +1690,9 @@ function BannerSection() {
                 color: "#d3d3d3",
               }}
             >
-              Wähle aus über 500+ Motiven oder lade dein eigenes Bild hoch. Wir
-              drucken es mit modernster DTF-Technologie auf Bio-Baumwolle – fair
-              und nachhaltig.
+              Wähle dein Motiv oder lade dein eigenes Bild hoch. Wir drucken es
+              mit moderner DTF-Technologie auf ausgewählten Textilien —
+              individuell und mit Charakter.
             </p>
             <a
               href="/designer"
@@ -2139,359 +1853,20 @@ function CategoriesSection() {
 
 // ─── Bestseller Carousel ──────────────────────────────────────────────────────
 
-type BestsellerProduct = {
-  slug: string
-  img: string
-  badge: string
-  category: string
-  name: string
-  rating?: number
-  price: string
-  swatches: string[]
-}
-
-function ProductCard({ product }: { product: BestsellerProduct }) {
-  return (
-    <div
-      className="product-card relative rounded-[8px] flex-shrink-0 overflow-hidden"
-      role="link"
-      tabIndex={0}
-      data-product-url={`/katalog/${product.slug}`}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ")
-          window.location.href = `/katalog/${product.slug}`
-      }}
-      style={{
-        background: "#202020",
-        border: "1px solid #484848",
-        width: "clamp(260px, 22vw, 340px)",
-        boxShadow: "0px 10px 24px -10px rgba(0,0,0,0.55)",
-      }}
-    >
-      {/* Image */}
-      <div
-        className="relative overflow-hidden"
-        style={{ height: "clamp(220px, 18vw, 310px)" }}
-      >
-        <img
-          src={product.img}
-          alt={product.name}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div
-          className="absolute left-0 right-0 bottom-0"
-          style={{
-            height: "150px",
-            background:
-              "linear-gradient(180deg, transparent 20%, rgba(6,6,6,0.22) 42%, rgba(6,6,6,0.9) 100%)",
-          }}
-        />
-        {/* Badge */}
-        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-[4px] bg-[#b91c1c]">
-          <span
-            style={{
-              fontFamily: "Oswald, sans-serif",
-              fontWeight: 600,
-              fontSize: 12,
-              letterSpacing: "1.4px",
-              color: "white",
-            }}
-          >
-            {product.badge}
-          </span>
-        </div>
-        {/* Wishlist */}
-        <button
-          onClick={(event) => event.stopPropagation()}
-          className="btn-wishlist absolute top-3 right-3 w-9 h-9 rounded-full bg-black/45 flex items-center justify-center"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path
-              d={svgPaths.p3bd7ee70}
-              stroke="white"
-              strokeLinecap="round"
-              strokeOpacity="0.9"
-              strokeWidth="1.5"
-            />
-          </svg>
-        </button>
-        {/* Meta overlay */}
-        <div className="absolute bottom-4 left-4 right-4">
-          <p
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontWeight: 500,
-              fontSize: 11,
-              letterSpacing: "1.7px",
-              color: "#aaa",
-              textTransform: "uppercase",
-            }}
-          >
-            {product.category}
-          </p>
-          <p
-            style={{
-              fontFamily: "Oswald, sans-serif",
-              fontWeight: 700,
-              fontSize: "clamp(16px, 1.5vw, 22px)",
-              color: "white",
-            }}
-          >
-            {product.name}
-          </p>
-          {product.rating && (
-            <div className="flex items-center gap-1 mt-0.5">
-              <span className="text-[#f59e0b] text-[13px]">★★★★★</span>
-              <span
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 11,
-                  color: "#a3a3a3",
-                }}
-              >
-                ({product.rating})
-              </span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Action row */}
-      <div
-        className="flex items-center justify-between p-4 bg-[#292929]"
-        style={{ borderTop: "1px solid #4a4a4a" }}
-      >
-        <div className="flex flex-col gap-1.5">
-          <div className="flex gap-1.5">
-            {product.swatches.map((c, i) => (
-              <div
-                key={i}
-                className="w-3 h-3 rounded-full border border-[#222]"
-                style={{ background: c }}
-              />
-            ))}
-          </div>
-          <div className="product-card-price"
-            style={{
-              fontFamily: "Inter, sans-serif",
-              fontWeight: 700,
-              fontSize: "clamp(14px, 1.3vw, 18px)",
-              color: "white",
-            }}
-          >
-            {product.price}
-            <PriceLegalNote />
-          </div>
-        </div>
-        <a
-          href={`/katalog/${product.slug}`}
-          className="btn-ansehen flex items-center gap-1.5 px-4 py-2.5 rounded-[6px]"
-          onPointerDown={(event) => event.stopPropagation()}
-          onClick={(event) => event.stopPropagation()}
-          aria-label={`${product.name} ansehen`}
-        >
-          <span
-            style={{
-              fontFamily: "Oswald, sans-serif",
-              fontWeight: 600,
-              fontSize: 13,
-              color: "white",
-              letterSpacing: "1px",
-            }}
-          >
-            Ansehen
-          </span>
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            className="arrow-icon"
-          >
-            <path
-              d={svgPaths.p278a3600}
-              stroke="white"
-              strokeLinecap="round"
-              strokeWidth="2"
-            />
-          </svg>
-        </a>
-      </div>
-    </div>
-  )
-}
-
 function BestsellerSection() {
-  const [drag, setDrag] = useState<{ x: number position: number } | null>(null)
   const { products: shopifyProducts } = useShopifyCatalog()
-  const bestsellers = useMemo<BestsellerProduct[]>(
-    () => {
-      const products = shopifyProducts ?? []
-      const demoProducts = products.filter((product) => product.isDemo)
-      const liveProducts = products
-        .filter((product) => !product.isDemo)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 20)
-      return [...demoProducts, ...liveProducts]
-        .map((product: any) => ({
-          slug: product.slug,
-          img: product.image,
-          badge: product.isDemo ? "DEMO" : "BESTSELLER",
-          category: product.category,
-          name: product.name,
-          price: product.price,
-          swatches: product.colors,
-        }))
-    },
-    [shopifyProducts],
-  )
-  const carouselRef = useRef<HTMLDivElement>(null)
-  const carouselTrackRef = useRef<HTMLDivElement>(null)
-  const carouselStarted = useRef(false)
-  const carouselPosition = useRef(0)
-  const canLoopBestsellers = bestsellers.length > 1
-
-  useEffect(() => {
-    if (!canLoopBestsellers) return
-    const viewport = carouselRef.current
-    const group =
-      carouselTrackRef.current?.querySelector<HTMLElement>(".bestseller-group")
-    const track = carouselTrackRef.current
-    if (!viewport || !group || !track) return
-    const unit = group.offsetWidth
-    if (!carouselStarted.current) {
-      carouselPosition.current = unit
-      carouselStarted.current = true
-    }
-    let frame = 0
-    let previous = performance.now()
-    const draw = () => {
-      track.style.transform = `translate3d(${-carouselPosition.current}px,0,0)`
-    }
-    const move = (now: number) => {
-      if (!drag) {
-        carouselPosition.current -= (now - previous) * 0.018
-        if (carouselPosition.current <= 0) carouselPosition.current += unit
-        if (carouselPosition.current >= unit * 2)
-          carouselPosition.current -= unit
-        draw()
-      }
-      previous = now
-      frame = requestAnimationFrame(move)
-    }
-    frame = requestAnimationFrame(move)
-    return () => cancelAnimationFrame(frame)
-  }, [drag, bestsellers.length])
+  const bestsellers = useMemo(() => {
+    return [...(shopifyProducts ?? [])]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 20)
+  }, [shopifyProducts])
 
   return (
-    <div className="w-full bg-[#0a0a0a] py-8 sm:py-10">
-      {/* Header row with consistent padding */}
-      <div
-        className="bestseller-header max-w-[1440px] mx-auto mb-6 flex items-center justify-between"
-        style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-1 h-[38px] rounded-[2px] bg-[#b91c1c]" />
-          <div>
-            <p
-              style={{
-                fontFamily: "Oswald, sans-serif",
-                fontWeight: 500,
-                fontSize: 12,
-                letterSpacing: "1.6px",
-                color: "#888",
-              }}
-            >
-              Bestseller & Neuheiten
-            </p>
-            <p
-              style={{
-                fontFamily: "Oswald, sans-serif",
-                fontWeight: 700,
-                fontSize: "clamp(18px, 2.5vw, 30px)",
-                letterSpacing: "3.4px",
-                color: "white",
-              }}
-            >
-              BESTSELLER & NEUHEITEN
-            </p>
-          </div>
-        </div>
-        <a href="/katalog" className="bestseller-all whitespace-nowrap">
-          ALLE ANSEHEN <span>→</span>
-        </a>
-      </div>
-
-      {/* Scrolling carousel */}
-      <div
-        className={`bestseller-viewport w-full overflow-hidden ${
-          drag ? "is-dragging" : ""
-        }`}
-        ref={carouselRef}
-        onPointerDown={(event) => {
-          if ((event.target as HTMLElement).closest("[data-carousel-control]"))
-            return
-          if (!canLoopBestsellers || event.button !== 0) return
-          event.currentTarget.setPointerCapture(event.pointerId)
-          setDrag({ x: event.clientX, position: carouselPosition.current })
-        }}
-        onPointerMove={(event) => {
-          if (!canLoopBestsellers || !drag || !carouselTrackRef.current) return
-          let next = drag.position - (event.clientX - drag.x)
-          const unit =
-            carouselTrackRef.current.querySelector<HTMLElement>(
-              ".bestseller-group",
-            )?.offsetWidth ?? 0
-          if (unit) {
-            while (next <= 0) next += unit
-            while (next >= unit * 2) next -= unit
-          }
-          carouselPosition.current = next
-          carouselTrackRef.current.style.transform = `translate3d(${-next}px,0,0)`
-        }}
-        onPointerUp={(event) => {
-          const wasClick = drag && Math.abs(event.clientX - drag.x) < 7
-          setDrag(null)
-          if (!wasClick) return
-          const target = event.target as HTMLElement
-          if (
-            target.closest(".btn-wishlist") ||
-            target.closest("[data-carousel-control]")
-          )
-            return
-          const card = target.closest<HTMLElement>(".product-card")
-          const productUrl = card?.dataset.productUrl
-          if (productUrl) {
-            event.preventDefault()
-            window.location.assign(productUrl)
-          }
-        }}
-        onPointerCancel={() => setDrag(null)}
-      >
-        <div style={{ paddingLeft: SECTION_PAD }}>
-          <div
-            ref={carouselTrackRef}
-            className={`bestseller-track flex ${
-              canLoopBestsellers ? "" : "justify-center"
-            }`}
-            style={{ width: canLoopBestsellers ? "max-content" : "100%" }}
-          >
-            {(canLoopBestsellers ? [0, 1, 2] : [0]).map((group) => (
-              <div className="bestseller-group flex gap-4" key={group}>
-                {bestsellers.map((product) => (
-                  <ProductCard
-                    key={`${group}-${product.name}`}
-                    product={product}
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    <BestsellerCarousel
+      products={bestsellers}
+      loading={shopifyProducts === null}
+      renderPriceNote={() => <PriceLegalNote />}
+    />
   )
 }
 
@@ -2514,13 +1889,10 @@ function TrustBadgesBar() {
     },
     {
       icon: (
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <path d={svgPaths.p30474200} fill="white" />
-          <path d={svgPaths.pe449880} fill="white" />
-        </svg>
+        <FiLayers size={48} color="white" strokeWidth={1.5} aria-hidden="true" />
       ),
-      title: "100% Bio-Baumwolle",
-      sub: "OEKO-TEX® zertifiziert",
+      title: "Mit Sorgfalt veredelt",
+      sub: "Vom Entwurf bis zum fertigen Stück.",
     },
     {
       icon: (
@@ -2532,7 +1904,7 @@ function TrustBadgesBar() {
         </svg>
       ),
       title: "Gratis Versand ab 85€",
-      sub: "3–5 Werktage Lieferzeit",
+      sub: "Katalog: 3–5 Werktage Bearbeitung",
     },
     {
       icon: (
@@ -2540,8 +1912,8 @@ function TrustBadgesBar() {
           <path d={svgPaths.p25bc3a80} fill="white" />
         </svg>
       ),
-      title: "30 Tage Rückgabe",
-      sub: "Für Produkte aus dem Katalog",
+      title: "Rückgabe & Umtausch",
+      sub: "Informationen klar und transparent",
     },
   ]
 
@@ -2670,7 +2042,7 @@ function BrandSection() {
         {/* CTA */}
         <div className="mt-12 flex justify-start">
           <a
-            href="/ueber-uns"
+            href="/geschichte"
             className="btn-red flex items-center justify-center rounded-[2px]"
             style={{ padding: "15px 44px" }}
           >
@@ -2692,85 +2064,23 @@ function BrandSection() {
   )
 }
 
-// ─── Stats Bar ────────────────────────────────────────────────────────────────
-
-function StatsBar() {
-  const stats = [
-    { value: "Eigene", sub: "Produktion" },
-    { value: "100%", sub: "Bio-Baumwolle" },
-    { value: "500+", sub: "Zufriedene Kumpel" },
-    { value: "3–5 Tage", sub: "Lieferzeit" },
-  ]
-
-  return (
-    <div className="w-full bg-[#1a1a1a] overflow-hidden">
-      <div
-        className="stats-grid max-w-[1440px] mx-auto py-5 grid grid-cols-2 sm:grid-cols-4 gap-4"
-        style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-      >
-        {stats.map((stat) => (
-          <div key={stat.value} className="flex flex-col items-center">
-            <p
-              style={{
-                fontFamily: "Oswald, sans-serif",
-                fontWeight: 700,
-                fontSize: "clamp(18px, 2.2vw, 28px)",
-                letterSpacing: "3.4px",
-                color: "white",
-                textAlign: "center",
-                lineHeight: 1.5,
-              }}
-            >
-              {stat.value}
-            </p>
-            <p
-              style={{
-                fontFamily: "Inter, sans-serif",
-                fontSize: "clamp(10px, 0.8vw, 12px)",
-                letterSpacing: "1.2px",
-                color: "#aaa",
-                textAlign: "center",
-              }}
-            >
-              {stat.sub}
-            </p>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
 function Footer() {
   return (
-    <footer className="w-full flex flex-col">
+    <footer className="site-footer w-full flex flex-col">
       {/* Social bar */}
-      <div className="w-full bg-[#111] border-t border-b border-[#242424] py-7">
-        <div
-          className="max-w-[1440px] mx-auto flex flex-col items-center gap-5"
-          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-        >
-          <p
-            style={{
-              fontFamily: "Oswald, sans-serif",
-              fontWeight: 600,
-              fontSize: 13,
-              letterSpacing: "2px",
-              color: "white",
-            }}
-          >
-            FOLGT UNS AUF:
-          </p>
-          <div className="flex gap-5">
+      <div className="footer-social-bar">
+        <div className="footer-container footer-social-inner">
+          <p className="footer-social-label">FOLGT UNS AUF</p>
+          <nav className="footer-social-links" aria-label="Social Media">
             {/* Facebook */}
             <a
               href="https://www.facebook.com/share/1GotazpmgX/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Pottlerkinder auf Facebook"
-              className="btn-social w-14 h-14 rounded-[14px] bg-[#373737] border border-white/60 flex items-center justify-center cursor-pointer"
+              className="btn-social footer-social-link"
             >
               <span
                 style={{
@@ -2790,7 +2100,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Pottlerkinder auf Instagram"
-              className="btn-social w-14 h-14 rounded-[14px] bg-[#373737] border border-white/60 flex items-center justify-center cursor-pointer"
+              className="btn-social footer-social-link"
             >
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
                 <rect
@@ -2812,12 +2122,12 @@ function Footer() {
                 <circle cx="21" cy="7" r="1.75" fill="white" />
               </svg>
             </a>
-          </div>
+          </nav>
         </div>
       </div>
 
       {/* Footer columns */}
-      <div className="relative w-full overflow-hidden">
+      <div className="footer-main relative w-full overflow-hidden">
         <div className="absolute inset-0 bg-[#0a0a0a]">
           <img
             src={imgFooterBg}
@@ -2827,249 +2137,122 @@ function Footer() {
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="absolute inset-0 bg-[rgba(10,10,10,0.88)]" />
-        <div
-          className="footer-content relative max-w-[1440px] mx-auto py-12 sm:py-16"
-          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="absolute inset-0 bg-[rgba(10,10,10,0.96)]" />
+        <div className="footer-content footer-container relative">
+          <div className="footer-grid">
             {/* HILFE */}
-            <div>
-              <div className="border-b border-[#2a2a2a] pb-4 mb-5">
-                <p
-                  style={{
-                    fontFamily: "Oswald, sans-serif",
-                    fontWeight: 600,
-                    fontSize: 12,
-                    letterSpacing: "2.8px",
-                    color: "#d4d4d4",
-                  }}
-                >
-                  HILFE
-                </p>
-              </div>
-              <div className="footer-help-links">
-              {[
-                ["Zahlung", "/zahlung"],
-                ["Versandkosten", "/versandkosten"],
-                ["Rücksendung & Umtausch", "/rueckgabe-umtausch"],
-                ["Widerrufsbelehrung", "/widerrufsbelehrung"],
-                ["Kontakt", "mailto:kontakt@pottlerkinder.de"],
-              ].map(([label, href]) => (
-                <a
-                  key={label}
-                  href={href}
-                  className="footer-link mb-2"
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: 13,
-                    letterSpacing: "1.5px",
-                    color: "#ccc",
-                    lineHeight: 2,
-                  }}
-                >
-                  {label}
-                </a>
-              ))}
-              </div>
-            </div>
+            <nav className="footer-help" aria-labelledby="footer-help-title">
+              <h2 className="footer-heading" id="footer-help-title">
+                HILFE
+              </h2>
+              <ul className="footer-help-links">
+                {[
+                  ["Zahlung", "/zahlung"],
+                  ["Versandkosten", "/versandkosten"],
+                  ["Rücksendung & Umtausch", "/rueckgabe-umtausch"],
+                  ["Widerrufsbelehrung", "/widerrufsbelehrung"],
+                  ["Kontakt", "/kontakt"],
+                ].map(([label, href]) => (
+                  <li key={label}>
+                    <a href={href} className="footer-link">
+                      {label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
             {/* ZAHLUNGSMETHODEN */}
-            <div>
-              <div className="border-b border-[#2a2a2a] pb-4 mb-5">
-                <p
-                  style={{
-                    fontFamily: "Oswald, sans-serif",
-                    fontWeight: 600,
-                    fontSize: 12,
-                    letterSpacing: "2.8px",
-                    color: "#d4d4d4",
-                  }}
-                >
-                  ZAHLUNGSMETHODEN
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {["PayPal", "Visa", "Mastercard", "Stripe"].map((method) => (
-                  <div
-                    key={method}
-                    className="h-9 px-4 flex items-center justify-center rounded-[4px]"
-                    style={{ background: "#1a1a1a", border: "1px solid #333" }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "Inter, sans-serif",
-                        fontWeight: 500,
-                        fontSize: 12,
-                        color: "#e0e0e0",
-                      }}
-                    >
-                      {method}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <section
+              className="footer-payment"
+              aria-labelledby="footer-payment-title"
+            >
+              <h2 className="footer-heading" id="footer-payment-title">
+                ZAHLUNGSMETHODEN
+              </h2>
+              <PaymentMethods />
+            </section>
 
             {/* VERSAND */}
-            <div>
-              <div className="border-b border-[#2a2a2a] pb-4 mb-5">
-                <p
-                  style={{
-                    fontFamily: "Oswald, sans-serif",
-                    fontWeight: 600,
-                    fontSize: 12,
-                    letterSpacing: "2.8px",
-                    color: "#d4d4d4",
-                  }}
-                >
-                  VERSAND DURCH
-                </p>
-              </div>
-              <div className="flex gap-2 mb-4">
+            <section
+              className="footer-shipping"
+              aria-labelledby="footer-shipping-title"
+            >
+              <h2 className="footer-heading" id="footer-shipping-title">
+                VERSAND DURCH
+              </h2>
+              <div className="footer-carriers" aria-label="Versanddienstleister">
                 {["DHL", "GLS"].map((s) => (
-                  <div
-                    key={s}
-                    className="px-5 py-2.5 rounded-[4px]"
-                    style={{ background: "#1a1a1a", border: "1px solid #333" }}
-                  >
-                    <span
-                      style={{
-                        fontFamily: "Oswald, sans-serif",
-                        fontWeight: 600,
-                        fontSize: 13,
-                        letterSpacing: "1.6px",
-                        color: "#e0e0e0",
-                      }}
-                    >
-                      {s}
-                    </span>
-                  </div>
+                  <span key={s}>{s}</span>
                 ))}
               </div>
-              <p
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 12,
-                  letterSpacing: "1.5px",
-                  color: "#888",
-                  lineHeight: 1.6,
-                }}
-              >
-                Lieferzeit 3–5 Werktage. Versand innerhalb Deutschlands 6,15 €.
-                Kostenloser Versand ab 85 €.
+              <dl className="footer-delivery">
+                <div>
+                  <dt>Katalog</dt>
+                  <dd>3–5 Werktage</dd>
+                </div>
+                <div>
+                  <dt>Konfigurator</dt>
+                  <dd>Bis zu 15 Werktage</dd>
+                </div>
+              </dl>
+              <p className="footer-shipping-copy">
+                Bearbeitungszeit, jeweils zzgl. Versandlaufzeit.
               </p>
-            </div>
+              <a href="/versandkosten" className="footer-shipping-rate">
+                Deutschland · 6,15 €<span>Kostenlos ab 85 €</span>
+              </a>
+            </section>
 
             {/* NEWSLETTER */}
-            <div>
-              <div className="border-b border-[#2a2a2a] pb-4 mb-5">
-                <p
-                  style={{
-                    fontFamily: "Oswald, sans-serif",
-                    fontWeight: 600,
-                    fontSize: 12,
-                    letterSpacing: "2.8px",
-                    color: "#d4d4d4",
-                  }}
-                >
+            <section
+              className="footer-newsletter"
+              aria-labelledby="footer-newsletter-title"
+            >
+              <div className="footer-newsletter-intro">
+                <h2 className="footer-heading" id="footer-newsletter-title">
                   NEWSLETTER
+                </h2>
+                <p className="footer-newsletter-copy">
+                  Neue Motive, Aktionen & exklusive Angebote direkt aus dem
+                  Revier.
                 </p>
               </div>
-              <p
-                className="mb-3"
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 12,
-                  letterSpacing: "1.5px",
-                  color: "#888",
-                  lineHeight: 1.6,
-                }}
-              >
-                Neue Motive, Aktionen & exklusive Angebote direkt aus dem
-                Revier.
-              </p>
-              <input
-                type="email"
-                placeholder="deine@email.de"
-                className="w-full mb-2.5 px-3.5 py-2.5 rounded-[2px] outline-none"
-                style={{
-                  background: "#1a1a1a",
-                  border: "1.5px solid white",
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 13,
-                  letterSpacing: "1.5px",
-                  color: "#8c8c8c",
-                }}
-              />
-              <button
-                className="btn-subscribe w-full py-3 rounded-[2px] mb-3"
-                style={{ border: "1.5px solid rgba(255,255,255,0.2)" }}
-              >
-                <span
-                  style={{
-                    fontFamily: "Oswald, sans-serif",
-                    fontWeight: 600,
-                    fontSize: 13,
-                    letterSpacing: "1.6px",
-                    color: "white",
-                  }}
-                >
-                  Newsletter abonnieren
-                </span>
-              </button>
-              <label className="flex items-start gap-2 cursor-pointer">
-                <div
-                  className="w-[13px] h-[13px] flex-shrink-0 mt-0.5 rounded-[2px]"
-                  style={{ background: "#1a1a1a", border: "1px solid #555" }}
-                />
-                <span
-                  style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: 11,
-                    color: "#555",
-                    lineHeight: 1.55,
-                  }}
-                >
-                  Ich stimme der{" "}
-                  <span className="text-[#888] underline">
-                    Datenschutzerklärung
-                  </span>{" "}
-                  zu.
-                </span>
-              </label>
-            </div>
+              <NewsletterForm />
+            </section>
           </div>
         </div>
       </div>
 
       {/* Copyright */}
       <div className="w-full border-t border-[#1e1e1e] bg-[#020202]">
-        <div
-          className="copyright-row max-w-[1440px] mx-auto py-4 flex flex-col sm:flex-row items-center justify-between gap-3"
-          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-        >
+        <div className="copyright-row footer-container">
           <div className="flex flex-wrap gap-4 sm:gap-5 justify-center sm:justify-start">
-            {[
-              "AGB",
-              "Datenschutz",
-              "Impressum",
-              "Widerrufsbelehrung",
-            ].map((link) => (
-              <a
-                href={`/${link === "AGB" ? "agb" : link === "Datenschutz" ? "datenschutz" : link === "Impressum" ? "impressum" : "widerrufsbelehrung"}`}
-                key={link}
-                className="copy-link"
-                style={{
-                  fontFamily: "Inter, sans-serif",
-                  fontSize: 12,
-                  letterSpacing: "1.3px",
-                  color: "#aaa",
-                }}
-              >
-                {link}
-              </a>
-            ))}
+            {["AGB", "Datenschutz", "Impressum", "Widerrufsbelehrung"].map(
+              (link) => (
+                <a
+                  href={`/${
+                    link === "AGB"
+                      ? "agb"
+                      : link === "Datenschutz"
+                        ? "datenschutz"
+                        : link === "Impressum"
+                          ? "impressum"
+                          : "widerrufsbelehrung"
+                  }`}
+                  key={link}
+                  className="copy-link"
+                  style={{
+                    fontFamily: "Inter, sans-serif",
+                    fontSize: 12,
+                    letterSpacing: "1.3px",
+                    color: "#aaa",
+                  }}
+                >
+                  {link}
+                </a>
+              ),
+            )}
           </div>
           <p
             style={{
@@ -3080,7 +2263,8 @@ function Footer() {
               textAlign: "center",
             }}
           >
-            © 2026 Pottlerkinder · Alle Preise inkl. MwSt. zzgl. Versandkosten
+            © 2026 Pottlerkinder · Alle Preise inkl. MwSt. zzgl.{" "}
+            <a href="/versandkosten">Versandkosten</a>
           </p>
         </div>
       </div>
@@ -3252,6 +2436,7 @@ const LEGAL_PAGES: Record<string, { eyebrow: string; title: string; lead: string
       { title: "4. PERSONALISIERTE INHALTE & KONTAKT", text: "Hochgeladene Designs, Texte und Motive werden ausschließlich zur Herstellung und Abwicklung der Bestellung verarbeitet. Bei einer Kontaktaufnahme verarbeiten wir die übermittelten Daten zur Bearbeitung Ihres Anliegens." },
       { title: "5. DIENSTLEISTER, COOKIES & EXTERNE INHALTE", text: "Zahlungsdienste, Versanddienstleister (DHL/GLS), Shopify sowie gegebenenfalls Google Maps, Instagram und Analysedienste verarbeiten Daten nur im jeweils erforderlichen Umfang. Nicht notwendige Cookies und Analysefunktionen werden nur nach Ihrer Einwilligung eingesetzt." },
       { title: "6. IHRE RECHTE", text: "Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit, Widerspruch sowie Widerruf einer Einwilligung. Außerdem besteht ein Beschwerderecht bei einer Datenschutzaufsichtsbehörde." },
+      { title: "7. KONTAKTFORMULAR UND NEWSLETTER-ANFRAGEN ÜBER WEB3FORMS", text: "Für die Übermittlung dieser Formulare nutzen wir Web3Forms (Web3Creative, Indien). Erst beim bewussten Absenden werden die eingegebenen Kontaktdaten, Betreff, Nachricht beziehungsweise die Newsletter-Anfrage und der dokumentierte Einwilligungstext an den Dienst übermittelt und an unser Postfach weitergeleitet. Dabei können technische Daten wie die IP-Adresse verarbeitet werden. Kontaktanfragen verarbeiten wir gemäß Art. 6 Abs. 1 lit. b DSGVO bei vertragsbezogenen Anliegen beziehungsweise Art. 6 Abs. 1 lit. f DSGVO bei sonstigen Anfragen. Newsletter-Anfragen beruhen auf Ihrer Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO, die Sie jederzeit für die Zukunft über unsere Kontaktadresse widerrufen können. Die Übermittlung einer Anfrage führt noch nicht zu einer bestätigten Newsletter-Anmeldung. Eine Verarbeitung außerhalb des Europäischen Wirtschaftsraums kann stattfinden. Der Anbieter nennt für Formulardaten eine Aufbewahrung von maximal drei Jahren, sofern diese nicht früher gelöscht werden oder für den jeweiligen Tarif kürzere Fristen gelten. Informationen und Auftragsverarbeitungsbedingungen des Anbieters: https://web3forms.com/privacy. Sie können uns alternativ direkt per E-Mail oder Telefon kontaktieren." },
     ],
   },
   "/impressum": {
@@ -3457,233 +2642,31 @@ function AboutPage() {
 
 function HistoryPage() {
   return (
-    <TextPage
-      image={PAGE_BACKDROPS.history}
-      eyebrow="GESCHICHTE"
-      title="WAS AUS DEM POTT BLEIBT"
-      lead="Pottlerkinder erzählt keine ausgedachten Geschichten – sondern greift das auf, was das Ruhrgebiet bis heute prägt."
-    >
-      <p>
-        Fördertürme, Halden und ehemalige Zechen gehören zur Landschaft des
-        Ruhrgebiets. Sie erinnern an Arbeit, Gemeinschaft und eine industrielle
-        Vergangenheit, die in der Kultur der Region bis heute sichtbar ist.
-      </p>
-      <p>
-        Viele Orte verändern sich: Wo früher gearbeitet wurde, entstehen heute
-        Räume für Kultur, Begegnung und neue Erinnerungen. Diese Veränderung ist
-        Teil unserer Haltung – Respekt für das, was war, und Raum für neue
-        Ideen.
-      </p>
-      <h2>UNSERE INTERPRETATION</h2>
-      <p>
-        Mit Pottlerkinder übersetzen wir diese Verbundenheit in Produkte, Drucke
-        und Motive. Modern, kreativ und mit einem Augenzwinkern – ohne die
-        Herkunft aus den Augen zu verlieren.
-      </p>
-      <p className="page-highlight">
-        Aus industrieller Vergangenheit wird kulturelle Identität.
-      </p>
-      <a
-        href="/ueber-uns"
-        className="btn-red inline-flex mt-8 px-7 py-4 text-white"
-        style={{
-          fontFamily: "Oswald, sans-serif",
-          fontWeight: 600,
-          letterSpacing: "2px",
-        }}
-      >
-        DIE GANZE GESCHICHTE
-      </a>
-    </TextPage>
+    <PageShell inner>
+      <HistoryContent />
+    </PageShell>
   )
 }
 
 function BlogPage() {
   return (
-    <TextPage
-      image={PAGE_BACKDROPS.blog}
-      eyebrow="BLOG"
-      title="NEUES AUS DEM REVIER"
-      lead="Geschichten, Ideen und Einblicke aus dem Pott."
-    >
-      <div className="page-empty">
-        <span>◆</span>
-        <h2>NOCH KEINE BEITRÄGE</h2>
-        <p>Hier entsteht bald Raum für Neues aus dem Revier.</p>
-        <a
-          href="/"
-          className="btn-outline inline-flex px-6 py-3 mt-4 text-white"
-          style={{ fontFamily: "Oswald, sans-serif", letterSpacing: "2px" }}
-        >
-          ZUR STARTSEITE
-        </a>
-      </div>
-    </TextPage>
+    <PageShell inner>
+      <NewsPageContent />
+    </PageShell>
   )
 }
 
-const BASE_CATALOG_PRODUCTS = [
-  {
-    slug: "glueck-auf-shirt",
-    image: imgProduct1,
-    name: "GLÜCK AUF T-SHIRT",
-    category: "T-SHIRTS",
-    gender: "UNISEX",
-    colors: ["#121212", "#e6e6e6", "#cf3131"],
-    price: "24,90 €",
-    short: "Bio-Baumwolle · DTF-Print · Made im Pott",
-    description:
-      "Ein klares Statement für alle, die ihre Heimat tragen wollen. Weiche Bio-Baumwolle trifft auf einen langlebigen DTF-Print.",
-    sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
-  },
-  {
-    slug: "foerderturm-hoodie",
-    image: imgProduct2,
-    name: "FÖRDERTURM HOODIE",
-    category: "HOODIES",
-    gender: "MÄNNER",
-    colors: ["#111111", "#4a4a4a"],
-    price: "40,90 €",
-    short: "Heavy Cotton · Kapuze · Revier-Print",
-    description:
-      "Schwerer Hoodie für kühle Schichten und lange Tage. Der Förderturm-Print bringt die Industriegeschichte des Potts auf die Brust.",
-    sizes: ["S", "M", "L", "XL", "2XL", "3XL"],
-  },
-  {
-    slug: "kumpel-shirt",
-    image: imgProduct3,
-    name: "KUMPEL T-SHIRT",
-    category: "T-SHIRTS",
-    gender: "UNISEX",
-    colors: ["#181818", "#757575"],
-    price: "24,90 €",
-    short: "Regular Fit · Bio-Baumwolle · Kumpel-Kollektion",
-    description:
-      "Ein unkompliziertes Shirt mit Haltung. Angenehm im Alltag, klar im Auftritt und bereit für die nächste Schicht.",
-    sizes: ["XS", "S", "M", "L", "XL", "2XL"],
-  },
-  {
-    slug: "bergmann-shirt",
-    image: imgProduct4,
-    name: "BERGMANN T-SHIRT",
-    category: "T-SHIRTS",
-    gender: "FRAUEN",
-    colors: ["#111111", "#f3f3f3"],
-    price: "24,90 €",
-    short: "Soft Touch · Damen Fit · Revier-Klassiker",
-    description:
-      "Der Revier-Klassiker in einer weichen, unkomplizierten Passform. Für die Geschichte des Ruhrgebiets und den Alltag von heute.",
-    sizes: ["XS", "S", "M", "L", "XL", "2XL"],
-  },
-  {
-    slug: "schicht-im-schacht-polo",
-    image: imgProduct5,
-    name: "SCHICHT IM SCHACHT POLO",
-    category: "POLOS",
-    gender: "MÄNNER",
-    colors: ["#161616", "#30343a", "#7c8794"],
-    price: "34,90 €",
-    short: "Piqué · Polokragen · Dezenter Brustprint",
-    description:
-      "Ein Polo für einen aufgeräumten Look mit Ruhrpott-Charakter. Robust, bequem und passend für Team, Alltag und Feierabend.",
-    sizes: ["S", "M", "L", "XL", "2XL", "3XL"],
-  },
-  {
-    slug: "glueck-auf-tasse",
-    image: img55,
-    name: "GLÜCK AUF TASSE",
-    category: "GLÄSER & TASSEN",
-    sub: "TASSEN",
-    gender: "UNISEX",
-    colors: ["#f3f3f3"],
-    price: "14,90 €",
-    short: "Keramik · 330 ml · Spülmaschinenfest",
-    description:
-      "Eine Tasse mit Revierhaltung für Kaffee, Tee und die Pause nach der Schicht.",
-    sizes: ["ALLE"],
-  },
-  {
-    slug: "ruhrkohle-schmuck",
-    image: imgZubehorPhoto,
-    name: "RUHRKOHLE SCHMUCK",
-    category: "ACCESSOIRES",
-    sub: "SCHMUCK",
-    gender: "UNISEX",
-    colors: ["#161616"],
-    price: "29,90 €",
-    short: "Echte Ruhrkohle · Handgefertigt",
-    description:
-      "Ein kleines Stück Ruhrgebiet für jeden Tag – individuell und mit Geschichte.",
-    sizes: ["ALLE"],
-  },
-  {
-    slug: "dtf-transfer-revier",
-    image: img11,
-    name: "DTF TRANSFER REVIER",
-    category: "DTF-TRANSFERS",
-    sub: "FÜR KLEIDUNG & TEXTILIEN",
-    gender: "UNISEX",
-    colors: ["#e7473d", "#f4f4f4"],
-    price: "9,90 €",
-    short: "Für Textilien · Langlebig · Einfach aufzubringen",
-    description: "Dein Motiv für Textilien: bereit für die eigene Veredelung.",
-    sizes: ["ALLE"],
-  },
-]
-
-const TEST_CATEGORIES = [
-  "HOODIES",
-  "SWEATSHIRTS",
-  "T-SHIRTS",
-  "POLOS",
-  "ACCESSOIRES",
-  "GLÄSER & TASSEN",
-  "DTF-TRANSFERS",
-] as const
-const TEST_SUBCATEGORIES: Record<string, string[]> = {
-  ACCESSOIRES: ["KOPFBEDECKUNG", "SHOPPER", "SCHMUCK", "PINS"],
-  "GLÄSER & TASSEN": ["TASSEN", "BIERGLÄSER", "UNTERSETZER"],
-  "DTF-TRANSFERS": ["FÜR KLEIDUNG & TEXTILIEN"],
+function BlogArticlePage({ slug }: { slug: string }) {
+  return <PageShell inner><NewsPageContent slug={slug} /></PageShell>
 }
-const TEST_PREFIXES = [
-  "KUMPEL",
-  "SCHICHT",
-  "REVlER",
-  "GLÜCK AUF",
-  "KOHLE",
-  "ZECHEN",
-  "RUHRPOTT",
-  "FÖRDERTURM",
-]
-const TEST_GENDERS = ["MÄNNER", "FRAUEN", "KINDER", "UNISEX"]
 
-const CATALOG_PRODUCTS = Array.from({ length: 100 }, (_, index) => {
-  const source = BASE_CATALOG_PRODUCTS[index % BASE_CATALOG_PRODUCTS.length]
-  const category = TEST_CATEGORIES[index % TEST_CATEGORIES.length]
-  const subcategories = TEST_SUBCATEGORIES[category]
-  const textile = !subcategories
-  const number = String(index + 1).padStart(3, "0")
-  return {
-    ...source,
-    slug: `test-${number}-${source.slug}`,
-    name: `${TEST_PREFIXES[index % TEST_PREFIXES.length]} ${
-      category === "T-SHIRTS" ? "T-SHIRT" : category.slice(0, -1)
-    } ${number}`,
-    category,
-    sub: subcategories?.[index % subcategories.length],
-    gender: textile ? TEST_GENDERS[index % TEST_GENDERS.length] : "UNISEX",
-    colors: ["#161616", "#cf3131", "#f3f3f3", "#4a4a4a"].slice(
-      0,
-      (index % 3) + 1,
-    ),
-    price: `${14 + ((index * 3) % 46)},90 €`,
-    sizes: textile
-      ? index % 4 === 2
-        ? ["04A (104)", "06A (116)", "08A (128)", "10A (140)", "12A (152)"]
-        : ["XS", "S", "M", "L", "XL", "2XL", "3XL"]
-      : ["ALLE"],
-  }
-})
+function ContactPage() {
+  return <PageShell inner><ContactPageContent /></PageShell>
+}
+
+
+
+
 
 const SHOPIFY_CATEGORY_MAP: Record<string, string> = {
   HOODIES: "HOODIES",
@@ -3784,12 +2767,12 @@ function shopifyCatalogProduct(product: any) {
   return {
     id: product.id,
     slug: product.handle,
-    image: product.featuredMedia?.preview?.image?.url || imgProduct1,
+    image: product.featuredMedia?.preview?.image?.url || productUnavailable,
     images: images.length
       ? images
       : [
           {
-            url: product.featuredMedia?.preview?.image?.url || imgProduct1,
+            url: product.featuredMedia?.preview?.image?.url || productUnavailable,
             altText: product.title,
           },
         ],
@@ -3817,15 +2800,8 @@ function useShopifyCatalog(handle?: string) {
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
     let active = true
-    const demoProduct = DEMO_PRODUCTS.find((product) => product.slug === handle)
-    if (demoProduct) {
-      setProducts([demoProduct])
-      setError(null)
-      return () => {
-        active = false
-      }
-    }
-    if (!handle) setProducts((current) => current ?? DEMO_PRODUCTS)
+    setProducts(null)
+    setError(null)
     const cacheKey = handle || "all"
     const loadCatalog = () => {
       const cachedProducts = catalogCache.get(cacheKey)
@@ -3846,11 +2822,8 @@ function useShopifyCatalog(handle?: string) {
           const mappedProducts = (data.products || [])
             .map(shopifyCatalogProduct)
             .filter(Boolean)
-          const productsWithDemo = handle
-            ? mappedProducts
-            : [...DEMO_PRODUCTS, ...mappedProducts]
-          catalogCache.set(cacheKey, productsWithDemo)
-          return productsWithDemo
+          catalogCache.set(cacheKey, mappedProducts)
+          return mappedProducts
         })
         .finally(() => catalogRequests.delete(cacheKey))
       catalogRequests.set(cacheKey, request)
@@ -3861,7 +2834,7 @@ function useShopifyCatalog(handle?: string) {
       .then((nextProducts) => active && setProducts(nextProducts))
       .catch((requestError) => {
         if (!active) return
-        setProducts(handle ? [] : DEMO_PRODUCTS)
+        setProducts([])
         setError(requestError.message)
       })
     return () => {
@@ -3875,11 +2848,8 @@ function useShopifyCart() {
   const [cart, setCart] = useState<any | null>(sharedCart ?? null)
   const [loading, setLoading] = useState(sharedCart === undefined)
   const refreshCart = () => {
-    const demoCart = readDemoCart()
-    if (demoCart) {
-      publishCart(demoCart)
-      return Promise.resolve(demoCart)
-    }
+    // Remove preview-only data without touching the customer's Shopify cart.
+    window.localStorage.removeItem("pottlerkinder-demo-cart")
     const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
     if (!cartId) {
       publishCart(null)
@@ -3929,83 +2899,6 @@ function useShopifyCart() {
     }
   }, [])
   return { cart, loading, refreshCart }
-}
-
-const CATALOG_CATEGORIES = [
-  "ALLE",
-  "HOODIES",
-  "SWEATSHIRTS",
-  "T-SHIRTS",
-  "POLOS",
-  "ACCESSOIRES",
-  "GLÄSER & TASSEN",
-  "DTF-TRANSFERS",
-]
-const COLOR_FILTERS = [
-  { label: "Mehrfarbig", value: "multi" },
-  { label: "Rot", value: "#e7473d" },
-  { label: "Orange", value: "#ef801b" },
-  { label: "Gelb", value: "#e6c716" },
-  { label: "Grün", value: "#36b95a" },
-  { label: "Blau", value: "#3189d6" },
-  { label: "Violett", value: "#8d55c7" },
-  { label: "Pink", value: "#ec6b9f" },
-  { label: "Schwarz", value: "#161616" },
-  { label: "Weiß", value: "#f4f4f4" },
-  { label: "Grau", value: "#92a3a3" },
-]
-
-function FilterLabel({
-  type,
-  children,
-}: {
-  type: "gender" | "category" | "color" | "size"
-  children: React.ReactNode
-}) {
-  const paths = {
-    gender: (
-      <>
-        <circle cx="12" cy="7" r="3" />
-        <path d="M6.5 20c.5-4 2.4-6 5.5-6s5 2 5.5 6" />
-      </>
-    ),
-    category: (
-      <>
-        <path d="M4 7.5 12 3l8 4.5-8 4.5-8-4.5Z" />
-        <path d="M4 12.5 12 17l8-4.5M4 17l8 4 8-4" />
-      </>
-    ),
-    color: (
-      <>
-        <path d="M12 3a7 7 0 0 0 0 14h1.2a1.8 1.8 0 0 1 1.7 2.4A1.2 1.2 0 0 0 16 21a7 7 0 0 0-4-18Z" />
-        <circle cx="7.8" cy="10" r=".8" fill="currentColor" />
-        <circle cx="11.5" cy="6.8" r=".8" fill="currentColor" />
-        <circle cx="16" cy="10" r=".8" fill="currentColor" />
-      </>
-    ),
-    size: (
-      <>
-        <path d="m5 5 14 14M7 3l14 14M3 7l14 14" />
-        <path d="M4 20 20 4" />
-      </>
-    ),
-  }
-  return (
-    <p className="catalog-filter-label">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        {paths[type]}
-      </svg>
-      {children}
-    </p>
-  )
 }
 
 function FilterOptionIcon({ label }: { label: string }) {
@@ -4075,538 +2968,41 @@ function FilterOptionIcon({ label }: { label: string }) {
   return <Icon aria-hidden="true" className="catalog-filter-option-icon" />
 }
 
-function CatalogAddToCartButton({ product, cart }: { product: any; cart: any | null }) {
-  // Catalog items are sourced exclusively from Shopify.
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
-  const variant = product.variants?.[0]
-  const inCart = cartHasVariant(cart, variant?.id)
-
-  const addToCart = async () => {
-    if (!variant?.id) {
-      setStatus("error")
-      return
-    }
-
-    setStatus("loading")
-    try {
-      if (product.isDemo) {
-        addDemoVariant(product, variant)
-        setStatus("success")
-        return
-      }
-      const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
-      const response = cartId
-        ? await shopCart.add(cartId, [{ merchandiseId: variant.id, quantity: 1 }])
-        : await shopCart.create([{ merchandiseId: variant.id, quantity: 1 }])
-      const cart = (response as { cart: { id: string } }).cart
-      window.localStorage.setItem("pottlerkinder-cart-id", cart.id)
-      publishCart(cart)
-      setStatus("success")
-    } catch {
-      setStatus("error")
-    }
-  }
-
-  const label =
-    status === "loading"
-      ? "WIRD HINZUGEFÜGT"
-      : inCart
-        ? "HINZUGEFÜGT"
-        : status === "error"
-          ? "ERNEUT VERSUCHEN"
-          : "IN DEN WARENKORB"
-
-  return (
-    <button
-      type="button"
-      className={`catalog-add-to-cart ${inCart ? "is-success" : ""} ${status === "error" ? "is-error" : ""}`}
-      onClick={addToCart}
-      disabled={status === "loading"}
-      aria-label={`${product.name} – ${label}`}
-      title={label}
-    >
-      <FaShoppingBag aria-hidden="true" />
-      <span>{label}</span>
-    </button>
-  )
-}
-
-function CatalogPage() {
-  const { products: shopifyProducts, error: shopifyError } = useShopifyCatalog()
-  const { cart } = useShopifyCart()
-  const catalogProducts = shopifyProducts ?? []
-  const params = new URLSearchParams(window.location.search)
-  const [category, setCategory] = useState(
-    () => params.get("category") || "ALLE",
-  )
-  const [gender, setGender] = useState(() => params.get("gender") || "ALLE")
-  const [size, setSize] = useState("ALLE")
-  const [color, setColor] = useState<string | null>(null)
-  const [sort, setSort] = useState("BELIEBTHEIT")
-  const [sub, setSub] = useState(() => params.get("sub") || "ALLE")
-  const [page, setPage] = useState(1)
-  const catalogResultsRef = useRef<HTMLElement>(null)
-  const nonTextileCategories = [
-    "ACCESSOIRES",
-    "GLÄSER & TASSEN",
-    "DTF-TRANSFERS",
-  ]
-  const nonTextileCategory = nonTextileCategories.includes(category)
-  const subcategories =
-    category === "ACCESSOIRES"
-      ? ["KOPFBEDECKUNG", "SHOPPER", "SCHMUCK", "PINS"]
-      : category === "GLÄSER & TASSEN"
-        ? ["TASSEN", "BIERGLÄSER", "UNTERSETZER"]
-        : category === "DTF-TRANSFERS"
-          ? ["FÜR KLEIDUNG & TEXTILIEN"]
-          : []
-  const products = catalogProducts
-    .filter(
-      (product) =>
-        (category === "ALLE" || product.category === category) &&
-        (sub === "ALLE" || product.sub === sub) &&
-        (category !== "ALLE" ||
-          gender === "ALLE" ||
-          !nonTextileCategories.includes(product.category)) &&
-        (nonTextileCategory ||
-          gender === "ALLE" ||
-          product.gender === gender ||
-          product.gender === "UNISEX") &&
-        (nonTextileCategory ||
-          size === "ALLE" ||
-          product.sizes.includes(size)) &&
-        (nonTextileCategory ||
-          !color ||
-          (color === "multi" && product.colors.length > 1) ||
-          product.colors.includes(color)),
-    )
-    .sort((a, b) =>
-      sort === "NIEDRIGSTER PREIS"
-        ? Number(a.price.replace(",", ".")) - Number(b.price.replace(",", "."))
-        : sort === "HÖCHSTER PREIS"
-          ? Number(b.price.replace(",", ".")) -
-            Number(a.price.replace(",", "."))
-          : 0,
-    )
-  const productsPerPage = 30
-  const totalPages = Math.max(1, Math.ceil(products.length / productsPerPage))
-  const visibleProducts = products.slice(
-    (page - 1) * productsPerPage,
-    page * productsPerPage,
-  )
-
-  useEffect(() => {
-    setPage(1)
-  }, [category, gender, size, color, sort, sub])
-
-  const changePage = (nextPage: number) => {
-    setPage(nextPage)
-    window.setTimeout(
-      () =>
-        catalogResultsRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        }),
-      0,
-    )
-  }
+function CatalogPage({ saleOnly = false }: { saleOnly?: boolean }) {
+  const { products, error } = useShopifyCatalog()
   return (
     <PageShell inner>
-      <main className="flex-1">
-        <PageHero
-          compact
-          image={imgHeaderCoal}
-          eyebrow="POTTLERKINDER SHOP"
-          title="KATALOG"
-          lead="Streetwear, kreative Produkte und Drucke direkt aus dem Pott."
-        />
-        <div
-          className="catalog-layout max-w-[1440px] mx-auto py-8 sm:py-12"
-          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-        >
-          <aside className="catalog-filters">
-            <div className="catalog-filter-head">
-              <span>FILTER</span>
-              <button
-                onClick={() => {
-                  setCategory("ALLE")
-                  setGender("ALLE")
-                  setSize("ALLE")
-                  setColor(null)
-                  setSub("ALLE")
-                  setPage(1)
-                }}
-              >
-                ZURÜCKSETZEN
-              </button>
-            </div>
-            <div className="catalog-filter">
-              <FilterLabel type="gender">GESCHLECHT</FilterLabel>
-              {["ALLE", "MÄNNER", "FRAUEN", "KINDER", "UNISEX"].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => {
-                    setGender(item)
-                    if (nonTextileCategory) {
-                      setCategory("ALLE")
-                      setSub("ALLE")
-                    }
-                    if (item === "KINDER") setSize("ALLE")
-                  }}
-                  className={gender === item ? "is-active" : ""}
-                >
-                  <FilterOptionIcon label={item} />
-                  {item}
-                </button>
-              ))}
-            </div>
-            <div className="catalog-filter">
-              <FilterLabel type="category">KATEGORIE</FilterLabel>
-              {CATALOG_CATEGORIES.map((item) => (
-                <button
-                  key={item}
-                  onClick={() => {
-                    setCategory(item)
-                    setSub("ALLE")
-                    if (
-                      [
-                        "ACCESSOIRES",
-                        "GLÄSER & TASSEN",
-                        "DTF-TRANSFERS",
-                      ].includes(item)
-                    )
-                      setGender("ALLE")
-                  }}
-                  className={`${category === item ? "is-active" : ""} ${
-                    [
-                      "ACCESSOIRES",
-                      "GLÄSER & TASSEN",
-                      "DTF-TRANSFERS",
-                    ].includes(item)
-                      ? "catalog-nontextile"
-                      : ""
-                  } ${item === "ACCESSOIRES" ? "catalog-section-break" : ""}`}
-                >
-                  <FilterOptionIcon label={item} />
-                  {item}
-                </button>
-              ))}
-              {subcategories.length > 0 && (
-                <div className="catalog-subcategory-filter">
-                  <span>UNTERKATEGORIEN</span>
-                  <button
-                    onClick={() => setSub("ALLE")}
-                    className={sub === "ALLE" ? "is-active" : ""}
-                  >
-                    <FilterOptionIcon label="ALLE" />
-                    ALLE
-                  </button>
-                  {subcategories.map((item) => (
-                    <button
-                      key={item}
-                      onClick={() => setSub(item)}
-                      className={sub === item ? "is-active" : ""}
-                    >
-                      <FilterOptionIcon label={item} />
-                      {item}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <div
-              className={`catalog-filter ${
-                nonTextileCategory ? "is-disabled" : ""
-              }`}
-            >
-              <FilterLabel type="color">FARBE</FilterLabel>
-              <div className="color-filter-grid">
-                {COLOR_FILTERS.map((item) => (
-                  <button
-                    key={item.label}
-                    aria-label={item.label}
-                    title={item.label}
-                    disabled={nonTextileCategory}
-                    onClick={() =>
-                      setColor(color === item.value ? null : item.value)
-                    }
-                    className={`${color === item.value ? "is-active" : ""} ${
-                      item.value === "multi" ? "is-multicolor" : ""
-                    }`}
-                    style={
-                      item.value === "multi"
-                        ? undefined
-                        : { background: item.value }
-                    }
-                  />
-                ))}
-              </div>
-            </div>
-            <div
-              className={`catalog-filter ${
-                nonTextileCategory ? "is-disabled" : ""
-              }`}
-            >
-              <FilterLabel type="size">GRÖSSE</FilterLabel>
-              <span
-                className={`size-filter-label ${
-                  gender === "KINDER" ? "is-disabled" : ""
-                }`}
-              >
-                ERWACHSENE
-              </span>
-              <div
-                className={`size-filter-grid ${
-                  gender === "KINDER" ? "is-disabled" : ""
-                }`}
-              >
-                {["ALLE", "XS", "S", "M", "L", "XL", "2XL", "3XL"].map(
-                  (item) => (
-                    <button
-                      key={item}
-                      disabled={nonTextileCategory || gender === "KINDER"}
-                      onClick={() => setSize(item)}
-                      className={size === item ? "is-active" : ""}
-                    >
-                      {item}
-                    </button>
-                  ),
-                )}
-              </div>
-              <span
-                className={`size-filter-label size-filter-kids ${
-                  gender === "KINDER" ? "is-priority" : ""
-                }`}
-              >
-                KINDER
-              </span>
-              <div
-                className={`size-filter-grid ${
-                  gender === "KINDER" ? "is-priority" : ""
-                }`}
-              >
-                {[
-                  "04A (104)",
-                  "06A (116)",
-                  "08A (128)",
-                  "10A (140)",
-                  "12A (152)",
-                ].map((item) => (
-                  <button
-                    key={item}
-                    disabled={nonTextileCategory}
-                    onClick={() => setSize(item)}
-                    className={size === item ? "is-active" : ""}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </aside>
-          <section className="catalog-results" ref={catalogResultsRef}>
-            <div className="catalog-result-head">
-              <p>
-                <span>{products.length}</span> PRODUKTE
-              </p>
-              <div className="catalog-sort">
-                <label htmlFor="catalog-sort">SORTIERUNG</label>
-                <select
-                  id="catalog-sort"
-                  value={sort}
-                  onChange={(event) => setSort(event.target.value)}
-                >
-                  <option>BELIEBTHEIT</option>
-                  <option>NIEDRIGSTER PREIS</option>
-                  <option>HÖCHSTER PREIS</option>
-                  <option>ARTIKELBEZEICHNUNG</option>
-                </select>
-              </div>
-            </div>
-            <div className="catalog-product-grid">
-              {visibleProducts.map((product) => (
-                <article key={product.slug} className="catalog-product-card">
-                  <a
-                    href={`/katalog/${product.slug}`}
-                    className="catalog-product-image"
-                  >
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      loading="lazy"
-                    />
-                  </a>
-                  <div className="catalog-product-copy">
-                    <h2>{product.name}</h2>
-                    <p className="catalog-product-short">{product.short}</p>
-                    <div className="catalog-price-block">
-                      <div className="catalog-price-copy">
-                        <strong>{product.price}</strong>
-                        <PriceLegalNote />
-                      </div>
-                      <CatalogAddToCartButton product={product} cart={cart} />
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
-            {shopifyProducts === null && !shopifyError && (
-              <div className="catalog-no-results">
-                SHOPIFY KATALOG WIRD GELADEN.
-              </div>
-            )}
-            {shopifyProducts !== null && products.length === 0 && (
-              <div className="catalog-no-results">
-                {shopifyError
-                  ? "SHOPIFY KATALOG IST MOMENTAN NICHT VERFÜGBAR."
-                  : "KEINE PRODUKTE FÜR DIESE AUSWAHL."}
-              </div>
-            )}
-            {totalPages > 1 && (
-              <nav className="catalog-pagination" aria-label="Katalogseiten">
-                <button
-                  type="button"
-                  onClick={() => changePage(Math.max(1, page - 1))}
-                  disabled={page === 1}
-                >
-                  ← ZURÜCK
-                </button>
-                <span>
-                  {page} / {totalPages}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => changePage(Math.min(totalPages, page + 1))}
-                  disabled={page === totalPages}
-                >
-                  NÄCHSTE SEITE →
-                </button>
-              </nav>
-            )}
-          </section>
-        </div>
-      </main>
+      <CatalogView
+        products={products}
+        error={error}
+        initialSaleOnly={saleOnly}
+        renderPriceNote={() => <PriceLegalNote />}
+      />
     </PageShell>
   )
 }
 
 function SalePage() {
-  const { products: shopifyProducts, error: shopifyError } = useShopifyCatalog()
-  const { cart } = useShopifyCart()
-  const [page, setPage] = useState(1)
-  const resultsRef = useRef<HTMLElement>(null)
-  const perPage = 30
-  const saleProducts = (shopifyProducts ?? []).filter(
-    (product) => product.compareAtPrice,
-  )
-  const totalPages = Math.max(1, Math.ceil(saleProducts.length / perPage))
-  const products = saleProducts.slice((page - 1) * perPage, page * perPage)
-  const changePage = (nextPage: number) => {
-    setPage(nextPage)
-    window.setTimeout(
-      () =>
-        resultsRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        }),
-      0,
-    )
-  }
-  return (
-    <PageShell inner>
-      <main className="flex-1">
-        <PageHero
-          compact
-          image={imgHeaderCoal}
-          eyebrow="NUR SOLANGE DER VORRAT REICHT"
-          title="SALE"
-          lead="Ausgewählte Stücke zu Sonderpreisen."
-        />
-        <section
-          ref={resultsRef}
-          className="max-w-[1440px] mx-auto py-10 sm:py-14"
-          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-        >
-          <div className="catalog-result-head">
-            <p>
-              <span>{saleProducts.length}</span> ANGEBOTE
-            </p>
-            <span>REDUZIERTE ARTIKEL</span>
-          </div>
-          <div className="sale-product-grid catalog-product-grid">
-            {products.map((product) => (
-              <article key={product.slug} className="catalog-product-card">
-                <a
-                  href={`/katalog/${product.slug}`}
-                  className="catalog-product-image relative"
-                >
-                  <img src={product.image} alt={product.name} loading="lazy" />
-                  <span className="sale-badge">SALE</span>
-                </a>
-                <div className="catalog-product-copy">
-                  <h2>{product.name}</h2>
-                  <p className="catalog-product-short">{product.short}</p>
-                  <div className="catalog-price-block">
-                    <div className="catalog-price-copy">
-                      <strong>
-                        <s>{product.price}</s> {product.price}
-                      </strong>
-                      <PriceLegalNote />
-                    </div>
-                    <CatalogAddToCartButton product={product} cart={cart} />
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-          {shopifyProducts === null && !shopifyError && (
-            <div className="catalog-no-results">SHOPIFY SALE WIRD GELADEN.</div>
-          )}
-          {shopifyProducts !== null && products.length === 0 && (
-            <div className="catalog-no-results">
-              {shopifyError
-                ? "SHOPIFY SALE IST MOMENTAN NICHT VERFÜGBAR."
-                : "AKTUELL SIND KEINE SALE-ARTIKEL VERFÜGBAR."}
-            </div>
-          )}
-          {totalPages > 1 && (
-            <nav className="catalog-pagination" aria-label="Sale Seiten">
-              <button
-                type="button"
-                onClick={() => changePage(Math.max(1, page - 1))}
-                disabled={page === 1}
-              >
-                ← ZURÜCK
-              </button>
-              <span>
-                {page} / {totalPages}
-              </span>
-              <button
-                type="button"
-                onClick={() => changePage(Math.min(totalPages, page + 1))}
-                disabled={page === totalPages}
-              >
-                NÄCHSTE SEITE →
-              </button>
-            </nav>
-          )}
-        </section>
-      </main>
-    </PageShell>
-  )
+  return <CatalogPage saleOnly />
 }
 
 function ShopifyProductPage({ handle }: { handle: string }) {
   const { products, error } = useShopifyCatalog(handle)
   if (products?.[0]) return <ProductPage product={products[0]} />
+  const loading = products === null && !error
   return (
     <PageShell inner>
-      <main className="flex-1 flex items-center justify-center min-h-[55vh] px-6">
-        <p className="catalog-no-results">
-          {error || products
-            ? "DIESER ARTIKEL IST NICHT VERFÜGBAR."
-            : "ARTIKEL WIRD GELADEN."}
-        </p>
+      <main className="product-page">
+        <div className="pd-product-state" role="status" aria-busy={loading}>
+          <span>Pottlerkinder / Katalog</span>
+          <h1>{loading ? "Dein Produkt wird geladen …" : "Dieser Artikel ist gerade nicht verfügbar."}</h1>
+          {!loading && (
+            <>
+              <p>Entdecke weitere Produkte in unserem Katalog.</p>
+              <a href="/katalog">Zurück zum Katalog</a>
+            </>
+          )}
+        </div>
       </main>
     </PageShell>
   )
@@ -4616,13 +3012,13 @@ function ProductPage({ product }: { product: any }) {
   const [size, setSize] = useState(product.sizes[0])
   const [selectedColor, setSelectedColor] = useState(product.colors[0])
   const [selectedImage, setSelectedImage] = useState(0)
-  const productImages = product.images || [
+  const productImages = product.images?.length ? product.images : [
     { url: product.image, altText: product.name },
   ]
   const { cart } = useShopifyCart()
   const [cartStatus, setCartStatus] =
     useState<"idle" | "loading" | "success" | "error">("idle")
-  const variant = selectedProductVariant(product, size, selectedColor)
+  const variant = findProductVariant(product, size, selectedColor)
   const inCart = cartHasVariant(cart, variant?.id)
   const addToCart = async () => {
     if (!variant?.id) {
@@ -4631,11 +3027,7 @@ function ProductPage({ product }: { product: any }) {
     }
     setCartStatus("loading")
     try {
-      if (product.isDemo) {
-        addDemoVariant(product, variant)
-        setCartStatus("success")
-        return
-      }
+      
       const cartId = window.localStorage.getItem("pottlerkinder-cart-id")
       const response = cartId
         ? await shopCart.add(cartId, [
@@ -4652,124 +3044,34 @@ function ProductPage({ product }: { product: any }) {
   }
   return (
     <PageShell inner>
-      <main className="flex-1">
-        <div
-          className="product-detail max-w-[1440px] mx-auto py-10 sm:py-16"
-          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-        >
-          <a href="/katalog" className="product-back">
-            ← ZURÜCK ZUM KATALOG
-          </a>
-          <div className="product-detail-grid">
-            <div className="product-detail-media">
-              {productImages.length > 1 && (
-                <div className="product-gallery" aria-label="Produktbilder">
-                  {productImages.map((image: any, index: number) => (
-                    <button
-                      type="button"
-                      key={image.url}
-                      onClick={() => setSelectedImage(index)}
-                      className={selectedImage === index ? "is-active" : ""}
-                      aria-label={`Bild ${index + 1} anzeigen`}
-                    >
-                      <img src={image.url} alt="" />
-                    </button>
-                  ))}
-                </div>
-              )}
-              <div className="product-detail-image">
-                <img
-                  src={productImages[selectedImage]?.url || product.image}
-                  alt={productImages[selectedImage]?.altText || product.name}
-                />
-              </div>
-            </div>
-            <div className="product-detail-copy">
-              <p>
-                {product.category} · {product.gender}
-              </p>
-              <h1>{product.name}</h1>
-              <p className="product-detail-lead">{product.description}</p>
-              <div className="product-detail-price">
-                <strong>{product.price}</strong>
-                <PriceLegalNote />
-              </div>
-              <div className="product-purchase-panel">
-                <div className="product-option">
-                  <span>FARBE</span>
-                  <div>
-                    {product.colors.map((color) => (
-                      <button
-                        type="button"
-                        key={color}
-                        aria-label="Farbe auswählen"
-                        aria-pressed={selectedColor === color}
-                        onClick={() => setSelectedColor(color)}
-                        className={`catalog-swatch ${selectedColor === color ? "is-selected" : ""}`}
-                        style={{ background: color }}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="product-option">
-                  <span>GRÖSSE</span>
-                  <div className="product-size-options">
-                    {product.sizes.map((item) => (
-                      <button
-                        type="button"
-                        key={item}
-                        aria-pressed={size === item}
-                        onClick={() => setSize(item)}
-                        className={size === item ? "is-active" : ""}
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <button
-                  className={`btn-red product-cart-button ${inCart ? "is-success" : ""}`}
-                  onClick={addToCart}
-                  disabled={cartStatus === "loading"}
-                >
-                  {cartStatus === "loading"
-                    ? "WIRD HINZUGEFÜGT"
-                    : inCart
-                    ? "IM WARENKORB"
-                    : "IN DEN WARENKORB"}{" "}
-                  <span>→</span>
-                </button>
-                {inCart && (
-                  <p className="product-cart-feedback">
-                    IM WARENKORB GESPEICHERT.
-                  </p>
-                )}
-                {cartStatus === "error" && (
-                  <p className="product-cart-feedback is-error">
-                    WARENKORB KONNTE NICHT AKTUALISIERT WERDEN.
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-          <section id="details" className="product-more-details">
-            <p>ARTIKELBESCHREIBUNG</p>
-            <h2>{product.name}</h2>
-            <p>
-              {product.short}. Der Artikel ist für den täglichen Einsatz
-              konzipiert und wird mit Sorgfalt für Pottlerkinder ausgewählt und
-              veredelt.
-            </p>
-          </section>
-        </div>
-      </main>
+      <ProductView
+        product={product}
+        images={productImages}
+        selectedImage={selectedImage}
+        size={size}
+        selectedColor={selectedColor}
+        variant={variant}
+        inCart={inCart}
+        cartStatus={cartStatus}
+        onImageChange={setSelectedImage}
+        onColorChange={(color) => {
+          setSelectedColor(color)
+          setCartStatus("idle")
+        }}
+        onSizeChange={(nextSize) => {
+          setSize(nextSize)
+          setCartStatus("idle")
+        }}
+        onAddToCart={addToCart}
+        renderPriceNote={() => <PriceLegalNote />}
+      />
     </PageShell>
   )
 }
 
 function HomePage() {
   return (
-    <div className="w-full min-h-screen bg-[#0a0a0a] flex flex-col">
+    <div className="home-page w-full min-h-screen bg-[#0a0a0a] flex flex-col">
       <Header />
       <main className="flex-1">
         <HeroCarousel />
@@ -4787,7 +3089,6 @@ function HomePage() {
         <div className="w-full h-px bg-[#1a1a1a]" />
         <TrustBadgesBar />
         <BrandSection />
-        <StatsBar />
       </main>
       <Footer />
     </div>
@@ -4809,11 +3110,7 @@ function CartPage() {
   const removeLine = async (lineId: string) => {
     if (!cart?.id) return
     setUpdating(lineId)
-    if (cart.isDemoCart) {
-      updateDemoCartLine(lineId, 0)
-      setUpdating(null)
-      return
-    }
+    
     const previousCart = cart
     publishCart(cartWithoutLine(cart, lineId))
     try {
@@ -4828,11 +3125,7 @@ function CartPage() {
   const updateLineQuantity = async (lineId: string, quantity: number) => {
     if (!cart?.id || quantity < 1) return
     setUpdating(lineId)
-    if (cart.isDemoCart) {
-      updateDemoCartLine(lineId, quantity)
-      setUpdating(null)
-      return
-    }
+    
     const previousCart = cart
     publishCart(cartWithLineQuantity(cart, lineId, quantity))
     try {
@@ -5171,11 +3464,8 @@ function AccountPage() {
   }
   return (
     <PageShell inner>
-      <main className="flex-1">
-        <section
-          className="account-page account-page-access max-w-[1440px] mx-auto"
-          style={{ paddingLeft: SECTION_PAD, paddingRight: SECTION_PAD }}
-        >
+      <main className="flex-1 account-theme">
+        <section className="account-page account-page-access max-w-[1440px] mx-auto">
           {loading && <p className="account-loading">KONTO WIRD GELADEN …</p>}
           {!loading && !customer && (
             <div className="account-login-panel">
@@ -5879,32 +4169,6 @@ function AddressManager({
   )
 }
 
-function AccountInformation({
-  title,
-  rows,
-}: {
-  title: string
-  rows: Array<[string, string | undefined]>
-}) {
-  return (
-    <>
-      <div className="account-section-head">
-        <div>
-          <p className="account-kicker">MEIN KONTO</p>
-          <h2>{title}</h2>
-        </div>
-      </div>
-      <div className="account-information">
-        {rows.map(([label, value]) => (
-          <div key={label}>
-            <small>{label}</small>
-            <p>{value || "NICHT HINTERLEGT"}</p>
-          </div>
-        ))}
-      </div>
-    </>
-  )
-}
 
 const DESIGNER_PRODUCTS = [
   {
@@ -7167,6 +5431,24 @@ function DesignerStudio() {
   const [forbiddenThemesOpen, setForbiddenThemesOpen] = useState(false)
   const [copyrightUploadOpen, setCopyrightUploadOpen] = useState(false)
   const [copyrightAccepted, setCopyrightAccepted] = useState(false)
+  const designerDialog = copyrightUploadOpen
+    ? ".designer-studio .legal-dialog-layer"
+    : forbiddenThemesOpen
+      ? ".designer-forbidden-layer"
+      : helpStep !== null
+        ? ".designer-help-layer"
+        : productInfoOpen
+          ? ".designer-info-layer"
+          : reviewOpen
+            ? ".designer-review-layer"
+            : null
+  useDialogFocus(designerDialog, () => {
+    if (copyrightUploadOpen) setCopyrightUploadOpen(false)
+    else if (forbiddenThemesOpen) setForbiddenThemesOpen(false)
+    else if (helpStep !== null) setHelpStep(null)
+    else if (productInfoOpen) setProductInfoOpen(false)
+    else setReviewOpen(false)
+  })
   const [copyrightUploadConfirmed, setCopyrightUploadConfirmed] = useState(
     () => window.localStorage.getItem("pottlerkinder-copyright-upload-confirmed") === "true",
   )
@@ -7933,9 +6215,11 @@ function DesignerStudio() {
         // Embedded/private browser sessions may not provide IndexedDB.
       })
   }
-  const requestImageUpload = (event: React.MouseEvent<HTMLLabelElement>) => {
-    if (copyrightUploadConfirmed) return
-    event.preventDefault()
+  const requestImageUpload = () => {
+    if (copyrightUploadConfirmed) {
+      uploadInputRef.current?.click()
+      return
+    }
     setCopyrightAccepted(false)
     setCopyrightUploadOpen(true)
   }
@@ -8822,6 +7106,18 @@ function DesignerStudio() {
     } else if (axis === "horizontal") setTextX(0)
     else setTextY(0)
   }
+  const moveActiveObject = (x: number, y: number) => {
+    if (object === "image") {
+      setObjectX((value) => value + x)
+      setObjectY((value) => value + y)
+    } else if (activeSlot === "text2") {
+      setText2X((value) => value + x)
+      setText2Y((value) => value + y)
+    } else {
+      setTextX((value) => value + x)
+      setTextY((value) => value + y)
+    }
+  }
   const renderObjectSettings = () => {
     if (!hasObject) return null
     const isTextMode = panel === "text"
@@ -8837,7 +7133,7 @@ function DesignerStudio() {
           {isTextMode && (
             <div className="designer-object-font" ref={fontPickerRef}>
               <span>SCHRIFT</span>
-              <button type="button" className={`designer-product-button ${fontPickerOpen ? "is-open" : ""}`} onClick={() => setFontPickerOpen((open) => !open)}>
+              <button type="button" className={`designer-product-button ${fontPickerOpen ? "is-open" : ""}`} aria-expanded={fontPickerOpen} onClick={() => setFontPickerOpen((open) => !open)}>
                 <span style={{ fontFamily: previewFont }}>{previewFont}</span><b>⌄</b>
               </button>
               <button type="button" className="designer-control-reset" onClick={() => resetObjectSetting("font")} aria-label="Schrift zurücksetzen">↺</button>
@@ -8863,6 +7159,13 @@ function DesignerStudio() {
             <button type="button" onClick={() => centerActiveObject("horizontal")} aria-label="Horizontal zentrieren">↔</button>
             <button type="button" onClick={() => centerActiveObject("vertical")} aria-label="Vertikal zentrieren">↕</button>
           </div>
+          <div className="designer-position-controls">
+            <span>POSITION</span>
+            <button type="button" onClick={() => moveActiveObject(-10, 0)} aria-label="Objekt nach links verschieben"><FiArrowLeft aria-hidden="true" /></button>
+            <button type="button" onClick={() => moveActiveObject(0, -10)} aria-label="Objekt nach oben verschieben"><FiArrowUp aria-hidden="true" /></button>
+            <button type="button" onClick={() => moveActiveObject(0, 10)} aria-label="Objekt nach unten verschieben"><FiArrowDown aria-hidden="true" /></button>
+            <button type="button" onClick={() => moveActiveObject(10, 0)} aria-label="Objekt nach rechts verschieben"><FiArrowRight aria-hidden="true" /></button>
+          </div>
         </div>
       </section>
     )
@@ -8870,7 +7173,7 @@ function DesignerStudio() {
   return (
     <div className="designer-studio">
       <aside className="designer-tools">
-        <a href="/" className="designer-brand" aria-label="На главную">
+        <a href="/" className="designer-brand" aria-label="Zur Startseite">
           <img src={imgTowerLogo} alt="Pottlerkinder" />
           <img src={imgWordmarkLogo} alt="Pottlerkinder" />
         </a>
@@ -8878,6 +7181,7 @@ function DesignerStudio() {
           <button
             type="button"
             className={panel === "design" ? "is-active" : ""}
+            aria-pressed={panel === "design"}
             onClick={() => {
               setPanel("design")
               setObject("image")
@@ -8888,6 +7192,7 @@ function DesignerStudio() {
           <button
             type="button"
             className={panel === "text" ? "is-active" : ""}
+            aria-pressed={panel === "text"}
             onClick={() => {
               setPanel("text")
               setObject("text")
@@ -8899,26 +7204,27 @@ function DesignerStudio() {
         <div className="designer-tool-content">
           {panel === "design" ? (
             <>
-              <label htmlFor="designer-image-upload" className="designer-upload" onClick={requestImageUpload}>
-                <input
-                  id="designer-image-upload"
-                  ref={uploadInputRef}
-                  type="file"
-                  accept="image/png,image/jpeg"
-                  onClick={(event) => { event.currentTarget.value = "" }}
-                  onChange={(event) => {
-                    upload(event.target.files?.[0])
-                    setCopyrightUploadOpen(false)
-                  }}
-                />
+              <input
+                id="designer-image-upload"
+                className="designer-upload-input"
+                ref={uploadInputRef}
+                type="file"
+                accept="image/png,image/jpeg"
+                onClick={(event) => { event.currentTarget.value = "" }}
+                onChange={(event) => {
+                  upload(event.target.files?.[0])
+                  setCopyrightUploadOpen(false)
+                }}
+              />
+              <button type="button" className="designer-upload" onClick={requestImageUpload} aria-label="Bild hochladen">
                 <b>BILD HOCHLADEN</b>
                 <span>PNG ODER JPEG · MAX. 5 MB</span>
                 <span>1 BILD PRO DRUCKSEITE · BIS ZU 3 BILDER IN DER BIBLIOTHEK</span>
-              </label>
+              </button>
               {uploadError && <p className="designer-error">{uploadError}</p>}
               {imageLibrary.map((image, index) => (
                 <div className="designer-image-library-item" key={image}>
-                  <button type="button" className={`designer-object-select ${activeImageIndex === index ? "is-active" : ""}`} onClick={() => { setActiveImageIndex(index); setUploadedImage(image); setObject("image") }}>
+                  <button type="button" className={`designer-object-select ${activeImageIndex === index ? "is-active" : ""}`} aria-pressed={activeImageIndex === index} onClick={() => { setActiveImageIndex(index); setUploadedImage(image); setObject("image") }}>
                     <img className="designer-library-thumbnail" src={image} alt="" />
                     <span>BILD {index + 1}</span>
                     <b>✓</b>
@@ -8937,6 +7243,7 @@ function DesignerStudio() {
               <section>
                 <p>DEIN TEXT</p>
                 <textarea
+                  aria-label={activeSlot === "text2" ? "Dein zweiter Text" : "Dein Text"}
                   maxLength={70}
                   placeholder={!isTextInputFocused && !activeText.trim() ? "BIS ZU 2 TEXTFELDER HINZUFÜGEN …" : ""}
                   onFocus={() => setIsTextInputFocused(true)}
@@ -8964,8 +7271,8 @@ function DesignerStudio() {
                   }}
                 />
                 <div className="designer-object-slots">
-                  <button type="button" className={activeSlot === "text1" ? "is-active" : ""} onClick={() => { setActiveSlot("text1"); setObject("text") }}>TEXT 1</button>
-                  <button type="button" className={activeSlot === "text2" ? "is-active" : ""} onClick={() => { setActiveSlot("text2"); setObject("text") }}>TEXT 2</button>
+                  <button type="button" className={activeSlot === "text1" ? "is-active" : ""} aria-pressed={activeSlot === "text1"} onClick={() => { setActiveSlot("text1"); setObject("text") }}>TEXT 1</button>
+                  <button type="button" className={activeSlot === "text2" ? "is-active" : ""} aria-pressed={activeSlot === "text2"} onClick={() => { setActiveSlot("text2"); setObject("text") }}>TEXT 2</button>
                 </div>
               </section>
               {renderObjectSettings()}
@@ -8989,6 +7296,7 @@ function DesignerStudio() {
                       key={color}
                       title={color}
                       aria-label={`Textfarbe ${color}`}
+                      aria-pressed={activeTextColor.toLowerCase() === color.toLowerCase()}
                       className={activeTextColor.toLowerCase() === color.toLowerCase() ? "is-active" : ""}
                       style={{ backgroundColor: color }}
                       onClick={() => {
@@ -9310,6 +7618,7 @@ function DesignerStudio() {
           >
             <button
               type="button"
+              aria-label="Produktansicht verkleinern"
               onClick={() =>
                 setCanvasScale((value) => Math.max(0.65, value - 0.1))
               }
@@ -9319,6 +7628,7 @@ function DesignerStudio() {
             <span>{Math.round((canvasScale / 1.4) * 100)}%</span>
             <button
               type="button"
+              aria-label="Produktansicht vergrößern"
               onClick={() =>
                 setCanvasScale((value) => Math.min(2.52, value + 0.1))
               }
@@ -9357,6 +7667,7 @@ function DesignerStudio() {
                 <button
                   type="button"
                   className={gender === item ? "is-active" : ""}
+                  aria-pressed={gender === item}
                   onClick={() => chooseGender(item)}
                   key={item}
                 >
@@ -9372,6 +7683,7 @@ function DesignerStudio() {
                 <button
                   type="button"
                   className={item.id === product.id ? "is-active" : ""}
+                  aria-pressed={item.id === product.id}
                   onClick={() => chooseProduct(item)}
                   key={item.id}
                 >
@@ -9387,6 +7699,7 @@ function DesignerStudio() {
               className={`designer-product-button ${
                 productPickerOpen ? "is-open" : ""
               }`}
+              aria-expanded={productPickerOpen}
               onClick={() => {
                 setProductPickerOpen((open) => !open)
                 setModelPickerOpen(false)
@@ -9417,6 +7730,7 @@ function DesignerStudio() {
               className={`designer-product-button ${
                 modelPickerOpen ? "is-open" : ""
               }`}
+              aria-expanded={modelPickerOpen}
               onClick={() => {
                 setModelPickerOpen((open) => !open)
                 setProductPickerOpen(false)
@@ -9451,6 +7765,7 @@ function DesignerStudio() {
                       type="button"
                       title={item.label}
                       aria-label={item.label}
+                      aria-pressed={selectedConfiguredColor.id === item.id}
                       className={
                         selectedConfiguredColor.id === item.id
                           ? "is-active"
@@ -9477,6 +7792,7 @@ function DesignerStudio() {
             <button
               type="button"
               className="designer-info-button"
+              aria-haspopup="dialog"
               onClick={() => {
                 setProductInfoTab("details")
                 setProductInfoOpen(true)
@@ -9491,7 +7807,7 @@ function DesignerStudio() {
               {isMug ? (
                 <>
                   <div className="designer-side-choice">
-                    <button type="button" className="is-active">
+                    <button type="button" className="is-active" aria-pressed="true">
                       RUNDUMDRUCK +4,99 €
                     </button>
                   </div>
@@ -9502,6 +7818,7 @@ function DesignerStudio() {
                     <button
                       type="button"
                       className={printSide === "front" ? "is-active" : ""}
+                      aria-pressed={printSide === "front"}
                       onClick={() => choosePrintSide("front")}
                     >
                       VORNE +4,99 €
@@ -9509,6 +7826,7 @@ function DesignerStudio() {
                     <button
                       type="button"
                       className={printSide === "back" ? "is-active" : ""}
+                      aria-pressed={printSide === "back"}
                       onClick={() => choosePrintSide("back")}
                       disabled={!isConfiguredTextile && !isAnyCap && !isShopper}
                     >
@@ -9531,6 +7849,7 @@ function DesignerStudio() {
                 <button
                   type="button"
                   className={size === item ? "is-active" : ""}
+                  aria-pressed={size === item}
                   onClick={() => setSize(item)}
                   key={item}
                 >
@@ -10228,17 +8547,18 @@ function DesignerStudio() {
         </div>
       )}
       {reviewOpen && (
-        <div className="designer-review-layer">
+        <div className="designer-review-layer" role="dialog" aria-modal="true" aria-labelledby="designer-review-title">
           <div className="designer-review">
             <button
               type="button"
               className="designer-review-close"
+              aria-label="Vorschau schließen"
               onClick={() => setReviewOpen(false)}
             >
               ×
             </button>
             <p>LETZTER BLICK</p>
-            <h2>DEIN EIGENER DESIGN</h2>
+            <h2 id="designer-review-title">DEIN EIGENER DESIGN</h2>
             <div
               className={`designer-review-mockup ${
                 (hasBackDesign && (isConfiguredTextile || isShopper)) ||
@@ -10317,7 +8637,7 @@ function DesignerStudio() {
       )}
       {copyrightUploadOpen && (
         <div className="legal-dialog-layer" role="dialog" aria-modal="true" aria-labelledby="copyright-upload-title">
-          <button type="button" className="legal-dialog-backdrop" aria-label="Fenster schließen" onClick={() => setCopyrightUploadOpen(false)} />
+          <button type="button" className="legal-dialog-backdrop" tabIndex={-1} aria-label="Fenster schließen" onClick={() => setCopyrightUploadOpen(false)} />
           <section className="legal-dialog copyright-upload-dialog">
             <button type="button" className="legal-dialog-close" aria-label="Schließen" onClick={() => setCopyrightUploadOpen(false)}>×</button>
             <p className="legal-kicker">BILD HOCHLADEN</p>
@@ -10348,7 +8668,7 @@ function DesignerStudio() {
         </div>
       )}
       {helpStep !== null && (
-        <div className="designer-help-layer">
+        <div className="designer-help-layer" role="dialog" aria-modal="true" aria-label="Hilfe zum Designstudio">
           <div className="designer-help">
             <span>
               {helpStep + 1} / {help.length}
@@ -10473,11 +8793,21 @@ function DesignerStudio() {
 }
 
 export default function App() {
-  const [shippingDialogOpen, setShippingDialogOpen] = useState(false)
+  const [serviceDialog, setServiceDialog] = useState<ServiceInfoKind | null>(
+    null,
+  )
   useEffect(() => {
-    const openShippingDialog = () => setShippingDialogOpen(true)
-    window.addEventListener("pottlerkinder-open-shipping", openShippingDialog)
-    return () => window.removeEventListener("pottlerkinder-open-shipping", openShippingDialog)
+    const openShippingDialog = () => setServiceDialog("shipping")
+    const openReturnsDialog = () => setServiceDialog("returns")
+    window.addEventListener(SERVICE_INFO_EVENTS.shipping, openShippingDialog)
+    window.addEventListener(SERVICE_INFO_EVENTS.returns, openReturnsDialog)
+    return () => {
+      window.removeEventListener(
+        SERVICE_INFO_EVENTS.shipping,
+        openShippingDialog,
+      )
+      window.removeEventListener(SERVICE_INFO_EVENTS.returns, openReturnsDialog)
+    }
   }, [])
   const pages: Record<string, React.ReactNode> = {
     "/katalog": <CatalogPage />,
@@ -10487,16 +8817,55 @@ export default function App() {
     "/ueber-uns": <AboutPage />,
     "/geschichte": <HistoryPage />,
     "/blog": <BlogPage />,
+    "/kontakt": <ContactPage />,
     "/account": <AccountPage />,
     "/account/callback": <AccountCallbackPage />,
     "/designer": <DesignerStudio />,
   }
   const productHandle =
     window.location.pathname.match(/^\/katalog\/([^/]+)$/)?.[1]
-  const content = productHandle ? (
+  const articleSlug = window.location.pathname.match(/^\/blog\/([^/]+)$/)?.[1]
+  const content = articleSlug ? (
+    <BlogArticlePage slug={decodeURIComponent(articleSlug)} />
+  ) : productHandle ? (
     <ShopifyProductPage handle={decodeURIComponent(productHandle)} />
+  ) : LEGAL_PAGES[window.location.pathname] ? (
+    <LegalPage path={window.location.pathname} />
   ) : (
-    LEGAL_PAGES[window.location.pathname] ? <LegalPage path={window.location.pathname} /> : (pages[window.location.pathname] ?? <HomePage />)
+    (pages[window.location.pathname] ?? <HomePage />)
   )
-  return <>{content}<ShippingCostsDialog open={shippingDialogOpen} onClose={() => setShippingDialogOpen(false)} /></>
+  return (
+    <>
+      <a
+        className="site-skip-link"
+        href="#main-content"
+        onClick={(event) => {
+          const main = document.querySelector<HTMLElement>("main")
+          if (main) {
+            event.preventDefault()
+            main.id = "main-content"
+            main.tabIndex = -1
+            main.focus()
+            main.scrollIntoView({ block: "start" })
+          }
+        }}
+      >
+        Zum Inhalt springen
+      </a>
+      {content}
+      {serviceDialog && (
+        <ServiceInfoDialog
+          kind={serviceDialog}
+          sections={
+            LEGAL_PAGES[
+              serviceDialog === "shipping"
+                ? "/versandkosten"
+                : "/rueckgabe-umtausch"
+            ].sections
+          }
+          onClose={() => setServiceDialog(null)}
+        />
+      )}
+    </>
+  )
 }

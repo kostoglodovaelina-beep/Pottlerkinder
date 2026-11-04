@@ -1,0 +1,170 @@
+/* Shared UI text scale. Artwork inside the designer intentionally keeps its own typography. */
+:root {
+  --ui-body-size: 16px;
+  --ui-label-size: 14px;
+  --ui-focus: #f1abb3;
+}
+html { color-scheme: dark; }
+body { margin: 0; font-family: Inter,sans-serif; }
+button, a, input, select, textarea, summary { touch-action: manipulation; }
+input, select, textarea { font-family: Inter,sans-serif; }
+.site-skip-link { position: fixed; top: 10px; left: 12px; z-index: 300; padding: 13px 20px; color: #fff; background: #181818; border: 2px solid var(--ui-focus); font: 500 16px/1.5 Inter,sans-serif; transform: translateY(-160%); }
+.site-skip-link:focus { transform: translateY(0); }
+main:focus { outline: none; }
+.site-header ~ main { scroll-margin-top: 185px; }
+.legal-document-shell .legal-document-head h1 { overflow-wrap: anywhere; hyphens: auto; }
+.legal-document-shell .legal-breadcrumb { flex-wrap: wrap; color: #c4c4c4; font: 400 14px/1.6 Inter,sans-serif; letter-spacing: .4px; }
+.legal-document-shell .legal-breadcrumb :is(a,span:last-child) { color: #c4c4c4; }
+.legal-document-shell .legal-breadcrumb a { display: inline-flex; align-items: center; min-height: 32px; }
+.legal-document-shell .legal-breadcrumb a:hover { color: #fff; border-bottom-color: #ccc; }
+.legal-document-shell .legal-breadcrumb a:focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 3px; }
+
+/* The familiar header footprint is unchanged; controls are taller and easier to read. */
+.site-header .catalog-menu-trigger, .site-header .catalog-submenu button,
+.site-header .site-catalog-all, .site-header .commerce-account-menu button { min-height: 46px; font-size: 14px; line-height: 1.5; }
+.site-header .catalog-menu-kicker, .site-header .commerce-account-menu .account-menu-head > span { color: #c4c4c4; font-size: 13px; line-height: 1.5; }
+.site-header .site-mobile-menu > a { font-size: 16px; min-height: 50px; }
+.site-header .site-icon-action { min-height: 48px; }
+
+/* Editorial and commerce copy use a consistent, readable secondary size. */
+.news-page, .history-page, .company-page, .catalog-page, .product-page, .account-theme { font-size: var(--ui-body-size); }
+.news-page :is(.news-breadcrumb,.news-categories button,.news-results-meta,.news-feature-labels,.news-meta,.news-read,.news-resource small,.news-editor-note,.news-back,.news-article-index,.news-article-end a) { font-size: var(--ui-label-size); line-height: 1.7; }
+.news-page :is(.news-intro > p,.news-feature-copy > p,.news-empty p,.news-article-lead,.news-article-body section p) { font-size: var(--ui-body-size); line-height: 1.85; }
+.news-page .news-resource strong { font-size: 16px; }
+.news-page .news-eyebrow, .news-page .news-article-index > p, .news-page .news-article-photo figcaption { font-size: 13px; line-height: 1.7; }
+.news-page .news-article-index a { font-size: 14px; min-height: 44px; }
+.news-page .news-search { height: 48px; width: min(390px,100%); }
+.news-page .news-search input { font-size: 16px; }
+.news-page .news-search button { min-width: 44px; }
+.news-page .news-empty :is(a,button) { font-size: 14px; min-height: 48px; }
+.news-page .news-tools { flex-wrap: wrap; }
+.history-page :is(.history-breadcrumb,.history-photo figcaption,.history-index > p,.history-index a,.history-index-note) { font-size: 14px; line-height: 1.7; }
+.history-page :is(.history-intro > p,.history-article section > p:not(.history-chapter)) { font-size: 16px; line-height: 1.9; }
+.history-page :is(.history-kicker,.history-chapter) { font-size: 13px; line-height: 1.7; }
+.company-page :is(.b2b-eyebrow,.b2b-breadcrumb,.b2b-visual-kicker,.b2b-visual-caption,.b2b-image-note,.b2b-service-number) { font-size: 13px; line-height: 1.7; letter-spacing: .5px; }
+.company-page :is(.b2b-hero-description,.b2b-section-heading > p,.b2b-service-copy p,.b2b-sticker-note,.b2b-steps p,.b2b-contact-intro,.b2b-faq-list details p) { font-size: 16px; line-height: 1.8; }
+.company-page :is(.b2b-button,.b2b-text-link,.b2b-studio-link,.b2b-trust-row li,.b2b-offer-legal,.b2b-offer-price > span,.b2b-email-address,.b2b-contact-options span,.b2b-contact-options strong,.b2b-address span,.b2b-address strong,.b2b-faq-list summary) { font-size: 14px; line-height: 1.7; }
+.company-page .b2b-button { min-height: 50px; }
+.company-page .b2b-service-copy { padding-bottom: 22px; }
+.company-page .b2b-faq-list summary { min-height: 60px; }
+.company-page .b2b-bottom { padding-bottom: 30px; }
+.product-page :is(.pd-breadcrumbs,.pd-kicker,.pd-sku,.pd-option legend,.pd-option legend > span,.pd-sizes button,.pd-availability,.pd-selection-summary,.pd-selection-summary strong,.pd-cart-feedback,.pd-service-links small,.pd-information dl,.pd-back,.pd-personalize,.pd-personalize strong) { font-size: 14px; line-height: 1.65; }
+.product-page :is(.pd-service-links > button,.pd-information summary,.pd-description,.pd-information details > p) { font-size: 16px; line-height: 1.75; }
+.product-page .pd-sizes button { min-height: 46px; min-width: 46px; }
+.product-page .pd-image-navigation button { min-width: 44px; min-height: 44px; }
+.product-page .pd-pricing .price-legal-note, .product-page .pd-pricing .price-legal-note button { font-size: 14px; line-height: 1.65; }
+.product-page .pd-personalize { gap: 12px; }
+.account-theme .account-page :is(.account-kicker,.account-access-card > p:not(.account-kicker),.account-registration-form > p:not(.account-kicker),.account-login-note,.account-form-grid label,.account-edit-form label,.account-privacy,.account-form-error,.account-save-message,.account-side-nav button,.account-profile > p:not(.account-kicker)) { font-size: 14px; line-height: 1.7; }
+.account-theme .account-page :is(input:not([type="checkbox"]),.account-login-intro > p:not(.account-kicker)) { font-size: 16px; line-height: 1.7; }
+.account-theme .account-page :is(.btn-red,.account-address-action,.account-add-address,.account-cancel,.account-logout) { font-size: 14px; min-height: 46px; }
+.service-info-dialog :is(.service-info-head p,.service-info-rate span,.service-info-rate small,.service-info-rate p,.service-info-times p,.service-info-times strong,.service-info-note,.service-info-foot > span,.service-info-foot button) { font-size: 14px; line-height: 1.6; }
+.service-info-dialog :is(.service-info-return-note,.service-info-body section p) { font-size: 16px; line-height: 1.8; }
+.service-info-dialog .service-info-foot { flex-wrap: wrap; }
+.service-info-dialog .service-info-rate { flex-wrap: wrap; }
+.commerce-drawer-layer :is(.cart-drawer-head span,.cart-drawer-copy span,.cart-drawer-copy .price-legal-note,.cart-drawer-costs > div span,.cart-shipping-note,.cart-drawer-continue,.cart-drawer-remove,.cart-drawer-empty p,.cart-drawer-empty > a,.cart-drawer-checkout) { font-size: 14px; line-height: 1.6; }
+.commerce-drawer-layer .cart-drawer-costs > div { align-items: start; }
+.commerce-drawer-layer .cart-drawer-remove { min-height: 44px; }
+.commerce-drawer-layer .cart-quantity-control { min-height: 44px; grid-template-columns: 44px 36px 44px; }
+
+/* Catalog controls retain their normal border, without click/focus frames. */
+.catalog-page :is(.catalog-breadcrumbs,.catalog-count,.catalog-category-tabs button,.catalog-design-link,.catalog-sidebar-heading h2,.catalog-sidebar-heading > button,.catalog-facet > summary,.catalog-kids-sizes > summary,.catalog-checkboxes > button,.catalog-size-buttons button,.catalog-facet-hint,.catalog-price-endpoints,.catalog-designer-card > span,.catalog-designer-card > strong,.catalog-result-summary h2,.catalog-result-summary > span,.catalog-favorites-toggle,.catalog-sort-control select,.catalog-active-filters button,.catalog-card-meta,.catalog-card-sku,.catalog-card-price s,.catalog-card-details,.catalog-pager > span,.catalog-pager button,.catalog-assurance-grid small,.catalog-assurance-grid strong) { font-size: 14px; line-height: 1.6; }
+.catalog-page .catalog-search input { font-size: 16px; }
+.catalog-page .catalog-search-submit { font-size: 14px; }
+.catalog-page .catalog-checkboxes > button { min-height: 36px; }
+.catalog-page .catalog-size-buttons button { min-height: 44px; min-width: 44px; }
+.catalog-page .catalog-color-buttons > button { min-width: 28px; min-height: 28px; }
+.catalog-page .catalog-facet > summary { min-height: 36px; }
+.catalog-page .catalog-sort-control select { width: 190px; min-height: 44px; }
+.catalog-page .catalog-toolbar, .catalog-page .catalog-toolbar-actions { flex-wrap: wrap; }
+.catalog-page .catalog-toolbar-actions { margin-left: auto; }
+.catalog-page .catalog-card-commerce { flex-wrap: wrap; row-gap: 10px; }
+.catalog-page .catalog-card-price { margin-left: auto; }
+.catalog-page .catalog-card-legal .price-legal-note, .catalog-page .catalog-card-legal .price-legal-note button { font-size: 14px; line-height: 1.65; }
+.catalog-page .catalog-heart { width: 36px; height: 36px; }
+.catalog-page .catalog-price-range input { min-height: 36px; }
+.catalog-page .catalog-price-range input::-webkit-slider-thumb { width: 22px; height: 22px; }
+.catalog-page .catalog-price-range input::-moz-range-thumb { width: 20px; height: 20px; }
+.catalog-page .catalog-assurance-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+.catalog-page .catalog-assurance-grid > a { flex-wrap: wrap; padding-inline: 16px; }
+
+/* Homepage: scale secondary labels, not the established display headings. */
+.home-page main :is(p,span)[style*="font-size: 11px"], .home-page main :is(p,span)[style*="font-size: 12px"], .home-page .hero-content .relative.pl-3 > p:last-child,
+.home-page .trust-grid .text-center > p:last-child { font-size: 14px !important; line-height: 1.7 !important; letter-spacing: .5px !important; }
+.home-page .hero-copy .inline-flex { min-height: 30px; height: auto; padding-block: 4px; }
+.home-page .hero-copy .inline-flex > span { color: #f4f4f4 !important; }
+.home-page :is(.hier-btn,.btn-red,.btn-outline) { min-height: 48px; }
+.home-page .hier-btn, .home-page .hier-btn span { font-size: 16px !important; }
+.home-page .hero-dot { position: relative; display: grid; place-items: center; width: 44px; height: 44px; background: transparent; border: 0; cursor: pointer; }
+.home-page .hero-dot::after { content: ""; display: block; width: 9px; height: 9px; border-radius: 2px; background: #b5b5b5; }
+.home-page .hero-dot[aria-pressed="true"]::after { width: 23px; background: #ee6b75; }
+.home-page .hero-dot:focus-visible { outline: 2px solid #f4b2b9; outline-offset: 1px; }
+.bestseller-section .bs-catalog-link { font-size: 14px; min-height: 46px; }
+.bestseller-card :is(.catalog-card-meta,.catalog-card-badge,.catalog-card-price s) { font-size: 14px; line-height: 1.6; }
+.bestseller-card .catalog-card-legal .price-legal-note, .bestseller-card .catalog-card-legal .price-legal-note button { font-size: 14px; line-height: 1.6; }
+.bestseller-card .catalog-card-legal { min-height: 42px; }
+.bestseller-card .catalog-card-commerce { flex-wrap: wrap; }
+
+/* Legacy !important type rules are overridden only in studio chrome, never in artwork. */
+.designer-studio :is(.designer-tools,.designer-options) { font-size: 16px; }
+.designer-studio :is(.designer-options section > p,.designer-text-settings section > p,.designer-object-settings > p,.designer-object-control-row label,.designer-object-font > span,.designer-center-controls > span,.designer-position-controls > span) { color: #ef929a; font-size: 14px !important; line-height: 1.6 !important; letter-spacing: .7px; }
+.designer-studio :is(.designer-gender-choice,.designer-segmented,.designer-side-choice,.designer-sizes) button { min-height: 44px; padding: 8px 7px; font-size: 14px !important; line-height: 1.5 !important; letter-spacing: .2px; white-space: normal; }
+.designer-studio :is(.designer-product-button,.designer-product-picker button,.designer-info-button,.designer-tool-tabs button) { min-height: 46px; font-size: 15px !important; line-height: 1.5 !important; letter-spacing: .4px; }
+.designer-studio .designer-upload b { font-size: 16px; line-height: 1.6; }
+.designer-studio .designer-upload { width: 100%; }
+.designer-upload-input { display: none; }
+.designer-studio .designer-upload span, .designer-studio .designer-error { font-size: 14px !important; line-height: 1.6 !important; }
+.designer-studio .designer-options small, .designer-studio .designer-color-name { color: #ddd !important; font-size: 14px !important; line-height: 1.6 !important; letter-spacing: .3px !important; }
+.designer-studio .designer-workspace-head :is(span,p) { font-size: 14px !important; line-height: 1.6 !important; letter-spacing: .7px; }
+.designer-studio .designer-workspace-head { flex-wrap: wrap; gap: 8px 15px; }
+.designer-studio .designer-model-colors { gap: 10px; }
+.designer-studio .designer-model-colors button { width: 30px; height: 30px; min-width: 30px; }
+.designer-studio .designer-tool-content { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.designer-studio .designer-tool-content:has(.designer-text-palette) { overflow: visible; }
+.designer-studio .designer-text-settings textarea, .designer-studio .designer-label :is(textarea,select) { font-size: 16px !important; line-height: 1.6 !important; min-height: 48px; }
+.designer-studio .designer-object-slots button { min-height: 44px; font-size: 14px; line-height: 1.5; }
+.designer-studio .designer-font-list button, .designer-studio .designer-object-font .designer-product-button > span { font-size: 15px !important; line-height: 1.5 !important; }
+.designer-studio .designer-color-codebar output { color: #f2f2f2 !important; font-size: 16px; }
+.designer-studio .designer-color-codebar .designer-eyedropper { color: #fff !important; }
+.designer-studio .designer-control-reset { min-width: 32px; min-height: 36px; }
+.designer-studio .designer-center-controls { display: grid; grid-template-columns: 1fr 44px 44px; gap: 7px; align-items: center; }
+.designer-studio .designer-center-controls button { width: 44px; height: 44px; font-size: 21px; }
+.designer-position-controls { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 7px; margin-top: 12px; }
+.designer-position-controls > span { grid-column: 1/-1; }
+.designer-position-controls button { display: grid; place-items: center; min-height: 44px; color: #fff; background: #252525; border: 1px solid #777; font: 400 22px/1 Inter,sans-serif; cursor: pointer; }
+.designer-position-controls svg { width: 20px; height: 20px; }
+.designer-position-controls button:hover { background: #3c2529; border-color: #d47b86; }
+.designer-studio .designer-zoom button { width: 44px; height: 44px; min-height: 44px; font-size: 25px; }
+.designer-studio .designer-zoom > span { font-size: 14px !important; line-height: 1.6 !important; }
+.designer-studio .designer-stage-links button { min-height: 44px; font-size: 14px !important; line-height: 1.5 !important; }
+.designer-studio .designer-history-controls button, .designer-studio .designer-tool-bottom .btn-red.designer-reset-button { min-height: 46px; font-size: 14px !important; line-height: 1.5 !important; letter-spacing: .3px; }
+.designer-studio .designer-options footer .btn-red { min-height: 50px; font-size: 15px !important; line-height: 1.5 !important; }
+.designer-studio .designer-options footer > .designer-price-summary .designer-price-label { font-size: 14px !important; }
+.designer-studio .designer-options footer > .designer-price-summary .price-legal-note,
+.designer-studio .designer-options footer > .designer-price-summary .price-legal-note :is(span,button) { font-size: 14px !important; line-height: 1.6 !important; }
+.designer-studio .designer-object-handles button { width: 28px !important; height: 28px !important; }
+.designer-studio :is(.designer-info-content,.designer-help,.designer-review-details,.designer-forbidden-lead,.designer-forbidden-rules p) { font-size: 16px !important; line-height: 1.8 !important; }
+.designer-studio :is(.designer-info-content p,.designer-info-content li) { font-size: 16px; line-height: 1.8; }
+.designer-studio :is(.designer-info-tabs button,.designer-info-kicker,.designer-size-table,.designer-review-actions button,.designer-help button) { font-size: 14px; line-height: 1.6; }
+.designer-studio :is(.designer-info-close,.designer-review-close,.designer-forbidden-close) { width: 44px; height: 44px; }
+.designer-studio :is(a,button,input,select,textarea):focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 3px; }
+.designer-studio .designer-options-scroll { overscroll-behavior: contain; scrollbar-gutter: stable; }
+.designer-studio .designer-info-modal, .designer-studio .designer-review { overscroll-behavior: contain; }
+
+@media(max-width:900px) {
+  .designer-studio .designer-tool-content { overflow: visible; }
+  .news-page .news-tools { row-gap: 12px; padding-bottom: 16px; }
+  .news-page .news-search { width: 100%; }
+}
+@media(max-width:640px) {
+  .catalog-page .catalog-toolbar-actions { width: 100%; justify-content: flex-end; }
+  .catalog-page .catalog-card-heading h3 { font-size: 25px; }
+  .catalog-page .catalog-assurance-grid { grid-template-columns: 1fr; }
+  .catalog-page .catalog-color-buttons > button { min-width: 36px; min-height: 36px; }
+  .home-page .hero-content { padding-bottom: 85px; }
+  .bestseller-section .bs-heading-inner { flex-wrap: wrap; }
+  .designer-studio .designer-stage-links button { font-size: 14px; }
+  .designer-studio .designer-tool-tabs { grid-template-columns: 1fr 1fr; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .ticker-left, .ticker-right, .hero-copy, .header-signal::after { animation: none !important; }
+}

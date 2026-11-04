@@ -1,0 +1,138 @@
+/* Scoped customer surfaces share the catalog's restrained charcoal palette. */
+.account-theme { flex: 1; min-width: 0; background: #1b1b1b; color: #efefef; font-family: Inter,sans-serif; }
+.account-theme .account-page { width: 100%; max-width: 1600px; padding: 38px clamp(20px,4.45vw,72px) 64px; min-height: 65vh; }
+.account-theme .account-page .account-login-panel { min-height: 0; padding: 0; background: transparent; border: 0; box-shadow: none; }
+.account-theme .account-page .account-login-intro { max-width: 640px; margin-bottom: 30px; }
+.account-theme .account-page .account-kicker { color: #b3b3b3; font: 500 10px/1.5 Inter,sans-serif; letter-spacing: 1px; }
+.account-theme .account-page .account-login-intro h2 { font: 500 clamp(32px,3.2vw,46px)/1.13 Oswald,sans-serif; letter-spacing: -.5px; }
+.account-theme .account-page .account-login-intro > p:not(.account-kicker) { margin: 18px 0 0; color: #bdbdbd; font-size: 14px; line-height: 1.8; }
+.account-theme .account-page .account-access-grid-register { max-width: none; grid-template-columns: minmax(240px,.7fr) minmax(0,1.3fr); gap: 24px; }
+.account-theme .account-page .account-access-card, .account-theme .account-page .account-registration-form { min-height: 0; align-self: start; padding: 28px; border: 1px solid #494949; background: #222222; box-shadow: none; }
+.account-theme .account-page .account-access-card::before { display: none; }
+.account-theme .account-page .account-access-symbol { width: 43px; height: 43px; margin-bottom: 23px; color: #bfbfbf; border-color: #606060; background: transparent; font-weight: 400; }
+.account-theme .account-page h3 { font: 500 clamp(25px,2.5vw,32px)/1.17 Oswald,sans-serif; letter-spacing: -.1px; }
+.account-theme .account-page .account-access-card > p:not(.account-kicker), .account-theme .account-page .account-registration-form > p:not(.account-kicker) { min-height: 0; margin: 17px 0 24px; color: #b4b4b4; font: 400 13px/1.8 Inter,sans-serif; }
+.account-theme .account-page .account-login-note { margin-top: 22px; color: #ababab; font: 400 11px/1.5 Inter,sans-serif; letter-spacing: 0; }
+.account-theme .account-page :is(.btn-red,.account-address-action,.account-add-address,.account-cancel) { min-height: 44px; padding: 11px 17px; color: #ffffff; background: #bf303a; border: 1px solid #dc5760; border-radius: 2px; box-shadow: none; font: 600 11px/1.4 Inter,sans-serif; letter-spacing: .35px; transform: none; transition: background .18s ease; }
+.account-theme .account-page .btn-red:hover { background: #d13a43; transform: none; box-shadow: none; }
+.account-theme .account-page .btn-red::before, .account-theme .account-page .btn-red::after { display: none; }
+.account-theme .account-page :is(.account-form-grid label,.account-edit-form label) { color: #d2d2d2; font: 500 11px/1.5 Inter,sans-serif; letter-spacing: .15px; }
+.account-theme .account-page input:not([type="checkbox"]) { width: 100%; min-width: 0; height: 44px; padding: 0 12px; color: #f2f2f2; background: #191919; border: 1px solid #5d5d5d; border-radius: 2px; font: 400 14px Inter,sans-serif; }
+.account-theme .account-page input:focus { border-color: #bfbfbf; outline: 2px solid #92929240; outline-offset: 1px; box-shadow: none; }
+.account-theme .account-page label.is-invalid input { border-color: #f17a7a; }
+.account-theme .account-page input:disabled { color: #a5a5a5; background: #282828; }
+.account-theme .account-page .account-privacy { margin-block: 19px; color: #bcbcbc; font: 400 12px/1.7 Inter,sans-serif; }
+.account-theme .account-page .account-form-error, .account-theme .account-page .account-save-message { color: #f29194; font: 500 11px/1.6 Inter,sans-serif; letter-spacing: 0; }
+.account-theme .account-page .account-layout { grid-template-columns: 255px minmax(0,1fr); gap: 38px; }
+.account-theme .account-page .account-profile { display: block; padding: 24px; background: #222222; border: 1px solid #4b4b4b; border-top: 2px solid #c33943; }
+.account-theme .account-page .account-profile h2 { font: 500 28px/1.2 Oswald,sans-serif; letter-spacing: -.2px; }
+.account-theme .account-page .account-profile > p:not(.account-kicker) { color: #b6b6b6; font-size: 12px; }
+.account-theme .account-page .account-side-nav { margin: 23px -24px 0; padding-top: 10px; border-color: #474747; }
+.account-theme .account-page .account-side-nav button { min-height: 45px; margin: 0; padding: 10px 24px; color: #c0c0c0; background: transparent; font: 500 11px/1.5 Inter,sans-serif; letter-spacing: .15px; }
+.account-theme .account-page .account-side-nav button.is-active { color: #ffffff; background: #3b3b3b; box-shadow: inset 2px 0 #df545e; }
+.account-theme .account-page .account-logout { padding: 15px 0 0; color: #d9d9d9; background: transparent; border-color: #515151; border-radius: 0; box-shadow: none; font: 500 11px/1.5 Inter,sans-serif; letter-spacing: .1px; }
+.account-theme .account-page .account-logout:hover { padding-left: 0; color: #f1878e; background: transparent; transform: none; box-shadow: none; }
+.account-theme .account-page .account-section-head { border-color: #4b4b4b; }
+.account-theme .account-page .account-section-head h2 { font: 500 29px/1.2 Oswald,sans-serif; letter-spacing: -.2px; }
+.account-theme .account-page .account-section-head > span { background: transparent; border: 1px solid #4f4f4f; color: #c1c1c1; font: 500 10px Inter,sans-serif; letter-spacing: .1px; }
+.account-theme .account-page .account-edit-form { padding: 24px; background: #222222; border-color: #4f4f4f; }
+.account-theme .account-page .account-empty { padding: 27px; background: #262626; border-left-color: #c34750; }
+.account-theme .account-page .account-empty strong { font: 500 24px/1.3 Oswald,sans-serif; letter-spacing: 0; }
+.account-theme .account-page .account-empty p { margin-top: 10px; color: #bbbbbb; }
+.account-theme .account-page .account-address-list article { background: #252525; border: 1px solid #505050; }
+.account-theme .account-page .account-address-list p { color: #dedede; font-size: 13px; }
+.account-theme .account-page :is(.account-address-action,.account-add-address,.account-cancel) { color: #dddddd; background: #2d2d2d; border-color: #636363; }
+.account-theme .account-page .account-address-action.is-danger { background: #382326; border-color: #91555f; }
+.account-theme .account-page .account-orders .account-order { border: 1px solid #505050; border-radius: 2px; background: #232323; box-shadow: none; }
+.account-theme .account-page .account-order-summary:hover { background: #2f2f2f; }
+.account-theme .account-page .account-order-details { text-align: left; animation: none; }
+.account-theme .account-page .account-order-meta small, .account-theme .account-page .account-order-delivery small { color: #d17e85; font: 500 10px/1.5 Inter,sans-serif; letter-spacing: .4px; }
+.account-theme .account-page .account-order.is-open .account-order-total i { transform: none; background: #42272b; border-color: #8c5359; }
+.account-theme .account-page .account-order-meta b { color: #dbdbdb; font: 500 12px/1.5 Inter,sans-serif; letter-spacing: 0; }
+.account-theme .account-page .account-order-summary strong { font: 500 22px/1.2 Oswald,sans-serif; letter-spacing: 0; }
+.account-theme .account-page .account-order-total b { font: 600 17px/1.3 Inter,sans-serif; letter-spacing: -.3px; }
+.account-theme .account-page .account-order-total i { background: #363636; border-color: #6b6b6b; }
+.account-theme .account-page .account-order-meta { border-color: #4e4e4e; }
+.account-theme .account-page .account-order-item { border-color: #474747; border-radius: 0; background: #2a2a2a; }
+.account-theme .account-page .account-order-delivery { border: 1px solid #525252; border-radius: 0; background: #2a2a2a; }
+.account-theme .account-page :is(a,button):focus-visible { outline: 2px solid #f1f1f1; outline-offset: 3px; }
+
+.site-header :is(.desktop-account-menu,.mobile-account-menu) .commerce-account-menu { padding: 10px; background: #1c1c1c; border: 1px solid #4c4c4c; border-radius: 2px; box-shadow: 0 16px 34px #00000055; }
+.site-header .mobile-account-menu { top: 100%; }
+.site-header .commerce-account-menu .account-menu-head { padding: 12px 11px 17px; border-color: #414141; }
+.site-header .commerce-account-menu .account-menu-head > span { color: #adadad; font: 400 10px/1.5 Inter,sans-serif; letter-spacing: .2px; }
+.site-header .commerce-account-menu .account-menu-head strong { color: #eaeaea; font: 500 23px/1.2 Oswald,sans-serif; letter-spacing: -.2px; }
+.site-header .commerce-account-menu button { min-height: 44px; padding: 10px 11px; color: #cdcdcd; border-color: #3e3e3e; background: transparent; font: 500 12px/1.5 Inter,sans-serif; letter-spacing: 0; }
+.site-header .commerce-account-menu button:hover { padding-left: 11px; color: #ffffff; background: #333333; }
+.commerce-menu-item-label { display: flex; align-items: center; gap: 10px; }
+.commerce-menu-item-label svg { width: 16px; height: 16px; color: #b3b3b3; flex-shrink: 0; }
+.site-header .commerce-account-menu button > svg { width: 13px; color: #969696; }
+.site-header .commerce-account-menu .account-menu-login { justify-content: space-between; width: 100%; min-height: 43px; margin: 12px 0 6px; padding: 10px 12px; color: #fff; border: 1px solid #d05b62; border-radius: 2px; background: #bd333c; box-shadow: none; font: 600 12px/1.4 Inter,sans-serif; letter-spacing: .1px; animation: none; }
+.site-header .commerce-account-menu .account-menu-login::before, .site-header .commerce-account-menu .account-menu-login::after { display: none; }
+.site-header .commerce-account-menu .account-menu-login > svg { color: #ffffff; }
+.site-header .commerce-account-menu .account-menu-logout { font: 500 11px/1.5 Inter,sans-serif; letter-spacing: .2px; }
+.site-header .site-mobile-menu { border-color: #484848; background: #1e1e1e; }
+.site-header .site-mobile-menu > a { border-color: #3e3e3e; }
+
+.commerce-drawer-layer .cart-drawer { width: min(100%,460px); background: #1b1b1b; border-color: #464646; box-shadow: -20px 0 55px #00000055; color: #eaeaea; font-family: Inter,sans-serif; }
+.commerce-drawer-layer .cart-drawer::before { display: none; }
+.commerce-drawer-layer .cart-drawer-head { align-items: center; padding: 24px; border-color: #434343; border-top: 3px solid #c8313b; }
+.commerce-drawer-layer .cart-drawer-head > div { display: block; }
+.commerce-drawer-layer .cart-drawer-head span { color: #ef7b83; font: 400 10px/1.4 Inter,sans-serif; letter-spacing: .5px; }
+.commerce-drawer-layer .cart-drawer-head h2 { margin-top: 7px; font: 500 29px/1.1 Oswald,sans-serif; letter-spacing: -.3px; }
+.commerce-drawer-layer .cart-drawer-head h2 b { min-width: 22px; height: 22px; margin-left: 6px; vertical-align: 3px; color: #fff; background: #bf303a; font: 500 11px Inter,sans-serif; }
+.commerce-drawer-layer .cart-drawer-head > button { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid #606060; background: transparent; font-size: 18px; }
+.commerce-drawer-layer .cart-drawer-head > button:hover { background: #373737; border-color: #a2a2a2; }
+.commerce-drawer-layer .cart-drawer-lines { padding-inline: 24px; min-height: 0; }
+.commerce-drawer-layer .cart-drawer-lines:has(.cart-drawer-empty) { display: grid; place-items: center; }
+.commerce-drawer-layer .cart-drawer-line { grid-template-columns: 82px minmax(0,1fr); gap: 14px; padding: 20px 0 22px; border-color: #434343; }
+.commerce-drawer-layer .cart-drawer-image { width: 82px; height: 96px; background: #2b2b2b; }
+.commerce-drawer-layer .cart-drawer-copy { min-width: 0; padding-right: 0; }
+.commerce-drawer-layer .cart-drawer-copy p { color: #eeeeee; font: 500 20px/1.25 Oswald,sans-serif; letter-spacing: -.2px; overflow-wrap: anywhere; }
+.commerce-drawer-layer .cart-drawer-copy span { margin-top: 5px; color: #b3b3b3; font: 400 11px/1.5 Inter,sans-serif; }
+.commerce-drawer-layer .cart-drawer-copy strong { color: #eeeeee; font: 600 13px/1.5 Inter,sans-serif; }
+.commerce-drawer-layer .cart-drawer-copy .price-legal-note { color: #c1c1c1; font-size: 11px; }
+.commerce-drawer-layer .cart-drawer-remove { position: static; grid-column: 2; justify-self: start; min-height: 30px; margin: 0; padding: 0; color: #cbcbcb; background: transparent; border: 0; border-radius: 0; box-shadow: none; font: 400 10px/1.4 Inter,sans-serif; text-decoration: underline; text-underline-offset: 3px; letter-spacing: .3px; }
+.commerce-drawer-layer .cart-drawer-remove::before { display: none; }
+.commerce-drawer-layer .cart-drawer-remove:is(:hover,:active):not(:disabled) { color: #f78d92; background: transparent; box-shadow: none; transform: none; }
+.commerce-drawer-layer .cart-quantity-control { grid-template-columns: 34px 34px 34px; min-height: 34px; margin-top: 10px; border-color: #636363; background: #292929; box-shadow: none; }
+.commerce-drawer-layer .cart-drawer-foot { display: block; flex: 0 0 auto; width: 100%; padding: 20px 24px 25px; border-color: #4c4c4c; background: #202020; }
+.commerce-drawer-layer .cart-drawer-foot .cart-drawer-costs { display: grid; grid-template-columns: minmax(0,1fr); width: 100%; align-items: stretch; justify-content: stretch; }
+.commerce-drawer-layer .cart-drawer-costs > div span { color: #bcbcbc; font: 500 10px/1.4 Inter,sans-serif; letter-spacing: .25px; }
+.commerce-drawer-layer .cart-drawer-costs > div strong { color: #ebebeb; font: 500 16px/1.4 Inter,sans-serif; letter-spacing: -.2px; }
+.commerce-drawer-layer .cart-drawer-costs .cart-drawer-grand-total { border-color: #b63b43; }
+.commerce-drawer-layer .cart-drawer-costs .cart-drawer-grand-total strong { color: #f17b83; font-size: 23px; font-weight: 600; }
+.commerce-drawer-layer .cart-shipping-note { color: #a6a6a6; font: 400 10px/1.6 Inter,sans-serif; }
+.commerce-drawer-layer .cart-drawer-continue { min-height: 35px; margin: 14px 0; color: #dadada; font: 500 11px/1.5 Inter,sans-serif; letter-spacing: 0; }
+.commerce-drawer-layer .cart-drawer-checkout { min-height: 46px; padding: 13px 15px; border: 1px solid #db5963; border-radius: 2px; background: #be303b; box-shadow: none; font: 600 12px/1.4 Inter,sans-serif; letter-spacing: .3px; }
+.commerce-drawer-layer .cart-drawer-checkout::before, .commerce-drawer-layer .cart-drawer-checkout::after { display: none; }
+.commerce-drawer-layer .cart-drawer-empty { display: grid; justify-items: center; gap: 14px; margin: 0; padding: 48px 10px; text-align: center; }
+.commerce-drawer-layer .cart-drawer-minecart { display: block; width: 48px; height: 48px; object-fit: contain; mix-blend-mode: screen; }
+.commerce-drawer-layer .cart-drawer { color-scheme: dark; }
+.commerce-drawer-layer .cart-drawer-lines { overscroll-behavior: contain; }
+.commerce-drawer-layer .cart-drawer-costs strong.is-free, .cart-summary .is-free { color: #f2f2f2; }
+.commerce-drawer-layer .cart-drawer-empty h3 { max-width: 22ch; color: #e9e9e9; font: 500 25px/1.25 Oswald,sans-serif; letter-spacing: -.2px; }
+.commerce-drawer-layer .cart-drawer-empty p { max-width: 32ch; color: #b2b2b2; font: 400 12px/1.8 Inter,sans-serif; letter-spacing: 0; }
+.commerce-drawer-layer .cart-drawer-empty > a { display: inline-flex; align-items: center; gap: 20px; min-height: 42px; margin-top: 6px; padding: 0 15px; border: 1px solid #d65660; color: #fff; background: #bf303a; font: 500 11px Inter,sans-serif; letter-spacing: 0; }
+.commerce-drawer-layer .cart-drawer-empty > a:hover { background: #d13b45; }
+.commerce-drawer-layer :is(a,button):focus-visible { outline: 2px solid #ee858c; outline-offset: 3px; }
+@media(max-width:800px) {
+  .account-theme .account-page .account-access-grid-register, .account-theme .account-page .account-layout { grid-template-columns: minmax(0,1fr); gap: 24px; }
+  .account-theme .account-page .account-profile { padding: 22px; }
+  .account-theme .account-page .account-side-nav { margin-inline: -22px; }
+  .account-theme .account-page .account-side-nav button { padding-inline: 22px; }
+}
+@media(max-width:520px) {
+  .site-icon-action { width: 44px; height: 44px; }
+  .account-theme .account-page { padding-block: 28px 45px; }
+  .account-theme .account-page .account-access-card, .account-theme .account-page .account-registration-form, .account-theme .account-page .account-edit-form { padding: 21px 18px; }
+  .account-theme .account-page .account-form-grid { grid-template-columns: 1fr; }
+  .account-theme .account-page input:not([type="checkbox"]) { font-size: 16px; }
+  .commerce-drawer-layer .cart-drawer-head { padding: 23px 20px; }
+  .commerce-drawer-layer .cart-drawer-lines { padding-inline: 20px; }
+  .commerce-drawer-layer .cart-drawer-foot { padding: 17px 20px 21px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .commerce-drawer-layer *, .account-theme * { animation: none; transition: none; }
+  .commerce-drawer-layer .cart-drawer { animation: none; transform: none; }
+}

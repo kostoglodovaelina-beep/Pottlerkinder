@@ -1,0 +1,250 @@
+{
+  "shopper:STANDARD:STANDARD:front": {
+    "x": 49.04,
+    "y": 65.89
+  },
+  "shopper:STANDARD:STANDARD:back": {
+    "x": 51.8,
+    "y": 66.25
+  },
+  "hoodie:FRAUEN:STANDARD:front": {
+    "x": 49.05158201968026,
+    "y": 36.91783337280758,
+    "width": 27.61099130089125,
+    "height": 23.548914789474363
+  },
+  "tshirt:FRAUEN:STANDARD:front": {
+    "x": 49.75,
+    "y": 32.95677258912199,
+    "width": 34,
+    "height": 29
+  },
+  "polo:FRAUEN:STANDARD:front": {
+    "x": 61.88559228446475,
+    "y": 32.808035387001254,
+    "width": 14.75264407126829,
+    "height": 12.583137590199422
+  },
+  "sweatshirt:FRAUEN:STANDARD:front": {
+    "x": 50.89,
+    "y": 32.645318921845146,
+    "width": 36.150197769756716,
+    "height": 30.83399221538073
+  },
+  "shirt:FRAUEN:STANDARD:front": {
+    "x": 61.5,
+    "y": 31.41,
+    "width": 15.3,
+    "height": 13.05
+  },
+  "headwear:FRAUEN:STANDARD:front": {
+    "x": 50,
+    "y": 39.29,
+    "width": 34.5,
+    "height": 28.5
+  },
+  "headwear:MÄNNER:STANDARD:front": {
+    "x": 50,
+    "y": 40,
+    "width": 34.5,
+    "height": 28.5
+  },
+  "headwear:KINDER:STANDARD:front": {
+    "x": 50,
+    "y": 40,
+    "width": 34.5,
+    "height": 28.5
+  },
+  "headwear:UNISEX:STANDARD:front": {
+    "x": 50,
+    "y": 40,
+    "width": 34.5,
+    "height": 28.5
+  },
+  "hoodie:MÄNNER:STANDARD:front": {
+    "x": 50.44304461970935,
+    "y": 40.0674328918514,
+    "width": 33.72,
+    "height": 28.76
+  },
+  "tshirt:MÄNNER:STANDARD:front": {
+    "x": 50.3143502996849,
+    "y": 36.71221959096721,
+    "width": 34,
+    "height": 29
+  },
+  "polo:MÄNNER:STANDARD:front": {
+    "x": 59.6,
+    "y": 34.21,
+    "width": 15.3,
+    "height": 13.05
+  },
+  "sweatshirt:MÄNNER:STANDARD:front": {
+    "x": 50.3962685344715,
+    "y": 32.88338147576651,
+    "width": 35.18,
+    "height": 30.01
+  },
+  "shirt:MÄNNER:STANDARD:front": {
+    "x": 60.35,
+    "y": 36.51,
+    "width": 15.3,
+    "height": 13.05
+  },
+  "hoodie:KINDER:STANDARD:front": {
+    "x": 50.39999398786161,
+    "y": 44.58896303418676,
+    "width": 32.74,
+    "height": 27.92
+  },
+  "tshirt:KINDER:STANDARD:front": {
+    "x": 50.09,
+    "y": 40.30315879152627,
+    "width": 34,
+    "height": 29
+  },
+  "polo:KINDER:STANDARD:front": {
+    "x": 61.6,
+    "y": 30.42,
+    "width": 16.21,
+    "height": 13.83
+  },
+  "sweatshirt:KINDER:STANDARD:front": {
+    "x": 49.73845038965669,
+    "y": 34.172926292459344,
+    "width": 33.95,
+    "height": 28.96
+  },
+  "hoodie:FRAUEN:STANDARD:back": {
+    "x": 49.05158201968026,
+    "y": 36.91783337280758,
+    "width": 27.61099130089125,
+    "height": 23.548914789474363
+  },
+  "tshirt:FRAUEN:STANDARD:back": {
+    "x": 49.75,
+    "y": 32.95677258912199,
+    "width": 34,
+    "height": 29
+  },
+  "polo:FRAUEN:STANDARD:back": {
+    "x": 50.00000288337232,
+    "y": 32.36809332202457,
+    "width": 31.685740413864153,
+    "height": 27.02607270594295
+  },
+  "sweatshirt:FRAUEN:STANDARD:back": {
+    "x": 50.89,
+    "y": 32.645318921845146,
+    "width": 36.150197769756716,
+    "height": 30.83399221538073
+  },
+  "shirt:FRAUEN:STANDARD:back": {
+    "x": 52.16548206497955,
+    "y": 32.5447891383746,
+    "width": 11.138766166114063,
+    "height": 9.500712318156113
+  },
+  "hoodie:MÄNNER:STANDARD:back": {
+    "x": 50.44304461970935,
+    "y": 40.0674328918514,
+    "width": 33.72,
+    "height": 28.76
+  },
+  "tshirt:MÄNNER:STANDARD:back": {
+    "x": 50.3143502996849,
+    "y": 36.71221959096721,
+    "width": 34,
+    "height": 29
+  },
+  "polo:MÄNNER:STANDARD:back": {
+    "x": 50.753910760581306,
+    "y": 33.71357978131175,
+    "width": 34,
+    "height": 29
+  },
+  "sweatshirt:MÄNNER:STANDARD:back": {
+    "x": 50.3962685344715,
+    "y": 32.88338147576651,
+    "width": 35.18,
+    "height": 30.01
+  },
+  "shirt:MÄNNER:STANDARD:back": {
+    "x": 50.55434241075426,
+    "y": 37.799558325657756,
+    "width": 34,
+    "height": 29
+  },
+  "sweatshirt:KINDER:STANDARD:back": {
+    "x": 49.73845038965669,
+    "y": 34.172926292459344,
+    "width": 33.95,
+    "height": 28.96
+  },
+  "polo:KINDER:STANDARD:back": {
+    "x": 50.48121756864675,
+    "y": 32.30418185708582,
+    "width": 34,
+    "height": 29
+  },
+  "tshirt:KINDER:STANDARD:back": {
+    "x": 50.09,
+    "y": 40.30315879152627,
+    "width": 34,
+    "height": 29
+  },
+  "hoodie:KINDER:STANDARD:back": {
+    "x": 50.39999398786161,
+    "y": 44.58896303418676,
+    "width": 32.74,
+    "height": 27.92
+  },
+  "hoodie:UNISEX:STANDARD:front": {
+    "x": 49.23331418957621,
+    "y": 50.58899630187037,
+    "width": 27.228337588914858,
+    "height": 23.224170296427378
+  },
+  "hoodie:UNISEX:STANDARD:back": {
+    "x": 51.28844865948206,
+    "y": 36.48017417273122,
+    "width": 32.80745498738442,
+    "height": 27.98282925394553
+  },
+  "tshirt:UNISEX:STANDARD:front": {
+    "x": 49.78662729304617,
+    "y": 34.90193636491302,
+    "width": 34,
+    "height": 29
+  },
+  "tshirt:UNISEX:STANDARD:back": {
+    "x": 49.78662729304617,
+    "y": 34.90193636491302,
+    "width": 34,
+    "height": 29
+  },
+  "polo:UNISEX:STANDARD:front": {
+    "x": 61.514232406084375,
+    "y": 31.30907371759764,
+    "width": 15.254676944908462,
+    "height": 13.011342100068982
+  },
+  "polo:UNISEX:STANDARD:back": {
+    "x": 50.418983749360635,
+    "y": 31.4457618592659,
+    "width": 31.928963563059398,
+    "height": 27.233527744962426
+  },
+  "sweatshirt:UNISEX:STANDARD:front": {
+    "x": 49.879691098734526,
+    "y": 33.27789726902822,
+    "width": 36.78527232912706,
+    "height": 31.37567345719661
+  },
+  "sweatshirt:UNISEX:STANDARD:back": {
+    "x": 49.879691098734526,
+    "y": 33.27789726902822,
+    "width": 36.78527232912706,
+    "height": 31.37567345719661
+  }
+}

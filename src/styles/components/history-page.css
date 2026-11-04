@@ -1,0 +1,52 @@
+.history-page { flex: 1; min-width: 0; background: var(--brand-background); color: var(--brand-text); font: 400 15px/1.85 Inter,sans-serif; }
+.history-container { width: min(100%,1440px); margin-inline: auto; padding: 28px clamp(20px,6vw,88px) 80px; }
+.history-breadcrumb { display: flex; align-items: center; gap: 13px; color: #b5b5b5; font-size: 12px; }
+.history-breadcrumb > span[aria-hidden] { color: #777; }
+.history-breadcrumb a:hover { color: #fff; }
+.history-intro { display: grid; grid-template-columns: 1fr .8fr; gap: 70px; align-items: end; margin: 46px 0 40px; }
+.history-kicker { margin-bottom: 18px; color: #bdbdbd; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; }
+.history-kicker::before { content: ""; display: inline-block; width: 23px; height: 2px; margin: 0 10px 3px 0; background: #df4449; }
+.history-intro h1 { font: 500 clamp(44px,5.3vw,76px)/1.08 Oswald,sans-serif; letter-spacing: -1px; text-wrap: balance; }
+.history-intro > p { max-width: 43ch; padding-bottom: 5px; color: #c4c4c4; font-size: 16px; line-height: 1.85; }
+.history-photo { margin: 0; }
+.history-photo > img { display: block; width: 100%; height: clamp(320px,36vw,500px); object-fit: cover; object-position: center top; }
+.history-photo figcaption { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 5px 20px; padding-block: 12px; color: #aaa; font-size: 11px; border-bottom: 1px solid #3c3c3c; }
+.history-editorial { display: grid; grid-template-columns: 220px minmax(0,1fr); gap: clamp(40px,7vw,110px); margin-top: 64px; }
+.history-index { position: sticky; top: 198px; align-self: start; }
+.history-index > p { margin-bottom: 14px; color: #aaa; font-size: 11px; text-transform: uppercase; letter-spacing: 1.4px; }
+.history-index nav { display: grid; }
+.history-index a { display: flex; align-items: center; gap: 15px; min-height: 49px; border-bottom: 1px solid #3c3c3c; color: #bdbdbd; font-size: 13px; transition: color .18s ease; }
+.history-index a > span { color: #999; font-size: 11px; font-variant-numeric: tabular-nums; }
+.history-index a:hover, .history-index a[aria-current] { color: #fff; }
+.history-index a[aria-current] { border-bottom-color: #d44348; }
+.history-index a[aria-current] > span { color: #f07579; }
+.history-index-note { display: block; margin-top: 28px; color: #999; font-size: 12px; line-height: 1.8; }
+.history-article { max-width: 720px; min-width: 0; }
+.history-article section { scroll-margin-top: 198px; padding-bottom: 42px; margin-bottom: 42px; border-bottom: 1px solid #3c3c3c; }
+.history-article section:last-child { margin-bottom: 0; padding-bottom: 0; border: 0; }
+.history-chapter { color: #ee777b; font-size: 11px; letter-spacing: 1.3px; text-transform: uppercase; }
+.history-article h2 { margin: 12px 0 24px; font: 500 clamp(28px,2.7vw,38px)/1.25 Oswald,sans-serif; letter-spacing: -.3px; text-wrap: balance; }
+.history-article section > p:not(.history-chapter) { margin-top: 18px; color: #c4c4c4; font-size: 15px; line-height: 1.95; }
+.history-article blockquote { margin: 32px 0 0; padding: 9px 0 9px 25px; border-left: 3px solid #d44348; color: #f2f2f2; font: 500 clamp(25px,2.5vw,32px)/1.4 Oswald,sans-serif; }
+.history-page :is(a,button):focus-visible { outline: 2px solid #eee; outline-offset: 4px; }
+@media(max-width:800px) {
+  .history-container { padding-bottom: 48px; }
+  .history-intro { grid-template-columns: 1fr; gap: 24px; margin: 30px 0; }
+  .history-intro > p { max-width: 56ch; font-size: 15px; }
+  .history-editorial { grid-template-columns: 1fr; gap: 35px; margin-top: 36px; }
+  .history-index { position: static; }
+  .history-index nav { grid-template-columns: repeat(2,minmax(0,1fr)); column-gap: 22px; }
+  .history-index-note { display: none; }
+  .history-article section { scroll-margin-top: 190px; padding-bottom: 30px; margin-bottom: 30px; }
+  .history-photo > img { height: 340px; }
+}
+@media(max-width:480px) {
+  .history-intro h1 { font-size: 48px; }
+  .history-photo > img { height: 280px; object-position: 55% 25%; }
+  .history-photo figcaption { font-size: 10px; }
+  .history-index a { font-size: 12px; gap: 10px; }
+  .history-article blockquote { padding-left: 19px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .history-page *, .history-page *::before, .history-page *::after { transition: none; scroll-behavior: auto; }
+}
